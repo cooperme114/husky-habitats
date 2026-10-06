@@ -1,6 +1,18 @@
 const stems={hyper:"over",hypo:"under",phobia:"fear",pan:"all",mega:"big",pyro:"fire",circum:"around",cred:"believe",ject:"throw",med:"middle"};
 const catalog=[
 {id:"bed-white",name:"Basic White Bed",img:"images/items/Bed-basic-white-001.png",price:120,cat:"Furniture"},
+{id:"couch-angel-cream",name:"Angel Cream Couch",img:"images/items/Couch-angel-cream-001.png",price:180,cat:"Furniture"},
+{id:"couch-antique-cream",name:"Antique Cream Couch",img:"images/items/Couch-antique-cream-001.png",price:180,cat:"Furniture"},
+{id:"couch-basic-brown",name:"Brown Couch",img:"images/items/Couch-basic-brown-001.png",price:140,cat:"Furniture"},
+{id:"couch-goth-purple",name:"Goth Purple Couch",img:"images/items/Couch-goth-purple-001.png",price:180,cat:"Furniture"},
+{id:"cow-skull",name:"Cow Skull",img:"images/items/Decor-cow-skull-001.png",price:100,cat:"Decor"},
+{id:"crystal-ball",name:"Crystal Ball",img:"images/items/Decor-crystalball-001.png",price:110,cat:"Decor"},
+{id:"dresser-angel-cream",name:"Angel Cream Dresser",img:"images/items/Dresser-angel-cream-001.png",price:160,cat:"Furniture"},
+{id:"dresser-basic-cream",name:"Cream Dresser",img:"images/items/Dresser-basic-cream-001.png",price:130,cat:"Furniture"},
+{id:"dresser-basic-dark-brown",name:"Dark Brown Dresser",img:"images/items/Dresser-basic-dark-brown-001.png",price:130,cat:"Furniture"},
+{id:"dresser-floral-white",name:"Floral White Dresser",img:"images/items/Dresser-floral-white-001.png",price:160,cat:"Furniture"},
+{id:"table-angel-cream",name:"Angel Cream Table",img:"images/items/Table-angel-cream-001.png",price:140,cat:"Furniture"},
+{id:"table-goth-purple",name:"Goth Purple Table",img:"images/items/Table-goth-purple-001.png",price:140,cat:"Furniture"},
 {id:"couch-blue",name:"Blue Couch",img:"images/items/Couch-basic-blue-001.png",price:140,cat:"Furniture"},
 {id:"couch-green",name:"Green Couch",img:"images/items/Couch-basic-green-001.png",price:140,cat:"Furniture"},
 {id:"couch-red",name:"Red Couch",img:"images/items/Couch-basic-red-001.png",price:140,cat:"Furniture"},
