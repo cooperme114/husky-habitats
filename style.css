@@ -28,12 +28,31 @@ conic-gradient(from 90deg,#e9ecef 25%,#9da6ad 0 50%,#e9ecef 0 75%,#9da6ad 0) 0 1
 linear-gradient(#f7f1e7 0 68%,#9da6ad 68%);
 background-size:100% 100%,auto;
 }.placed{position:absolute;transform:translate(-50%,-50%);line-height:1;background:transparent;border:0;padding:4px;z-index:6;touch-action:none;filter:drop-shadow(0 5px 2px #0002);cursor:grab}.placed span{display:block}.room-item-image{display:block;width:auto;height:auto;max-width:none;max-height:none;pointer-events:none;transform:scale(2);transform-origin:center center}.item-image{display:block;width:auto;height:auto;max-width:100%;max-height:82px;object-fit:contain;margin:auto}.fallback-icon{font-size:46px}.placed.dragging{cursor:grabbing;transform:translate(-50%,-50%) scale(1.08);z-index:20}.move-hint{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);background:#ffffffd9;border:1px solid #d8e1e8;border-radius:999px;padding:5px 11px;font-size:.78rem;color:#6e7a83;z-index:10;pointer-events:none}.nav{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}.panel{margin-top:12px}.answers{display:grid;gap:10px;margin-top:16px}.answer{padding:13px;border:2px solid #c3d0d9;background:#fff;border-radius:14px;text-align:left;font-weight:700}.answer:hover{background:#f0f8fb}.feedback{font-weight:900;min-height:28px;margin-top:10px}.price{font-weight:900}.rare{color:#7950a8}.loot{padding:15px;background:#fff7d6;border:1px solid #e2c45d;border-radius:14px;margin-top:12px;display:flex;align-items:center;gap:10px}.loot .item-image{width:54px;height:54px;margin:0}.tiny{font-size:.85rem;color:#6d7780}.item-art{min-height:88px;display:grid;place-items:center;padding:4px}.hidden{display:none}@media(max-width:600px){.room{height:390px}.placed{font-size:54px}.move-hint{font-size:.68rem;white-space:nowrap}}
-.pet-animated{animation:pet-idle 2.4s ease-in-out infinite;transform-origin:center bottom}
-@keyframes pet-idle{
-  0%,72%,100%{transform:scale(2) translateY(0) scaleY(1)}
-  80%{transform:scale(2) translateY(-3px) scaleY(1.03)}
-  88%{transform:scale(2) translateY(0) scaleX(1.06) scaleY(.94)}
-  94%{transform:scale(2) translateY(-1px) scaleX(.98) scaleY(1.02)}
+.pet-animated{transform-origin:center bottom;animation-iteration-count:infinite;animation-timing-function:ease-in-out}
+.pet-bob{animation-name:pet-bob}
+.pet-squish{animation-name:pet-squish}
+.pet-hop{animation-name:pet-hop}
+.pet-wiggle{animation-name:pet-wiggle}
+@keyframes pet-bob{
+  0%,72%,100%{transform:scale(2) translateY(0)}
+  84%{transform:scale(2) translateY(-3px)}
+  92%{transform:scale(2) translateY(0)}
+}
+@keyframes pet-squish{
+  0%,76%,100%{transform:scale(2)}
+  86%{transform:scale(2.1,1.9)}
+  93%{transform:scale(1.96,2.04)}
+}
+@keyframes pet-hop{
+  0%,70%,100%{transform:scale(2) translateY(0)}
+  82%{transform:scale(2) translateY(-6px)}
+  90%{transform:scale(2.05,1.95) translateY(0)}
+}
+@keyframes pet-wiggle{
+  0%,74%,100%{transform:scale(2) rotate(0deg)}
+  82%{transform:scale(2) rotate(-3deg)}
+  90%{transform:scale(2) rotate(3deg)}
+  96%{transform:scale(2) rotate(0deg)}
 }
 @media (prefers-reduced-motion: reduce){
   .pet-animated{animation:none}
@@ -99,4 +118,30 @@ background-size:100% 100%,auto;
 
 .floor-surface{
   background-size:64px 64px;
+}
+
+.pet-animated.flipped.pet-bob{animation-name:pet-bob-flipped}
+.pet-animated.flipped.pet-squish{animation-name:pet-squish-flipped}
+.pet-animated.flipped.pet-hop{animation-name:pet-hop-flipped}
+.pet-animated.flipped.pet-wiggle{animation-name:pet-wiggle-flipped}
+@keyframes pet-bob-flipped{
+  0%,72%,100%{transform:scale(-2,2) translateY(0)}
+  84%{transform:scale(-2,2) translateY(-3px)}
+  92%{transform:scale(-2,2) translateY(0)}
+}
+@keyframes pet-squish-flipped{
+  0%,76%,100%{transform:scale(-2,2)}
+  86%{transform:scale(-2.1,1.9)}
+  93%{transform:scale(-1.96,2.04)}
+}
+@keyframes pet-hop-flipped{
+  0%,70%,100%{transform:scale(-2,2) translateY(0)}
+  82%{transform:scale(-2,2) translateY(-6px)}
+  90%{transform:scale(-2.05,1.95) translateY(0)}
+}
+@keyframes pet-wiggle-flipped{
+  0%,74%,100%{transform:scale(-2,2) rotate(0deg)}
+  82%{transform:scale(-2,2) rotate(-3deg)}
+  90%{transform:scale(-2,2) rotate(3deg)}
+  96%{transform:scale(-2,2) rotate(0deg)}
 }
