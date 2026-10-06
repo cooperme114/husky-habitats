@@ -69,8 +69,7 @@ const collections=[
 {name:"Geode Collection",emoji:"💎",items:["chair-geode-purple","geode-purple","endtable-geode","table-geode-blue"]},
 {name:"Floral Collection",emoji:"🌸",items:["floral-vines","floral-terrarium","dresser-floral-white"]},
 {name:"Deco Collection",emoji:"✨",items:["chair-deco-green","chair-deco-red"]},
-{name:"Antique Collection",emoji:"🕰️",items:["couch-antique-cream"]},
-{name:"Sunset Collection",emoji:"🌅",items:["candles-sunset"]}
+{name:"Antique Collection",emoji:"🕰️",items:["couch-antique-cream"]}
 ];
 let s={screen:"setup",first:"",initial:"",coins:100,xp:0,streak:0,inventory:[],placed:[],wall:"plain",floor:"plain",q:null,answered:0,loot:null};
 const app=document.querySelector("#app");
