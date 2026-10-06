@@ -50,7 +50,7 @@ function enableDragging(){
 function itemVisual(x,where){
  if(x.img){
    const cls=where==="room"?"room-item-image":"item-image";
-   return '<img class="'+cls+'" src="'+x.img+'" alt="">';
+   return '<img class="'+cls+(where==="room"&&x.cat==="Pets"?" pet-animated":"")+'" src="'+x.img+'" alt="">';
  }
  return '<span class="fallback-icon">'+(x.icon||"")+'</span>';
 }
