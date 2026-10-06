@@ -12,7 +12,7 @@ const catalog=[
 {id:"darkfloor",name:"Dark Wood Floor",icon:"🟫",price:100,cat:"Floors"},
 {id:"checker",name:"Checker Floor",icon:"◼️",price:120,cat:"Floors"}
 ];
-let s={screen:"setup",first:"",initial:"",fur:0,coins:100,xp:0,streak:0,inventory:[],placed:[],wall:"plain",floor:"plain",q:null,answered:0,loot:null};
+let s={screen:"setup",first:"",initial:"",fur:0,coins:100,xp:0,streak:0,inventory:[],placed:[],wall:"plain",floor:"plain",q:null,answered:0,loot:null,huskyPos:{x:78,y:55},facing:"left"};
 const app=document.querySelector("#app");
 
 function huskySVG(){
@@ -43,9 +43,10 @@ function huskySVG(){
 
 function render(){
  if(s.screen==="setup")return setup();
- app.innerHTML='<div class="shell"><div class="topbar"><div><b>🐾 Husky Habitats</b><div class="tiny">'+esc(s.first)+' '+esc(s.initial)+'.\'s Room</div></div><div class="stats"><span class="pill">🪙 '+s.coins+'</span><span class="pill">⭐ '+s.xp+' XP</span><span class="pill">🔥 '+s.streak+'</span></div></div><div id="room" class="room '+s.wall+' '+s.floor+'"><div class="window"><div class="sky"></div></div><div class="starter-bed"><div class="pillow"></div><div class="blanket"></div></div><div class="husky-wrap">'+huskySVG()+'</div>'+s.placed.map((p,i)=>{let x=catalog.find(a=>a.id===p.id);return '<button class="placed" data-place="'+i+'" style="left:'+p.x+'%;top:'+p.y+'%" aria-label="Move '+x.name+'"><span>'+x.icon+'</span></button>'}).join("")+'<div class="move-hint">Drag your things anywhere in the room ✨</div></div><div class="nav"><button class="primary" data-view="questions">📚 Answer Questions</button><button class="secondary" data-view="shop">🛍️ Shop</button><button class="secondary" data-view="inventory">🎒 Inventory</button></div><div id="panel" class="card panel"></div></div>';
+ app.innerHTML='<div class="shell"><div class="topbar"><div><b>🐾 Husky Habitats</b><div class="tiny">'+esc(s.first)+' '+esc(s.initial)+'.\'s Room</div></div><div class="stats"><span class="pill">🪙 '+s.coins+'</span><span class="pill">⭐ '+s.xp+' XP</span><span class="pill">🔥 '+s.streak+'</span></div></div><div id="room" class="room '+s.wall+' '+s.floor+'" tabindex="0" aria-label="Your room. Use W A S D or arrow keys to move your Husky."><div class="window"><div class="sky"></div></div><div class="starter-bed"><div class="pillow"></div><div class="blanket"></div></div><div id="huskyPlayer" class="husky-wrap facing-'+s.facing+'" style="left:'+s.huskyPos.x+'%;top:'+s.huskyPos.y+'%">'+huskySVG()+'</div>'+s.placed.map((p,i)=>{let x=catalog.find(a=>a.id===p.id);return '<button class="placed" data-place="'+i+'" style="left:'+p.x+'%;top:'+p.y+'%" aria-label="Move '+x.name+'"><span>'+x.icon+'</span></button>'}).join("")+'<div class="move-hint">🐾 WASD / arrows to move • drag your things ✨</div></div><div class="nav"><button class="primary" data-view="questions">📚 Answer Questions</button><button class="secondary" data-view="shop">🛍️ Shop</button><button class="secondary" data-view="inventory">🎒 Inventory</button></div><div id="panel" class="card panel"></div></div>';
  document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>panel(b.dataset.view));
  enableDragging();
+ enableHuskyMovement();
  panel("questions");
 }
 function setup(){
@@ -68,6 +69,28 @@ function enableDragging(){
      const up=()=>{el.classList.remove("dragging");el.removeEventListener("pointermove",move);el.removeEventListener("pointerup",up);el.removeEventListener("pointercancel",up);};
      el.addEventListener("pointermove",move);el.addEventListener("pointerup",up);el.addEventListener("pointercancel",up);
    });
+ });
+}
+function enableHuskyMovement(){
+ const room=document.querySelector("#room"),husky=document.querySelector("#huskyPlayer"); if(!room||!husky)return;
+ let walkTimer;
+ room.addEventListener("pointerdown",e=>{if(!e.target.closest(".placed"))room.focus()});
+ room.addEventListener("keydown",e=>{
+   const key=e.key.toLowerCase();
+   const moves={arrowleft:[-3,0,"left"],a:[-3,0,"left"],arrowright:[3,0,"right"],d:[3,0,"right"],arrowup:[0,-2,null],w:[0,-2,null],arrowdown:[0,2,null],s:[0,2,null]};
+   if(!moves[key])return;
+   e.preventDefault();
+   const [dx,dy,face]=moves[key];
+   s.huskyPos.x=Math.max(8,Math.min(90,s.huskyPos.x+dx));
+   s.huskyPos.y=Math.max(47,Math.min(63,s.huskyPos.y+dy));
+   if(face)s.facing=face;
+   husky.style.left=s.huskyPos.x+"%";
+   husky.style.top=s.huskyPos.y+"%";
+   husky.classList.toggle("facing-left",s.facing==="left");
+   husky.classList.toggle("facing-right",s.facing==="right");
+   husky.classList.add("walking");
+   clearTimeout(walkTimer);
+   walkTimer=setTimeout(()=>husky.classList.remove("walking"),120);
  });
 }
 function newQ(){let keys=Object.keys(stems),stem=keys[Math.floor(Math.random()*keys.length)],correct=stems[stem],wrong=[...new Set(Object.values(stems).filter(x=>x!==correct))].sort(()=>Math.random()-.5).slice(0,3);s.q={stem,correct,opts:[correct,...wrong].sort(()=>Math.random()-.5)};s.loot=null}
