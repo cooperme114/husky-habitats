@@ -33,8 +33,15 @@ function setup(){
 function panel(v){
  const p=document.querySelector("#panel");
  if(v==="questions"){if(!s.q)newQ();p.innerHTML='<h2>Earn Coins</h2><p>What does the Greek/Latin stem <b>'+s.q.stem+'</b> mean?</p><div class="answers">'+s.q.opts.map(o=>'<button class="answer" data-a="'+o+'">'+o+'</button>').join("")+'</div><div id="feedback" class="feedback"></div>'+ (s.loot?'<div class="loot">🎁 <b>Loot drop!</b> '+itemVisual(s.loot,"loot")+' <span>'+s.loot.name+' was added to your inventory!</span></div>':"");document.querySelectorAll("[data-a]").forEach(b=>b.onclick=()=>answer(b.dataset.a));}
- if(v==="shop"){p.innerHTML='<h2>🛍️ Habitat Shop</h2><p class="tiny">Buy things once and keep them forever.</p><div class="shop-grid">'+catalog.map(x=>'<div class="shop-item"><div class="item-art">'+itemVisual(x,"shop")+'</div><b>'+x.name+'</b><div class="tiny">'+x.cat+'</div><div class="price">🪙 '+x.price+'</div><button class="secondary" data-buy="'+x.id+'" '+(s.inventory.includes(x.id)?"disabled":"")+'>'+(s.inventory.includes(x.id)?"Owned":"Buy")+'</button></div>').join("")+'</div>';document.querySelectorAll("[data-buy]").forEach(b=>b.onclick=()=>buy(b.dataset.buy));}
+ if(v==="shop"){shopPanel(p,"All");}
  if(v==="inventory"){let owned=catalog.filter(x=>s.inventory.includes(x.id));p.innerHTML='<h2>🎒 Inventory</h2><p class="tiny">Place an item, then drag it where you want it.</p>'+(owned.length?'<div class="shop-grid">'+owned.map(x=>'<div class="shop-item"><div class="item-art">'+itemVisual(x,"shop")+'</div><b>'+x.name+'</b><div class="tiny">'+x.cat+'</div><button class="secondary" data-use="'+x.id+'">'+useLabel(x)+'</button></div>').join("")+'</div>':'<p>Your inventory is empty. Answer questions and visit the shop!</p>');document.querySelectorAll("[data-use]").forEach(b=>b.onclick=()=>useItem(b.dataset.use));}
+}
+function shopPanel(p,active){
+ const cats=["All","Furniture","Decor","Pets","Windows","Walls","Floors"];
+ const items=active==="All"?catalog:catalog.filter(x=>x.cat===active);
+ p.innerHTML='<h2>🛍️ Habitat Shop</h2><p class="tiny">Buy things once and keep them forever.</p><div class="shop-tabs">'+cats.map(c=>'<button class="shop-tab '+(c===active?'active':'')+'" data-cat="'+c+'">'+c+'</button>').join("")+'</div><div class="shop-grid">'+items.map(x=>'<div class="shop-item"><div class="item-art">'+itemVisual(x,"shop")+'</div><b>'+x.name+'</b><div class="tiny">'+x.cat+'</div><div class="price">🪙 '+x.price+'</div><button class="secondary" data-buy="'+x.id+'" '+(s.inventory.includes(x.id)?"disabled":"")+'>'+(s.inventory.includes(x.id)?"Owned":"Buy")+'</button></div>').join("")+'</div>';
+ p.querySelectorAll("[data-cat]").forEach(b=>b.onclick=()=>shopPanel(p,b.dataset.cat));
+ p.querySelectorAll("[data-buy]").forEach(b=>b.onclick=()=>buy(b.dataset.buy));
 }
 function enableDragging(){
  const room=document.querySelector("#room"); if(!room)return;
