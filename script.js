@@ -121,7 +121,7 @@ function showSaveStatus(msg){
 function render(){
  if(s.screen==="setup")return setup();
  let wallItem=catalog.find(x=>x.id===s.wall),floorItem=catalog.find(x=>x.id===s.floor);
- app.innerHTML='<div class="shell"><div class="topbar"><div><b>🐾 Husky Habitats</b><div class="tiny">'+esc(s.first)+' '+esc(s.initial)+'.\'s Room</div></div><div class="stats"><span class="pill">🪙 '+s.coins+'</span><span class="pill">⭐ '+s.xp+' XP</span><span class="pill">🔥 '+s.streak+'</span><button id="saveBtn" class="save-btn">💾 Save</button><span id="saveStatus" class="save-status" aria-live="polite"></span></div></div><div id="room" class="room" aria-label="Your room"><div class="wall-surface"></div><div class="floor-surface"></div><div class="baseboard"></div>'+s.placed.map((p,i)=>{let x=catalog.find(a=>a.id===p.id);let flip=p.dir==="right"?" flipped":"";return '<button class="placed'+(x.turnable?' turnable':'')+'" data-place="'+i+'" style="left:'+p.x+'%;top:'+p.y+'%" aria-label="Move '+x.name+(x.turnable?'. Double-click to turn.':'')+'">'+itemVisual(x,"room",flip)+'</button>'}).join("")+'<div class="move-hint">Drag your things anywhere in the room ✨</div></div><div class="nav"><button class="primary" data-view="questions">📚 Answer Questions</button><button class="secondary" data-view="shop">🛍️ Shop</button><button class="secondary" data-view="inventory">🎒 Inventory</button><button class="secondary" data-view="collections">📖 Collections</button></div><div id="panel" class="card panel"></div></div>';
+ app.innerHTML='<div class="shell"><div class="topbar"><div><b>🐾 Husky Habitats</b><div class="tiny">'+esc(s.first)+' '+esc(s.initial)+'.\'s Room</div></div><div class="stats"><span class="pill">🪙 '+s.coins+'</span><span class="pill">⭐ '+s.xp+' XP</span><span class="pill">🔥 '+s.streak+'</span><button id="saveBtn" class="save-btn">💾 Save</button><span id="saveStatus" class="save-status" aria-live="polite"></span></div></div><div id="room" class="room" aria-label="Your room"><div class="wall-surface"></div><div class="floor-surface"></div><div class="baseboard"></div>'+s.placed.map((p,i)=>{let x=catalog.find(a=>a.id===p.id);let flip=p.dir==="right"?" flipped":"";return '<button class="placed'+(x.turnable?' turnable':'')+'" data-place="'+i+'" style="left:'+p.x+'%;top:'+p.y+'%" aria-label="Move '+x.name+(x.turnable?'. Double-click to turn.':'')+'">'+itemVisual(x,"room",flip,x.cat==="Pets"?i:null)+'</button>'}).join("")+'<div class="move-hint">Drag your things anywhere in the room ✨</div></div><div class="nav"><button class="primary" data-view="questions">📚 Answer Questions</button><button class="secondary" data-view="shop">🛍️ Shop</button><button class="secondary" data-view="inventory">🎒 Inventory</button><button class="secondary" data-view="collections">📖 Collections</button></div><div id="panel" class="card panel"></div></div>';
  document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>panel(b.dataset.view));
  const saveBtn=document.querySelector("#saveBtn"); if(saveBtn)saveBtn.onclick=saveGame;
  const wallSurface=document.querySelector(".wall-surface");
@@ -169,10 +169,19 @@ function enableDragging(){
    });
  });
 }
-function itemVisual(x,where,extra=""){
+function itemVisual(x,where,extra="",petIndex=null){
  if(x.img){
    const cls=where==="room"?"room-item-image":"item-image";
-   return '<img class="'+cls+(where==="room"&&x.cat==="Pets"?" pet-animated":"")+extra+'" src="'+x.img+'" alt="">';
+   let petClass="",petStyle="";
+   if(where==="room"&&x.cat==="Pets"){
+     const variants=["pet-bob","pet-squish","pet-hop","pet-wiggle"];
+     const idx=petIndex==null?0:petIndex;
+     petClass=" pet-animated "+variants[idx%variants.length];
+     const delay=-((idx*0.47)%3.8);
+     const duration=2.6+(idx%4)*0.35;
+     petStyle=' style="animation-delay:'+delay+'s;animation-duration:'+duration+'s"';
+   }
+   return '<img class="'+cls+petClass+extra+'" src="'+x.img+'" alt=""'+petStyle+'>';
  }
  return '<span class="fallback-icon">'+(x.icon||"")+'</span>';
 }
