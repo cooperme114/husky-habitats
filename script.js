@@ -1,16 +1,16 @@
 const stems={hyper:"over",hypo:"under",phobia:"fear",pan:"all",mega:"big",pyro:"fire",circum:"around",cred:"believe",ject:"throw",med:"middle"};
 const catalog=[
-{id:"bed-white",name:"Basic White Bed",img:"images/items/Bed-basic-white-001.png",price:120,cat:"Furniture"},
-{id:"couch-blue",name:"Blue Couch",img:"images/items/Couch-basic-blue-001.png",price:140,cat:"Furniture"},
-{id:"couch-green",name:"Green Couch",img:"images/items/Couch-basic-green-001.png",price:140,cat:"Furniture"},
-{id:"couch-red",name:"Red Couch",img:"images/items/Couch-basic-red-001.png",price:140,cat:"Furniture"},
-{id:"couch-yellow",name:"Yellow Couch",img:"images/items/Couch-basic-yellow-001.png",price:140,cat:"Furniture"},
-{id:"jackolantern",name:"Jack-o'-Lantern",img:"images/items/Decor-jackolantern-001.png",price:90,cat:"Decor"},
-{id:"moon-stars",name:"Moon & Stars",img:"images/items/Decor-moon-and-stars-001.png",price:100,cat:"Decor"},
-{id:"string-lights",name:"String Lights",img:"images/items/Lights-string-001.png",price:110,cat:"Decor"},
-{id:"squirrel",name:"Squirrel",img:"images/items/Pet-squirrel-001.png",price:170,cat:"Pets"},
-{id:"window-stars",name:"Star Porthole Window",img:"images/items/Window-porthole-stars-001.png",price:150,cat:"Windows"},
-{id:"window-sun",name:"Sunny Window",img:"images/items/Window-sun-001.png",price:150,cat:"Windows"},
+{id:"bed-white",name:"Basic White Bed",img:"images/items/Bed-basic-white-001.png",price:120,cat:"Furniture",roomW:300},
+{id:"couch-blue",name:"Blue Couch",img:"images/items/Couch-basic-blue-001.png",price:140,cat:"Furniture",roomW:300},
+{id:"couch-green",name:"Green Couch",img:"images/items/Couch-basic-green-001.png",price:140,cat:"Furniture",roomW:300},
+{id:"couch-red",name:"Red Couch",img:"images/items/Couch-basic-red-001.png",price:140,cat:"Furniture",roomW:300},
+{id:"couch-yellow",name:"Yellow Couch",img:"images/items/Couch-basic-yellow-001.png",price:140,cat:"Furniture",roomW:300},
+{id:"jackolantern",name:"Jack-o'-Lantern",img:"images/items/Decor-jackolantern-001.png",price:90,cat:"Decor",roomW:180},
+{id:"moon-stars",name:"Moon & Stars",img:"images/items/Decor-moon-and-stars-001.png",price:100,cat:"Decor",roomW:180},
+{id:"string-lights",name:"String Lights",img:"images/items/Lights-string-001.png",price:110,cat:"Decor",roomW:180},
+{id:"squirrel",name:"Squirrel",img:"images/items/Pet-squirrel-001.png",price:170,cat:"Pets",roomW:150},
+{id:"window-stars",name:"Star Porthole Window",img:"images/items/Window-porthole-stars-001.png",price:150,cat:"Windows",roomW:220},
+{id:"window-sun",name:"Sunny Window",img:"images/items/Window-sun-001.png",price:150,cat:"Windows",roomW:220},
 {id:"brick",name:"Brick Wallpaper",icon:"🧱",price:100,cat:"Walls"},
 {id:"stars",name:"Star Wallpaper",icon:"🌌",price:140,cat:"Walls"},
 {id:"darkfloor",name:"Dark Wood Floor",icon:"🟫",price:100,cat:"Floors"},
@@ -50,7 +50,7 @@ function enableDragging(){
 function itemVisual(x,where){
  if(x.img){
    const cls=where==="room"?"room-item-image":"item-image";
-   return '<img class="'+cls+'" src="'+x.img+'" alt="">';
+   return '<img class="'+cls+'" src="'+x.img+'" alt=""'+(where==="room"&&x.roomW?' style="width:'+x.roomW+'px"':"")+' >';
  }
  return '<span class="fallback-icon">'+(x.icon||"")+'</span>';
 }
