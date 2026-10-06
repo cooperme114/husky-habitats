@@ -38,3 +38,7 @@ background-size:100% 100%,auto;
 @media (prefers-reduced-motion: reduce){
   .pet-animated{animation:none}
 }
+.shop-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 6px}
+.shop-tab{border:2px solid #c9d6df;background:#fff;border-radius:999px;padding:7px 12px;font-weight:800;color:#56636d}
+.shop-tab:hover{background:#f1f7fa}
+.shop-tab.active{background:#4c86a5;border-color:#4c86a5;color:#fff}
