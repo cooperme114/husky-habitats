@@ -74,20 +74,53 @@ const collections=[
 ];
 let s={screen:"setup",first:"",initial:"",coins:100,xp:0,streak:0,inventory:[],placed:[],wall:"plain",floor:"plain",q:null,answered:0,loot:null};
 const app=document.querySelector("#app");
+const SAVE_KEY="huskyHabitatsSaveV1";
+function saveGame(){
+  try{
+    localStorage.setItem(SAVE_KEY,JSON.stringify(s));
+    showSaveStatus("Saved! 💾");
+  }catch(e){
+    showSaveStatus("Could not save on this browser.");
+  }
+}
+function loadGame(){
+  try{
+    const raw=localStorage.getItem(SAVE_KEY);
+    if(!raw)return false;
+    const saved=JSON.parse(raw);
+    s={...s,...saved,screen:"game"};
+    render();
+    showSaveStatus("Loaded saved habitat.");
+    return true;
+  }catch(e){return false}
+}
+function showSaveStatus(msg){
+  let el=document.querySelector("#saveStatus");
+  if(!el)return;
+  el.textContent=msg;
+  clearTimeout(showSaveStatus.t);
+  showSaveStatus.t=setTimeout(()=>{if(el)el.textContent=""},1800);
+}
 
 function render(){
  if(s.screen==="setup")return setup();
  let wallItem=catalog.find(x=>x.id===s.wall),floorItem=catalog.find(x=>x.id===s.floor);
- let wallStyle=wallItem&&wallItem.img?'background-image:url("'+wallItem.img+'")':'';
- let floorStyle=floorItem&&floorItem.img?'background-image:url("'+floorItem.img+'")':'';
- app.innerHTML='<div class="shell"><div class="topbar"><div><b>🐾 Husky Habitats</b><div class="tiny">'+esc(s.first)+' '+esc(s.initial)+'.\'s Room</div></div><div class="stats"><span class="pill">🪙 '+s.coins+'</span><span class="pill">⭐ '+s.xp+' XP</span><span class="pill">🔥 '+s.streak+'</span></div></div><div id="room" class="room" aria-label="Your room"><div class="wall-surface" style="'+wallStyle+'"></div><div class="floor-surface" style="'+floorStyle+'"></div><div class="baseboard"></div>'+s.placed.map((p,i)=>{let x=catalog.find(a=>a.id===p.id);let flip=p.dir==="right"?" flipped":"";return '<button class="placed'+(x.turnable?' turnable':'')+'" data-place="'+i+'" style="left:'+p.x+'%;top:'+p.y+'%" aria-label="Move '+x.name+(x.turnable?'. Double-click to turn.':'')+'">'+itemVisual(x,"room",flip)+'</button>'}).join("")+'<div class="move-hint">Drag your things anywhere in the room ✨</div></div><div class="nav"><button class="primary" data-view="questions">📚 Answer Questions</button><button class="secondary" data-view="shop">🛍️ Shop</button><button class="secondary" data-view="inventory">🎒 Inventory</button><button class="secondary" data-view="collections">📖 Collections</button></div><div id="panel" class="card panel"></div></div>';
+ app.innerHTML='<div class="shell"><div class="topbar"><div><b>🐾 Husky Habitats</b><div class="tiny">'+esc(s.first)+' '+esc(s.initial)+'.\'s Room</div></div><div class="stats"><span class="pill">🪙 '+s.coins+'</span><span class="pill">⭐ '+s.xp+' XP</span><span class="pill">🔥 '+s.streak+'</span><button id="saveBtn" class="save-btn">💾 Save</button><span id="saveStatus" class="save-status" aria-live="polite"></span></div></div><div id="room" class="room" aria-label="Your room"><div class="wall-surface"></div><div class="floor-surface"></div><div class="baseboard"></div>'+s.placed.map((p,i)=>{let x=catalog.find(a=>a.id===p.id);let flip=p.dir==="right"?" flipped":"";return '<button class="placed'+(x.turnable?' turnable':'')+'" data-place="'+i+'" style="left:'+p.x+'%;top:'+p.y+'%" aria-label="Move '+x.name+(x.turnable?'. Double-click to turn.':'')+'">'+itemVisual(x,"room",flip)+'</button>'}).join("")+'<div class="move-hint">Drag your things anywhere in the room ✨</div></div><div class="nav"><button class="primary" data-view="questions">📚 Answer Questions</button><button class="secondary" data-view="shop">🛍️ Shop</button><button class="secondary" data-view="inventory">🎒 Inventory</button><button class="secondary" data-view="collections">📖 Collections</button></div><div id="panel" class="card panel"></div></div>';
  document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>panel(b.dataset.view));
+ const saveBtn=document.querySelector("#saveBtn"); if(saveBtn)saveBtn.onclick=saveGame;
+ const wallSurface=document.querySelector(".wall-surface");
+ const floorSurface=document.querySelector(".floor-surface");
+ if(wallSurface) wallSurface.style.backgroundImage=wallItem&&wallItem.img?'url("'+wallItem.img+'")':"none";
+ if(floorSurface) floorSurface.style.backgroundImage=floorItem&&floorItem.img?'url("'+floorItem.img+'")':"none";
  enableDragging();
  document.querySelectorAll(".placed.turnable").forEach(b=>b.addEventListener("dblclick",e=>{e.preventDefault();e.stopPropagation();turnItem(+b.dataset.place)}));
  panel("questions");
 }
 function setup(){
- app.innerHTML='<div class="shell"><div class="card setup-card"><h1 class="title">🐾 Husky Habitats</h1><p class="sub">Build a room that is completely yours.</p><div class="row"><div class="field"><label>Your first name</label><input id="first" maxlength="18" placeholder="Your real first name"></div><div class="field"><label>Your last initial</label><input id="initial" maxlength="1" placeholder="R"></div></div><p class="tiny">Use your real first name and last initial so your teacher knows which habitat is yours.</p><button id="start" class="primary">Start My Habitat →</button><div id="setupmsg" class="feedback"></div></div></div>';
+ app.innerHTML='<div class="shell"><div class="card setup-card"><h1 class="title">🐾 Husky Habitats</h1><p class="sub">Build a room that is completely yours.</p><div class="row"><div class="field"><label>Your first name</label><input id="first" maxlength="18" placeholder="Your real first name"></div><div class="field"><label>Your last initial</label><input id="initial" maxlength="1" placeholder="R"></div></div><p class="tiny">Use your real first name and last initial so your teacher knows which habitat is yours.</p><div class="setup-actions"><button id="start" class="primary">Start My Habitat →</button><button id="continueSave" class="secondary" style="display:none">💾 Continue Saved Habitat</button></div><div id="setupmsg" class="feedback"></div></div></div>';
+ const savedButton=document.querySelector("#continueSave");
+ try{if(localStorage.getItem(SAVE_KEY))savedButton.style.display=""}catch(e){}
+ savedButton.onclick=()=>loadGame();
  document.querySelector("#start").onclick=()=>{let f=document.querySelector("#first").value.trim(),i=document.querySelector("#initial").value.trim();if(!f||!/^[A-Za-z]$/.test(i)){document.querySelector("#setupmsg").textContent="Please enter your real first name and one last initial.";return}s.first=f[0].toUpperCase()+f.slice(1).toLowerCase();s.initial=i.toUpperCase();s.screen="game";render()};
 }
 function ownedCount(id){return s.inventory.filter(x=>x===id).length}
