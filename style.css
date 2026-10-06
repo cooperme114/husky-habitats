@@ -54,3 +54,19 @@ background-size:100% 100%,auto;
   88%{transform:scale(-2.12,1.88) translateY(0)}
   94%{transform:scale(-1.96,2.04) translateY(-1px)}
 }
+
+.collections-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-top:14px}
+.collection-card{border:2px solid #dce6ed;border-radius:20px;background:#fbfdff;padding:14px}
+.collection-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.collection-head>div{display:flex;align-items:center;gap:8px}
+.collection-emoji{font-size:1.4rem}
+.collection-progress{font-size:.82rem;font-weight:800;color:#6a7780;background:#eef3f6;border-radius:999px;padding:5px 9px;white-space:nowrap}
+.collection-items{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.collection-item{position:relative;border:1px solid #d9e2e8;border-radius:14px;padding:8px;background:#fff;opacity:.52;text-align:center}
+.collection-item.owned{opacity:1;border-color:#86b79d;background:#f4fbf7}
+.collection-check{position:absolute;right:6px;top:5px;width:23px;height:23px;border-radius:50%;display:grid;place-items:center;background:#edf1f4;color:#7a8790;font-weight:900}
+.collection-item.owned .collection-check{background:#dff2e6;color:#2d7650}
+.collection-thumb{height:62px;display:grid;place-items:center;margin-bottom:4px}
+.collection-thumb .item-image{max-height:58px}
+.collection-name{font-size:.78rem;font-weight:800;line-height:1.15}
+@media(max-width:520px){.collections-grid{grid-template-columns:1fr}.collection-items{grid-template-columns:1fr 1fr}}
