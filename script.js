@@ -1,6 +1,22 @@
 const stems={hyper:"over",hypo:"under",phobia:"fear",pan:"all",mega:"big",pyro:"fire",circum:"around",cred:"believe",ject:"throw",med:"middle"};
 const catalog=[
 {id:"bed-white",name:"Basic White Bed",img:"images/items/Bed-basic-white-001.png",price:120,cat:"Furniture"},
+{id:"bed-angel-cream",name:"Angel Cream Bed",img:"images/items/Bed-angel-cream-001.png",price:190,cat:"Furniture"},
+{id:"chair-angel-cream",name:"Angel Cream Chair",img:"images/items/Chair-angel-cream-001.png",price:120,cat:"Furniture",turnable:true},
+{id:"chair-basic-red",name:"Red Chair",img:"images/items/Chair-basic-red-001.png",price:90,cat:"Furniture",turnable:true},
+{id:"chair-basic-yellow",name:"Yellow Chair",img:"images/items/Chair-basic-yellow-001.png",price:90,cat:"Furniture",turnable:true},
+{id:"chair-deco-green",name:"Deco Green Chair",img:"images/items/Chair-deco-green-001.png",price:130,cat:"Furniture",turnable:true},
+{id:"chair-deco-red",name:"Deco Red Chair",img:"images/items/Chair-deco-red-001.png",price:130,cat:"Furniture",turnable:true},
+{id:"chair-geode-purple",name:"Purple Geode Chair",img:"images/items/Chair-geode-purple-001.png",price:150,cat:"Furniture",turnable:true},
+{id:"chair-goth-black",name:"Black Goth Chair",img:"images/items/Chair-goth-black-001.png",price:150,cat:"Furniture",turnable:true},
+{id:"chair-goth-purple",name:"Purple Goth Chair",img:"images/items/Chair-goth-purple-001.png",price:150,cat:"Furniture",turnable:true},
+{id:"candles-sunset",name:"Sunset Candles",img:"images/items/Decor-candles-sunset-001.png",price:100,cat:"Decor"},
+{id:"floral-vines",name:"Hanging Floral Vines",img:"images/items/Decor-floral-hanging-vines-001.png",price:120,cat:"Decor"},
+{id:"floral-terrarium",name:"Floral Terrarium",img:"images/items/Decor-floral-terrarium-001.png",price:110,cat:"Decor"},
+{id:"geode-purple",name:"Purple Geode",img:"images/items/Decor-geode-purple-001.png",price:120,cat:"Decor"},
+{id:"endtable-geode",name:"Geode End Table",img:"images/items/EndTable-geode-001.png",price:140,cat:"Furniture"},
+{id:"parrot",name:"Parrot",img:"images/items/Pet-parrot-001.png",price:180,cat:"Pets"},
+{id:"table-geode-blue",name:"Blue Geode Table",img:"images/items/Table-geode-blue-001.png",price:160,cat:"Furniture"},
 {id:"couch-angel-cream",name:"Angel Cream Couch",img:"images/items/Couch-angel-cream-001.png",price:180,cat:"Furniture"},
 {id:"couch-antique-cream",name:"Antique Cream Couch",img:"images/items/Couch-antique-cream-001.png",price:180,cat:"Furniture"},
 {id:"couch-basic-brown",name:"Brown Couch",img:"images/items/Couch-basic-brown-001.png",price:140,cat:"Furniture"},
@@ -33,25 +49,28 @@ const app=document.querySelector("#app");
 
 function render(){
  if(s.screen==="setup")return setup();
- app.innerHTML='<div class="shell"><div class="topbar"><div><b>🐾 Husky Habitats</b><div class="tiny">'+esc(s.first)+' '+esc(s.initial)+'.\'s Room</div></div><div class="stats"><span class="pill">🪙 '+s.coins+'</span><span class="pill">⭐ '+s.xp+' XP</span><span class="pill">🔥 '+s.streak+'</span></div></div><div id="room" class="room '+s.wall+' '+s.floor+'" aria-label="Your room">'+s.placed.map((p,i)=>{let x=catalog.find(a=>a.id===p.id);return '<button class="placed" data-place="'+i+'" style="left:'+p.x+'%;top:'+p.y+'%" aria-label="Move '+x.name+'">'+itemVisual(x,"room")+'</button>'}).join("")+'<div class="move-hint">Drag your things anywhere in the room ✨</div></div><div class="nav"><button class="primary" data-view="questions">📚 Answer Questions</button><button class="secondary" data-view="shop">🛍️ Shop</button><button class="secondary" data-view="inventory">🎒 Inventory</button></div><div id="panel" class="card panel"></div></div>';
+ app.innerHTML='<div class="shell"><div class="topbar"><div><b>🐾 Husky Habitats</b><div class="tiny">'+esc(s.first)+' '+esc(s.initial)+'.\'s Room</div></div><div class="stats"><span class="pill">🪙 '+s.coins+'</span><span class="pill">⭐ '+s.xp+' XP</span><span class="pill">🔥 '+s.streak+'</span></div></div><div id="room" class="room '+s.wall+' '+s.floor+'" aria-label="Your room">'+s.placed.map((p,i)=>{let x=catalog.find(a=>a.id===p.id);let flip=p.dir==="right"?" flipped":"";return '<button class="placed" data-place="'+i+'" style="left:'+p.x+'%;top:'+p.y+'%" aria-label="Move '+x.name+'">'+itemVisual(x,"room",flip)+'</button>'+(x.turnable?'<button class="turn-item" data-turn="'+i+'" style="left:calc('+p.x+'% + 34px);top:calc('+p.y+'% - 34px)" aria-label="Turn '+x.name+' left or right">↔</button>':"")}).join("")+'<div class="move-hint">Drag your things anywhere in the room ✨</div></div><div class="nav"><button class="primary" data-view="questions">📚 Answer Questions</button><button class="secondary" data-view="shop">🛍️ Shop</button><button class="secondary" data-view="inventory">🎒 Inventory</button></div><div id="panel" class="card panel"></div></div>';
  document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>panel(b.dataset.view));
  enableDragging();
+ document.querySelectorAll("[data-turn]").forEach(b=>b.onclick=e=>{e.stopPropagation();turnItem(+b.dataset.turn)});
  panel("questions");
 }
 function setup(){
  app.innerHTML='<div class="shell"><div class="card setup-card"><h1 class="title">🐾 Husky Habitats</h1><p class="sub">Build a room that is completely yours.</p><div class="row"><div class="field"><label>Your first name</label><input id="first" maxlength="18" placeholder="Your real first name"></div><div class="field"><label>Your last initial</label><input id="initial" maxlength="1" placeholder="R"></div></div><p class="tiny">Use your real first name and last initial so your teacher knows which habitat is yours.</p><button id="start" class="primary">Start My Habitat →</button><div id="setupmsg" class="feedback"></div></div></div>';
  document.querySelector("#start").onclick=()=>{let f=document.querySelector("#first").value.trim(),i=document.querySelector("#initial").value.trim();if(!f||!/^[A-Za-z]$/.test(i)){document.querySelector("#setupmsg").textContent="Please enter your real first name and one last initial.";return}s.first=f[0].toUpperCase()+f.slice(1).toLowerCase();s.initial=i.toUpperCase();s.screen="game";render()};
 }
+function ownedCount(id){return s.inventory.filter(x=>x===id).length}
+function placedCount(id){return s.placed.filter(x=>x.id===id).length}
 function panel(v){
  const p=document.querySelector("#panel");
  if(v==="questions"){if(!s.q)newQ();p.innerHTML='<h2>Earn Coins</h2><p>What does the Greek/Latin stem <b>'+s.q.stem+'</b> mean?</p><div class="answers">'+s.q.opts.map(o=>'<button class="answer" data-a="'+o+'">'+o+'</button>').join("")+'</div><div id="feedback" class="feedback"></div>'+ (s.loot?'<div class="loot">🎁 <b>Loot drop!</b> '+itemVisual(s.loot,"loot")+' <span>'+s.loot.name+' was added to your inventory!</span></div>':"");document.querySelectorAll("[data-a]").forEach(b=>b.onclick=()=>answer(b.dataset.a));}
  if(v==="shop"){shopPanel(p,"All");}
- if(v==="inventory"){let owned=catalog.filter(x=>s.inventory.includes(x.id));p.innerHTML='<h2>🎒 Inventory</h2><p class="tiny">Place an item, then drag it where you want it.</p>'+(owned.length?'<div class="shop-grid">'+owned.map(x=>'<div class="shop-item"><div class="item-art">'+itemVisual(x,"shop")+'</div><b>'+x.name+'</b><div class="tiny">'+x.cat+'</div><button class="secondary" data-use="'+x.id+'">'+useLabel(x)+'</button></div>').join("")+'</div>':'<p>Your inventory is empty. Answer questions and visit the shop!</p>');document.querySelectorAll("[data-use]").forEach(b=>b.onclick=()=>useItem(b.dataset.use));}
+ if(v==="inventory"){let owned=catalog.filter(x=>ownedCount(x.id)>0);p.innerHTML='<h2>🎒 Inventory</h2><p class="tiny">Place as many copies as you own, then drag them where you want them.</p>'+(owned.length?'<div class="shop-grid">'+owned.map(x=>'<div class="shop-item"><div class="item-art">'+itemVisual(x,"shop")+'</div><b>'+x.name+'</b><div class="tiny">'+x.cat+' • Owned: '+ownedCount(x.id)+'</div><div class="inventory-actions"><button class="secondary" data-use="'+x.id+'" '+((!["Walls","Floors"].includes(x.cat)&&placedCount(x.id)>=ownedCount(x.id))?"disabled":"")+'>'+useLabel(x)+'</button>'+((!["Walls","Floors"].includes(x.cat)&&placedCount(x.id)>0)?'<button class="secondary" data-remove="'+x.id+'">Remove One</button>':"")+'</div></div>').join("")+'</div>':'<p>Your inventory is empty. Answer questions and visit the shop!</p>');document.querySelectorAll("[data-use]").forEach(b=>b.onclick=()=>useItem(b.dataset.use));document.querySelectorAll("[data-remove]").forEach(b=>b.onclick=()=>removeOne(b.dataset.remove));}
 }
 function shopPanel(p,active){
  const cats=["All","Furniture","Decor","Pets","Windows","Walls","Floors"];
  const items=active==="All"?catalog:catalog.filter(x=>x.cat===active);
- p.innerHTML='<h2>🛍️ Habitat Shop</h2><p class="tiny">Buy things once and keep them forever.</p><div class="shop-tabs">'+cats.map(c=>'<button class="shop-tab '+(c===active?'active':'')+'" data-cat="'+c+'">'+c+'</button>').join("")+'</div><div class="shop-grid">'+items.map(x=>'<div class="shop-item"><div class="item-art">'+itemVisual(x,"shop")+'</div><b>'+x.name+'</b><div class="tiny">'+x.cat+'</div><div class="price">🪙 '+x.price+'</div><button class="secondary" data-buy="'+x.id+'" '+(s.inventory.includes(x.id)?"disabled":"")+'>'+(s.inventory.includes(x.id)?"Owned":"Buy")+'</button></div>').join("")+'</div>';
+ p.innerHTML='<h2>🛍️ Habitat Shop</h2><p class="tiny">Furniture, decor, pets, and windows can be bought more than once.</p><div class="shop-tabs">'+cats.map(c=>'<button class="shop-tab '+(c===active?'active':'')+'" data-cat="'+c+'">'+c+'</button>').join("")+'</div><div class="shop-grid">'+items.map(x=>{let count=ownedCount(x.id),oneOnly=["Walls","Floors"].includes(x.cat);return '<div class="shop-item"><div class="item-art">'+itemVisual(x,"shop")+'</div><b>'+x.name+'</b><div class="tiny">'+x.cat+(count?' • Owned: '+count:'')+'</div><div class="price">🪙 '+x.price+'</div><button class="secondary" data-buy="'+x.id+'" '+(oneOnly&&count?"disabled":"")+'>'+(oneOnly&&count?"Owned":count?"Buy Another":"Buy")+'</button></div>'}).join("")+'</div>';
  p.querySelectorAll("[data-cat]").forEach(b=>b.onclick=()=>shopPanel(p,b.dataset.cat));
  p.querySelectorAll("[data-buy]").forEach(b=>b.onclick=()=>buy(b.dataset.buy));
 }
@@ -66,17 +85,19 @@ function enableDragging(){
    });
  });
 }
-function itemVisual(x,where){
+function itemVisual(x,where,extra=""){
  if(x.img){
    const cls=where==="room"?"room-item-image":"item-image";
-   return '<img class="'+cls+(where==="room"&&x.cat==="Pets"?" pet-animated":"")+'" src="'+x.img+'" alt="">';
+   return '<img class="'+cls+(where==="room"&&x.cat==="Pets"?" pet-animated":"")+extra+'" src="'+x.img+'" alt="">';
  }
  return '<span class="fallback-icon">'+(x.icon||"")+'</span>';
 }
 function newQ(){let keys=Object.keys(stems),stem=keys[Math.floor(Math.random()*keys.length)],correct=stems[stem],wrong=[...new Set(Object.values(stems).filter(x=>x!==correct))].sort(()=>Math.random()-.5).slice(0,3);s.q={stem,correct,opts:[correct,...wrong].sort(()=>Math.random()-.5)};s.loot=null}
 function answer(a){let f=document.querySelector("#feedback");document.querySelectorAll("[data-a]").forEach(b=>b.disabled=true);if(a===s.q.correct){s.coins+=20;s.xp+=10;s.streak++;s.answered++;f.textContent="Correct! +20 coins 🪙";const streakRewards=[10,25,50,75,100];if(streakRewards.includes(s.streak)){let pool=catalog.filter(x=>!s.inventory.includes(x.id)&&!["Walls","Floors"].includes(x.cat));if(pool.length){let item=pool[Math.floor(Math.random()*pool.length)];s.inventory.push(item.id);s.loot=item;f.textContent="🔥 "+s.streak+"-answer streak! You earned "+item.name+"!"}}setTimeout(()=>{newQ();render()},1100)}else{s.streak=0;s.answered++;f.textContent="Not quite. "+s.q.stem+" means "+s.q.correct+".";document.querySelector(".pill:last-child").textContent="🔥 0";setTimeout(()=>{newQ();render()},1400)}}
 function buy(id){let x=catalog.find(a=>a.id===id);if(s.coins<x.price){alert("You need "+(x.price-s.coins)+" more coins.");return}s.coins-=x.price;s.inventory.push(id);render();panel("shop")}
-function useLabel(x){if(x.cat==="Walls")return "Use Wallpaper";if(x.cat==="Floors")return "Use Flooring";return s.placed.some(p=>p.id===x.id)?"Remove from Room":"Place in Room"}
-function useItem(id){let x=catalog.find(a=>a.id===id);if(x.cat==="Walls"){s.wall=id}else if(x.cat==="Floors"){s.floor=id}else{let found=s.placed.findIndex(p=>p.id===id);if(found>=0)s.placed.splice(found,1);else s.placed.push({id,x:42+(s.placed.length*8)%35,y:58-(s.placed.length%3)*10})}render();panel("inventory")}
+function useLabel(x){if(x.cat==="Walls")return "Use Wallpaper";if(x.cat==="Floors")return "Use Flooring";let available=ownedCount(x.id)-placedCount(x.id);return available>0?(placedCount(x.id)>0?"Place Another":"Place in Room"):"All Placed"}
+function useItem(id){let x=catalog.find(a=>a.id===id);if(x.cat==="Walls"){s.wall=id}else if(x.cat==="Floors"){s.floor=id}else if(placedCount(id)<ownedCount(id)){s.placed.push({id,x:42+(s.placed.length*8)%35,y:58-(s.placed.length%3)*10,dir:"left"})}render();panel("inventory")}
+function removeOne(id){let found=s.placed.map(p=>p.id).lastIndexOf(id);if(found>=0)s.placed.splice(found,1);render();panel("inventory")}
+function turnItem(index){if(!s.placed[index])return;s.placed[index].dir=s.placed[index].dir==="right"?"left":"right";render();}
 function esc(x){return x.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 render();
