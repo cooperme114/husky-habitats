@@ -96,3 +96,7 @@ background-size:100% 100%,auto;
 .wall-surface,.floor-surface{
  background-size:auto;
 }
+
+.floor-surface{
+  background-size:64px 64px;
+}
