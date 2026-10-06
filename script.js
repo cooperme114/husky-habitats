@@ -1,11 +1,16 @@
 const stems={hyper:"over",hypo:"under",phobia:"fear",pan:"all",mega:"big",pyro:"fire",circum:"around",cred:"believe",ject:"throw",med:"middle"};
 const catalog=[
-{id:"plant",name:"Potted Plant",icon:"🪴",price:60,cat:"Decor"},
-{id:"lamp",name:"Cozy Lamp",icon:"💡",price:80,cat:"Decor"},
-{id:"rug",name:"Blue Rug",icon:"🔵",price:100,cat:"Furniture"},
-{id:"chair",name:"Comfy Chair",icon:"🪑",price:120,cat:"Furniture"},
-{id:"frog",name:"Little Frog",icon:"🐸",price:150,cat:"Pets"},
-{id:"cat",name:"Black Cat",icon:"🐈‍⬛",price:180,cat:"Pets"},
+{id:"bed-white",name:"Basic White Bed",img:"images/items/Bed-basic-white-001.png",price:120,cat:"Furniture"},
+{id:"couch-blue",name:"Blue Couch",img:"images/items/Couch-basic-blue-001.png",price:140,cat:"Furniture"},
+{id:"couch-green",name:"Green Couch",img:"images/items/Couch-basic-green-001.png",price:140,cat:"Furniture"},
+{id:"couch-red",name:"Red Couch",img:"images/items/Couch-basic-red-001.png",price:140,cat:"Furniture"},
+{id:"couch-yellow",name:"Yellow Couch",img:"images/items/Couch-basic-yellow-001.png",price:140,cat:"Furniture"},
+{id:"jackolantern",name:"Jack-o'-Lantern",img:"images/items/Decor-jackolantern-001.png",price:90,cat:"Decor"},
+{id:"moon-stars",name:"Moon & Stars",img:"images/items/Decor-moon-and-stars-001.png",price:100,cat:"Decor"},
+{id:"string-lights",name:"String Lights",img:"images/items/Lights-string-001.png",price:110,cat:"Decor"},
+{id:"squirrel",name:"Squirrel",img:"images/items/Pet-squirrel-001.png",price:170,cat:"Pets"},
+{id:"window-stars",name:"Star Porthole Window",img:"images/items/Window-porthole-stars-001.png",price:150,cat:"Windows"},
+{id:"window-sun",name:"Sunny Window",img:"images/items/Window-sun-001.png",price:150,cat:"Windows"},
 {id:"brick",name:"Brick Wallpaper",icon:"🧱",price:100,cat:"Walls"},
 {id:"stars",name:"Star Wallpaper",icon:"🌌",price:140,cat:"Walls"},
 {id:"darkfloor",name:"Dark Wood Floor",icon:"🟫",price:100,cat:"Floors"},
@@ -16,7 +21,7 @@ const app=document.querySelector("#app");
 
 function render(){
  if(s.screen==="setup")return setup();
- app.innerHTML='<div class="shell"><div class="topbar"><div><b>🐾 Husky Habitats</b><div class="tiny">'+esc(s.first)+' '+esc(s.initial)+'.\'s Room</div></div><div class="stats"><span class="pill">🪙 '+s.coins+'</span><span class="pill">⭐ '+s.xp+' XP</span><span class="pill">🔥 '+s.streak+'</span></div></div><div id="room" class="room '+s.wall+' '+s.floor+'" aria-label="Your room"><div class="window"><div class="sky"></div></div>'+s.placed.map((p,i)=>{let x=catalog.find(a=>a.id===p.id);return '<button class="placed" data-place="'+i+'" style="left:'+p.x+'%;top:'+p.y+'%" aria-label="Move '+x.name+'"><span>'+x.icon+'</span></button>'}).join("")+'<div class="move-hint">Drag your things anywhere in the room ✨</div></div><div class="nav"><button class="primary" data-view="questions">📚 Answer Questions</button><button class="secondary" data-view="shop">🛍️ Shop</button><button class="secondary" data-view="inventory">🎒 Inventory</button></div><div id="panel" class="card panel"></div></div>';
+ app.innerHTML='<div class="shell"><div class="topbar"><div><b>🐾 Husky Habitats</b><div class="tiny">'+esc(s.first)+' '+esc(s.initial)+'.\'s Room</div></div><div class="stats"><span class="pill">🪙 '+s.coins+'</span><span class="pill">⭐ '+s.xp+' XP</span><span class="pill">🔥 '+s.streak+'</span></div></div><div id="room" class="room '+s.wall+' '+s.floor+'" aria-label="Your room">'+s.placed.map((p,i)=>{let x=catalog.find(a=>a.id===p.id);return '<button class="placed" data-place="'+i+'" style="left:'+p.x+'%;top:'+p.y+'%" aria-label="Move '+x.name+'">'+itemVisual(x,"room")+'</button>'}).join("")+'<div class="move-hint">Drag your things anywhere in the room ✨</div></div><div class="nav"><button class="primary" data-view="questions">📚 Answer Questions</button><button class="secondary" data-view="shop">🛍️ Shop</button><button class="secondary" data-view="inventory">🎒 Inventory</button></div><div id="panel" class="card panel"></div></div>';
  document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>panel(b.dataset.view));
  enableDragging();
  panel("questions");
@@ -27,7 +32,7 @@ function setup(){
 }
 function panel(v){
  const p=document.querySelector("#panel");
- if(v==="questions"){if(!s.q)newQ();p.innerHTML='<h2>Earn Coins</h2><p>What does the Greek/Latin stem <b>'+s.q.stem+'</b> mean?</p><div class="answers">'+s.q.opts.map(o=>'<button class="answer" data-a="'+o+'">'+o+'</button>').join("")+'</div><div id="feedback" class="feedback"></div>'+ (s.loot?'<div class="loot">🎁 <b>Loot drop!</b> '+s.loot.icon+' '+s.loot.name+' was added to your inventory!</div>':"");document.querySelectorAll("[data-a]").forEach(b=>b.onclick=()=>answer(b.dataset.a));}
+ if(v==="questions"){if(!s.q)newQ();p.innerHTML='<h2>Earn Coins</h2><p>What does the Greek/Latin stem <b>'+s.q.stem+'</b> mean?</p><div class="answers">'+s.q.opts.map(o=>'<button class="answer" data-a="'+o+'">'+o+'</button>').join("")+'</div><div id="feedback" class="feedback"></div>'+ (s.loot?'<div class="loot">🎁 <b>Loot drop!</b> '+itemVisual(s.loot,"loot")+' <span>'+s.loot.name+' was added to your inventory!</span></div>':"");document.querySelectorAll("[data-a]").forEach(b=>b.onclick=()=>answer(b.dataset.a));}
  if(v==="shop"){p.innerHTML='<h2>🛍️ Habitat Shop</h2><p class="tiny">Buy things once and keep them forever.</p><div class="shop-grid">'+catalog.map(x=>'<div class="shop-item"><div class="item-art">'+x.icon+'</div><b>'+x.name+'</b><div class="tiny">'+x.cat+'</div><div class="price">🪙 '+x.price+'</div><button class="secondary" data-buy="'+x.id+'" '+(s.inventory.includes(x.id)?"disabled":"")+'>'+(s.inventory.includes(x.id)?"Owned":"Buy")+'</button></div>').join("")+'</div>';document.querySelectorAll("[data-buy]").forEach(b=>b.onclick=()=>buy(b.dataset.buy));}
  if(v==="inventory"){let owned=catalog.filter(x=>s.inventory.includes(x.id));p.innerHTML='<h2>🎒 Inventory</h2><p class="tiny">Place an item, then drag it where you want it.</p>'+(owned.length?'<div class="shop-grid">'+owned.map(x=>'<div class="shop-item"><div class="item-art">'+x.icon+'</div><b>'+x.name+'</b><div class="tiny">'+x.cat+'</div><button class="secondary" data-use="'+x.id+'">'+useLabel(x)+'</button></div>').join("")+'</div>':'<p>Your inventory is empty. Answer questions and visit the shop!</p>');document.querySelectorAll("[data-use]").forEach(b=>b.onclick=()=>useItem(b.dataset.use));}
 }
@@ -41,6 +46,13 @@ function enableDragging(){
      el.addEventListener("pointermove",move);el.addEventListener("pointerup",up);el.addEventListener("pointercancel",up);
    });
  });
+}
+function itemVisual(x,where){
+ if(x.img){
+   const cls=where==="room"?"room-item-image":"item-image";
+   return '<img class="'+cls+'" src="'+x.img+'" alt="">';
+ }
+ return '<span class="fallback-icon">'+(x.icon||"")+'</span>';
 }
 function newQ(){let keys=Object.keys(stems),stem=keys[Math.floor(Math.random()*keys.length)],correct=stems[stem],wrong=[...new Set(Object.values(stems).filter(x=>x!==correct))].sort(()=>Math.random()-.5).slice(0,3);s.q={stem,correct,opts:[correct,...wrong].sort(()=>Math.random()-.5)};s.loot=null}
 function answer(a){let f=document.querySelector("#feedback");if(a===s.q.correct){s.coins+=20;s.xp+=10;s.streak++;s.answered++;f.textContent="Correct! +20 coins 🪙";if(s.answered%5===0){let pool=catalog.filter(x=>!s.inventory.includes(x.id)&&["Decor","Pets"].includes(x.cat));if(pool.length){let item=pool[Math.floor(Math.random()*pool.length)];s.inventory.push(item.id);s.loot=item}}setTimeout(()=>{newQ();render()},700)}else{s.streak=0;f.textContent="Not quite — try again.";document.querySelector(".pill:last-child").textContent="🔥 0"}}
