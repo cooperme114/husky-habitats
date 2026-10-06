@@ -48,12 +48,12 @@ const catalog=[
 const collections=[
 {name:"Basic Collection",emoji:"🛋️",items:["bed-white","chair-basic-red","chair-basic-yellow","couch-blue","couch-basic-brown","couch-green","couch-red","couch-yellow","dresser-basic-cream","dresser-basic-dark-brown"]},
 {name:"Angel Collection",emoji:"☁️",items:["bed-angel-cream","chair-angel-cream","couch-angel-cream","dresser-angel-cream","table-angel-cream"]},
-{name:"Goth Collection",emoji:"🖤",items:["chair-goth-black","chair-goth-purple","couch-goth-purple","table-goth-purple","crystal-ball"]},
+{name:"Goth Collection",emoji:"🖤",items:["chair-goth-black","chair-goth-purple","couch-goth-purple","table-goth-purple"]},
 {name:"Geode Collection",emoji:"💎",items:["chair-geode-purple","geode-purple","endtable-geode","table-geode-blue"]},
 {name:"Floral Collection",emoji:"🌸",items:["floral-vines","floral-terrarium","dresser-floral-white"]},
 {name:"Deco Collection",emoji:"✨",items:["chair-deco-green","chair-deco-red"]},
-{name:"Celestial Collection",emoji:"🌙",items:["moon-stars","string-lights","window-stars","stars"]},
-{name:"Rustic & Spooky Collection",emoji:"🎃",items:["cow-skull","jackolantern","candles-sunset"]}
+{name:"Antique Collection",emoji:"🕰️",items:["couch-antique-cream"]},
+{name:"Sunset Collection",emoji:"🌅",items:["candles-sunset"]}
 ];
 let s={screen:"setup",first:"",initial:"",coins:100,xp:0,streak:0,inventory:[],placed:[],wall:"plain",floor:"plain",q:null,answered:0,loot:null};
 const app=document.querySelector("#app");
