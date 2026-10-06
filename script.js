@@ -44,12 +44,23 @@ const catalog=[
 {id:"darkfloor",name:"Dark Wood Floor",icon:"🟫",price:100,cat:"Floors"},
 {id:"checker",name:"Checker Floor",icon:"◼️",price:120,cat:"Floors"}
 ];
+
+const collections=[
+{name:"Basic Collection",emoji:"🛋️",items:["bed-white","chair-basic-red","chair-basic-yellow","couch-blue","couch-basic-brown","couch-green","couch-red","couch-yellow","dresser-basic-cream","dresser-basic-dark-brown"]},
+{name:"Angel Collection",emoji:"☁️",items:["bed-angel-cream","chair-angel-cream","couch-angel-cream","dresser-angel-cream","table-angel-cream"]},
+{name:"Goth Collection",emoji:"🖤",items:["chair-goth-black","chair-goth-purple","couch-goth-purple","table-goth-purple","crystal-ball"]},
+{name:"Geode Collection",emoji:"💎",items:["chair-geode-purple","geode-purple","endtable-geode","table-geode-blue"]},
+{name:"Floral Collection",emoji:"🌸",items:["floral-vines","floral-terrarium","dresser-floral-white"]},
+{name:"Deco Collection",emoji:"✨",items:["chair-deco-green","chair-deco-red"]},
+{name:"Celestial Collection",emoji:"🌙",items:["moon-stars","string-lights","window-stars","stars"]},
+{name:"Rustic & Spooky Collection",emoji:"🎃",items:["cow-skull","jackolantern","candles-sunset"]}
+];
 let s={screen:"setup",first:"",initial:"",coins:100,xp:0,streak:0,inventory:[],placed:[],wall:"plain",floor:"plain",q:null,answered:0,loot:null};
 const app=document.querySelector("#app");
 
 function render(){
  if(s.screen==="setup")return setup();
- app.innerHTML='<div class="shell"><div class="topbar"><div><b>🐾 Husky Habitats</b><div class="tiny">'+esc(s.first)+' '+esc(s.initial)+'.\'s Room</div></div><div class="stats"><span class="pill">🪙 '+s.coins+'</span><span class="pill">⭐ '+s.xp+' XP</span><span class="pill">🔥 '+s.streak+'</span></div></div><div id="room" class="room '+s.wall+' '+s.floor+'" aria-label="Your room">'+s.placed.map((p,i)=>{let x=catalog.find(a=>a.id===p.id);let flip=p.dir==="right"?" flipped":"";return '<button class="placed" data-place="'+i+'" style="left:'+p.x+'%;top:'+p.y+'%" aria-label="Move '+x.name+'">'+itemVisual(x,"room",flip)+'</button>'+(x.turnable?'<button class="turn-item" data-turn="'+i+'" style="left:calc('+p.x+'% + 34px);top:calc('+p.y+'% - 34px)" aria-label="Turn '+x.name+' left or right">↔</button>':"")}).join("")+'<div class="move-hint">Drag your things anywhere in the room ✨</div></div><div class="nav"><button class="primary" data-view="questions">📚 Answer Questions</button><button class="secondary" data-view="shop">🛍️ Shop</button><button class="secondary" data-view="inventory">🎒 Inventory</button></div><div id="panel" class="card panel"></div></div>';
+ app.innerHTML='<div class="shell"><div class="topbar"><div><b>🐾 Husky Habitats</b><div class="tiny">'+esc(s.first)+' '+esc(s.initial)+'.\'s Room</div></div><div class="stats"><span class="pill">🪙 '+s.coins+'</span><span class="pill">⭐ '+s.xp+' XP</span><span class="pill">🔥 '+s.streak+'</span></div></div><div id="room" class="room '+s.wall+' '+s.floor+'" aria-label="Your room">'+s.placed.map((p,i)=>{let x=catalog.find(a=>a.id===p.id);let flip=p.dir==="right"?" flipped":"";return '<button class="placed" data-place="'+i+'" style="left:'+p.x+'%;top:'+p.y+'%" aria-label="Move '+x.name+'">'+itemVisual(x,"room",flip)+'</button>'+(x.turnable?'<button class="turn-item" data-turn="'+i+'" style="left:calc('+p.x+'% + 34px);top:calc('+p.y+'% - 34px)" aria-label="Turn '+x.name+' left or right">↔</button>':"")}).join("")+'<div class="move-hint">Drag your things anywhere in the room ✨</div></div><div class="nav"><button class="primary" data-view="questions">📚 Answer Questions</button><button class="secondary" data-view="shop">🛍️ Shop</button><button class="secondary" data-view="inventory">🎒 Inventory</button><button class="secondary" data-view="collections">📖 Collections</button></div><div id="panel" class="card panel"></div></div>';
  document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>panel(b.dataset.view));
  enableDragging();
  document.querySelectorAll("[data-turn]").forEach(b=>b.onclick=e=>{e.stopPropagation();turnItem(+b.dataset.turn)});
@@ -65,7 +76,11 @@ function panel(v){
  const p=document.querySelector("#panel");
  if(v==="questions"){if(!s.q)newQ();p.innerHTML='<h2>Earn Coins</h2><p>What does the Greek/Latin stem <b>'+s.q.stem+'</b> mean?</p><div class="answers">'+s.q.opts.map(o=>'<button class="answer" data-a="'+o+'">'+o+'</button>').join("")+'</div><div id="feedback" class="feedback"></div>'+ (s.loot?'<div class="loot">🎁 <b>Loot drop!</b> '+itemVisual(s.loot,"loot")+' <span>'+s.loot.name+' was added to your inventory!</span></div>':"");document.querySelectorAll("[data-a]").forEach(b=>b.onclick=()=>answer(b.dataset.a));}
  if(v==="shop"){shopPanel(p,"All");}
+ if(v==="collections"){collectionsPanel(p);}
  if(v==="inventory"){let owned=catalog.filter(x=>ownedCount(x.id)>0);p.innerHTML='<h2>🎒 Inventory</h2><p class="tiny">Place as many copies as you own, then drag them where you want them.</p>'+(owned.length?'<div class="shop-grid">'+owned.map(x=>'<div class="shop-item"><div class="item-art">'+itemVisual(x,"shop")+'</div><b>'+x.name+'</b><div class="tiny">'+x.cat+' • Owned: '+ownedCount(x.id)+'</div><div class="inventory-actions"><button class="secondary" data-use="'+x.id+'" '+((!["Walls","Floors"].includes(x.cat)&&placedCount(x.id)>=ownedCount(x.id))?"disabled":"")+'>'+useLabel(x)+'</button>'+((!["Walls","Floors"].includes(x.cat)&&placedCount(x.id)>0)?'<button class="secondary" data-remove="'+x.id+'">Remove One</button>':"")+'</div></div>').join("")+'</div>':'<p>Your inventory is empty. Answer questions and visit the shop!</p>');document.querySelectorAll("[data-use]").forEach(b=>b.onclick=()=>useItem(b.dataset.use));document.querySelectorAll("[data-remove]").forEach(b=>b.onclick=()=>removeOne(b.dataset.remove));}
+}
+function collectionsPanel(p){
+ p.innerHTML='<h2>📖 Collections</h2><p class="tiny">Own at least one item to check it off. Mix and match however you want in your room.</p><div class="collections-grid">'+collections.map(col=>{let found=col.items.filter(id=>ownedCount(id)>0).length;return '<section class="collection-card"><div class="collection-head"><div><span class="collection-emoji">'+col.emoji+'</span><b>'+col.name+'</b></div><span class="collection-progress">'+found+'/'+col.items.length+' owned</span></div><div class="collection-items">'+col.items.map(id=>{let x=catalog.find(a=>a.id===id);if(!x)return "";let owned=ownedCount(id)>0;return '<div class="collection-item '+(owned?'owned':'')+'"><div class="collection-check">'+(owned?'✓':'○')+'</div><div class="collection-thumb">'+itemVisual(x,"shop")+'</div><div class="collection-name">'+x.name+'</div></div>'}).join("")+'</div></section>'}).join("")+'</div>';
 }
 function shopPanel(p,active){
  const cats=["All","Furniture","Decor","Pets","Windows","Walls","Floors"];
