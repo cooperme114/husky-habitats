@@ -70,3 +70,13 @@ background-size:100% 100%,auto;
 .collection-thumb .item-image{max-height:58px}
 .collection-name{font-size:.78rem;font-weight:800;line-height:1.15}
 @media(max-width:520px){.collections-grid{grid-template-columns:1fr}.collection-items{grid-template-columns:1fr 1fr}}
+
+/* Image-based room surfaces: wallpaper fills the upper wall and flooring tiles the lower floor. */
+.room{
+ background-image:
+  var(--wall-img,linear-gradient(#f7f1e7,#f7f1e7)),
+  var(--floor-img,linear-gradient(#d7bea0,#d7bea0));
+ background-repeat:repeat,repeat;
+ background-position:left top,left bottom;
+ background-size:auto 68%,auto 32%;
+}
