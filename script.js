@@ -39,10 +39,27 @@ const catalog=[
 {id:"squirrel",name:"Squirrel",img:"images/items/Pet-squirrel-001.png",price:170,cat:"Pets"},
 {id:"window-stars",name:"Star Porthole Window",img:"images/items/Window-porthole-stars-001.png",price:150,cat:"Windows"},
 {id:"window-sun",name:"Sunny Window",img:"images/items/Window-sun-001.png",price:150,cat:"Windows"},
-{id:"brick",name:"Brick Wallpaper",icon:"🧱",price:100,cat:"Walls"},
-{id:"stars",name:"Star Wallpaper",icon:"🌌",price:140,cat:"Walls"},
-{id:"darkfloor",name:"Dark Wood Floor",icon:"🟫",price:100,cat:"Floors"},
-{id:"checker",name:"Checker Floor",icon:"◼️",price:120,cat:"Floors"}
+{id:"wall-blue-stripe",name:"Blue Stripe Wallpaper",img:"images/items/Wallpaper-blue-stripe-001.png",price:100,cat:"Walls"},
+{id:"wall-green-stripe",name:"Green Stripe Wallpaper",img:"images/items/Wallpaper-green-stripe-001.png",price:100,cat:"Walls"},
+{id:"wall-notebook",name:"Notebook Wallpaper",img:"images/items/Wallpaper-notebook-001.png",price:120,cat:"Walls"},
+{id:"wall-orange-stripe",name:"Orange Stripe Wallpaper",img:"images/items/Wallpaper-orange-stripe-001.png",price:100,cat:"Walls"},
+{id:"wall-purple-stripe",name:"Purple Stripe Wallpaper",img:"images/items/Wallpaper-purple-stripe-001.png",price:100,cat:"Walls"},
+{id:"wall-red-stripe",name:"Red Stripe Wallpaper",img:"images/items/Wallpaper-red-stripe-001.png",price:100,cat:"Walls"},
+{id:"wall-starry-night",name:"Starry Night Wallpaper",img:"images/items/Wallpaper-starry-night-001.png",price:140,cat:"Walls"},
+{id:"wall-yellow-stripe",name:"Yellow Stripe Wallpaper",img:"images/items/Wallpaper-yellow-stripe-001.png",price:100,cat:"Walls"},
+{id:"floor-carpet-red",name:"Red Carpet",img:"images/items/Floor-carpet-red-001.png",price:100,cat:"Floors"},
+{id:"floor-marble-tiles",name:"Marble Tile Floor",img:"images/items/Floor-marble-tiles-001.png",price:140,cat:"Floors"},
+{id:"floor-stone-tiles",name:"Stone Tile Floor",img:"images/items/Floor-stone-tiles-001.png",price:130,cat:"Floors"},
+{id:"floor-tiles-blue",name:"Blue Tile Floor",img:"images/items/Floor-tiles-blue-001.png",price:100,cat:"Floors"},
+{id:"floor-tiles-green",name:"Green Tile Floor",img:"images/items/Floor-tiles-green-001.png",price:100,cat:"Floors"},
+{id:"floor-tiles-orange",name:"Orange Tile Floor",img:"images/items/Floor-tiles-orange-001.png",price:100,cat:"Floors"},
+{id:"floor-tiles-pink",name:"Pink Tile Floor",img:"images/items/Floor-tiles-pink-001.png",price:100,cat:"Floors"},
+{id:"floor-tiles-primary",name:"Primary Tile Floor",img:"images/items/Floor-tiles-primary-001.png",price:110,cat:"Floors"},
+{id:"floor-tiles-purple",name:"Purple Tile Floor",img:"images/items/Floor-tiles-purple-001.png",price:100,cat:"Floors"},
+{id:"floor-tiles-purple-pink",name:"Purple & Pink Tile Floor",img:"images/items/Floor-tiles-purple-pink-001.png",price:110,cat:"Floors"},
+{id:"floor-tiles-red",name:"Red Tile Floor",img:"images/items/Floor-tiles-red-001.png",price:100,cat:"Floors"},
+{id:"floor-tiles-white",name:"White Tile Floor",img:"images/items/Floor-tiles-white-001.png",price:100,cat:"Floors"},
+{id:"floor-tiles-yellow",name:"Yellow Tile Floor",img:"images/items/Floor-tiles-yellow-001.png",price:100,cat:"Floors"}
 ];
 
 const collections=[
@@ -60,7 +77,9 @@ const app=document.querySelector("#app");
 
 function render(){
  if(s.screen==="setup")return setup();
- app.innerHTML='<div class="shell"><div class="topbar"><div><b>🐾 Husky Habitats</b><div class="tiny">'+esc(s.first)+' '+esc(s.initial)+'.\'s Room</div></div><div class="stats"><span class="pill">🪙 '+s.coins+'</span><span class="pill">⭐ '+s.xp+' XP</span><span class="pill">🔥 '+s.streak+'</span></div></div><div id="room" class="room '+s.wall+' '+s.floor+'" aria-label="Your room">'+s.placed.map((p,i)=>{let x=catalog.find(a=>a.id===p.id);let flip=p.dir==="right"?" flipped":"";return '<button class="placed" data-place="'+i+'" style="left:'+p.x+'%;top:'+p.y+'%" aria-label="Move '+x.name+'">'+itemVisual(x,"room",flip)+'</button>'+(x.turnable?'<button class="turn-item" data-turn="'+i+'" style="left:calc('+p.x+'% + 34px);top:calc('+p.y+'% - 34px)" aria-label="Turn '+x.name+' left or right">↔</button>':"")}).join("")+'<div class="move-hint">Drag your things anywhere in the room ✨</div></div><div class="nav"><button class="primary" data-view="questions">📚 Answer Questions</button><button class="secondary" data-view="shop">🛍️ Shop</button><button class="secondary" data-view="inventory">🎒 Inventory</button><button class="secondary" data-view="collections">📖 Collections</button></div><div id="panel" class="card panel"></div></div>';
+ let wallItem=catalog.find(x=>x.id===s.wall),floorItem=catalog.find(x=>x.id===s.floor);
+ let roomVars=(wallItem&&wallItem.img?'--wall-img:url("'+wallItem.img+'");':'')+(floorItem&&floorItem.img?'--floor-img:url("'+floorItem.img+'");':'');
+ app.innerHTML='<div class="shell"><div class="topbar"><div><b>🐾 Husky Habitats</b><div class="tiny">'+esc(s.first)+' '+esc(s.initial)+'.\'s Room</div></div><div class="stats"><span class="pill">🪙 '+s.coins+'</span><span class="pill">⭐ '+s.xp+' XP</span><span class="pill">🔥 '+s.streak+'</span></div></div><div id="room" class="room" style="'+roomVars+'" aria-label="Your room">'+s.placed.map((p,i)=>{let x=catalog.find(a=>a.id===p.id);let flip=p.dir==="right"?" flipped":"";return '<button class="placed" data-place="'+i+'" style="left:'+p.x+'%;top:'+p.y+'%" aria-label="Move '+x.name+'">'+itemVisual(x,"room",flip)+'</button>'+(x.turnable?'<button class="turn-item" data-turn="'+i+'" style="left:calc('+p.x+'% + 34px);top:calc('+p.y+'% - 34px)" aria-label="Turn '+x.name+' left or right">↔</button>':"")}).join("")+'<div class="move-hint">Drag your things anywhere in the room ✨</div></div><div class="nav"><button class="primary" data-view="questions">📚 Answer Questions</button><button class="secondary" data-view="shop">🛍️ Shop</button><button class="secondary" data-view="inventory">🎒 Inventory</button><button class="secondary" data-view="collections">📖 Collections</button></div><div id="panel" class="card panel"></div></div>';
  document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>panel(b.dataset.view));
  enableDragging();
  document.querySelectorAll("[data-turn]").forEach(b=>b.onclick=e=>{e.stopPropagation();turnItem(+b.dataset.turn)});
