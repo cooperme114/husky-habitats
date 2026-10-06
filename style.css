@@ -42,3 +42,15 @@ background-size:100% 100%,auto;
 .shop-tab{border:2px solid #c9d6df;background:#fff;border-radius:999px;padding:7px 12px;font-weight:800;color:#56636d}
 .shop-tab:hover{background:#f1f7fa}
 .shop-tab.active{background:#4c86a5;border-color:#4c86a5;color:#fff}
+
+.inventory-actions{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-top:8px}
+.turn-item{position:absolute;transform:translate(-50%,-50%);z-index:12;width:30px;height:30px;border-radius:50%;border:2px solid #b9c9d4;background:#fff;color:#4c6575;font-weight:900;line-height:1;box-shadow:0 2px 6px #0002}
+.turn-item:hover{background:#eef7fb}
+.room-item-image.flipped{transform:scale(-2,2)}
+.pet-animated.flipped{animation-name:pet-idle-flipped}
+@keyframes pet-idle-flipped{
+  0%,72%,100%{transform:scale(-2,2) translateY(0)}
+  80%{transform:scale(-2,2.06) translateY(-3px)}
+  88%{transform:scale(-2.12,1.88) translateY(0)}
+  94%{transform:scale(-1.96,2.04) translateY(-1px)}
+}
