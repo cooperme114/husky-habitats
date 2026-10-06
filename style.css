@@ -107,3 +107,9 @@ background-size:100% 100%,auto;
 }
 .placed{z-index:6}
 .placed.turnable{cursor:grab}
+
+.wall-surface,.floor-surface{position:absolute;left:0;right:0;z-index:0;pointer-events:none;background-repeat:repeat;background-position:left top;image-rendering:pixelated}
+.wall-surface{top:0;height:68%;background-color:#f7f1e7}
+.floor-surface{top:68%;bottom:0;background-color:#d7bea0}
+.baseboard{z-index:2}
+.placed{z-index:6}
