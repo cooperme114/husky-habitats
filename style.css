@@ -88,3 +88,11 @@ background-size:100% 100%,auto;
 .floor-surface{top:68%;bottom:0;background-color:#d7bea0}
 .baseboard{z-index:2}
 .placed{z-index:6}
+
+.save-btn{background:#fff;border:1px solid #cfd9e2;border-radius:999px;padding:8px 12px;font-weight:800;color:#33404d}
+.save-btn:hover{background:#f4f8fb}
+.save-status{align-self:center;font-size:.8rem;color:#65727b;min-width:0}
+.setup-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.wall-surface,.floor-surface{
+ background-size:auto;
+}
