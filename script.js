@@ -246,7 +246,7 @@ const collections=[
 {name:"Hello Kitty Collection",emoji:"🎀",items:["bed-hellokitty","decor-hellokitty-clock","decor-hellokitty-plant","dresser-hellokitty"]},
 {name:"Deco Collection",emoji:"✨",items:["chair-deco-green","chair-deco-red"]}
 ];
-let s={screen:"setup",first:"",initial:"",coins:100,xp:0,streak:0,inventory:[],placed:[],wall:"plain",floor:"plain",q:null,answered:0,correct:0,loot:null,favorites:[],achievements:[],completedCollections:[],favoriteCollections:[]};
+let s={screen:"setup",first:"",initial:"",coins:100,xp:0,streak:0,inventory:[],placed:[],wall:"plain",floor:"plain",q:null,answered:0,correct:0,loot:null,favorites:[],achievements:[],completedCollections:[],favoriteCollections:[],nonSellable:{}};
 const app=document.querySelector("#app");
 const SAVE_KEY="huskyHabitatsSaveV1";
 function saveGame(){
@@ -267,6 +267,7 @@ function loadGame(){
     if(!Array.isArray(s.achievements))s.achievements=[];
     if(!Array.isArray(s.completedCollections))s.completedCollections=[];
     if(!Array.isArray(s.favoriteCollections))s.favoriteCollections=[];
+    if(!s.nonSellable||typeof s.nonSellable!=="object")s.nonSellable={};
     if(typeof s.correct!=="number")s.correct=Math.floor((s.xp||0)/10);
     render();
     showSaveStatus("Loaded saved habitat.");
@@ -322,6 +323,55 @@ function toggleCollectionFavorite(name){
   saveSilently();
 }
 function saveSilently(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(s))}catch(e){}}
+function makeSaveCode(){
+  const payload={...s,screen:"game",q:null,loot:null,questionLocked:false,saveVersion:1};
+  delete payload.saveVersion;
+  const json=JSON.stringify(payload);
+  return "HH1-"+btoa(unescape(encodeURIComponent(json)));
+}
+function applySaveCode(code){
+  try{
+    const raw=code.trim().replace(/^HH1-/,"");
+    const saved=JSON.parse(decodeURIComponent(escape(atob(raw))));
+    s={...s,...saved,screen:"game",q:null,loot:null,questionLocked:false};
+    if(!Array.isArray(s.favorites))s.favorites=[];
+    if(!Array.isArray(s.achievements))s.achievements=[];
+    if(!Array.isArray(s.completedCollections))s.completedCollections=[];
+    if(!Array.isArray(s.favoriteCollections))s.favoriteCollections=[];
+    if(!s.nonSellable||typeof s.nonSellable!=="object")s.nonSellable={};
+    if(typeof s.correct!=="number")s.correct=Math.floor((s.xp||0)/10);
+    saveSilently();
+    render();
+    showSaveStatus("Save code loaded!");
+    return true;
+  }catch(e){
+    alert("That save code could not be loaded. Make sure you copied the whole code.");
+    return false;
+  }
+}
+function showSaveCode(){
+  const old=document.querySelector(".savecode-overlay");if(old)old.remove();
+  const el=document.createElement("div");el.className="savecode-overlay";
+  const code=makeSaveCode();
+  el.innerHTML='<div class="savecode-modal" role="dialog" aria-modal="true"><button class="savecode-close" type="button" aria-label="Close">×</button><h2>🔐 Backup Save Code</h2><p class="tiny">Copy this code somewhere safe. It restores your room and progress even after a refresh or on another device.</p><textarea id="saveCodeBox" class="savecode-box" readonly>'+code+'</textarea><div class="savecode-actions"><button id="copySaveCode" class="primary" type="button">Copy Save Code</button><button id="loadCodeHere" class="secondary" type="button">Load a Save Code</button></div></div>';
+  document.body.appendChild(el);
+  const close=()=>el.remove();
+  el.querySelector(".savecode-close").onclick=close;
+  el.addEventListener("click",e=>{if(e.target===el)close()});
+  el.querySelector("#copySaveCode").onclick=async()=>{
+    const box=el.querySelector("#saveCodeBox");box.select();
+    try{await navigator.clipboard.writeText(box.value);el.querySelector("#copySaveCode").textContent="Copied! ✓"}
+    catch(e){document.execCommand("copy");el.querySelector("#copySaveCode").textContent="Copied! ✓"}
+  };
+  el.querySelector("#loadCodeHere").onclick=()=>{
+    const codeIn=prompt("Paste your Husky Habitats save code:");
+    if(codeIn&&applySaveCode(codeIn))close();
+  };
+}
+function loadSaveCodePrompt(){
+  const code=prompt("Paste your Husky Habitats save code:");
+  if(code)applySaveCode(code);
+}
 function completedCollectionNames(){return collections.filter(c=>c.items.length&&c.items.every(id=>ownedCount(id)>0)).map(c=>c.name)}
 function checkCollectionComplete(){
   const now=completedCollectionNames();
@@ -433,7 +483,7 @@ function showScoreBreakdown(){
 function showHelp(){
  const old=document.querySelector(".help-overlay");if(old)old.remove();
  const el=document.createElement("div");el.className="help-overlay";
- el.innerHTML='<div class="help-modal" role="dialog" aria-modal="true" aria-labelledby="helpTitle"><button class="help-close" type="button" aria-label="Close instructions">×</button><h2 id="helpTitle">❓ How to Play Husky Habitats</h2><div class="help-sections"><section><h3>Top Icons</h3><p>🪙 Coins = spend them in the shop.<br>⭐ XP = how much experience you have earned.<br>🔥 Streak = correct answers in a row.<br>🏆 Room Score = how many decorating points your room has.</p></section><section><h3>Earn Coins & Prizes</h3><p>Answer questions correctly to earn coins and XP. Every 25 correct answers in a row earns a free random item. Mystery Boxes cost 200 coins and give 3 random items. Duplicates are possible.</p></section><section><h3>Decorating</h3><p>Open Inventory to place items, then drag them where you want. Want something on top of something else? Items placed later appear in front. Remove and place an item again to bring it to the front. Double-click any placed item to flip which direction it faces.</p></section><section><h3>Pets</h3><p>Pets are worth 2 room-score points instead of 1. Click a pet in your room to pet it and make a little heart appear. ♥</p></section><section><h3>Room Score</h3><p>Most items are worth 1 point. Pets are worth 2. Different items from the same collection multiply each other: 2 matching collection items = ×2, 3 = ×3, and so on. Duplicate copies do not increase the multiplier, but they still give their normal points.</p></section><section><h3>Collections & Favorites</h3><p>The Collections tab shows what you own. Completing a collection gives a celebration. You can ★ favorite a collection you are working toward, and ★ favorite shop items so they are easier to find later.</p></section><section><h3>Saving</h3><p>Click Save before you leave. For now, your save stays on this browser and device.</p></section></div></div>';
+ el.innerHTML='<div class="help-modal" role="dialog" aria-modal="true" aria-labelledby="helpTitle"><button class="help-close" type="button" aria-label="Close instructions">×</button><h2 id="helpTitle">❓ How to Play Husky Habitats</h2><div class="help-sections"><section><h3>Top Icons</h3><p>🪙 Coins = spend them in the shop.<br>⭐ XP = how much experience you have earned.<br>🔥 Streak = correct answers in a row.<br>🏆 Room Score = how many decorating points your room has.</p></section><section><h3>Earn Coins & Prizes</h3><p>Answer questions correctly to earn coins and XP. Every 25 correct answers in a row earns a free random item. Mystery Boxes cost 200 coins and give 3 random items. Duplicates are possible.</p></section><section><h3>Decorating</h3><p>Open Inventory to place items, then drag them where you want. Want something on top of something else? Items placed later appear in front. Remove and place an item again to bring it to the front. Double-click any placed item to flip which direction it faces.</p></section><section><h3>Pets</h3><p>Pets are worth 2 room-score points instead of 1. Click a pet in your room to pet it and make a little heart appear. ♥</p></section><section><h3>Room Score</h3><p>Most items are worth 1 point. Pets are worth 2. Different items from the same collection multiply each other: 2 matching collection items = ×2, 3 = ×3, and so on. Duplicate copies do not increase the multiplier, but they still give their normal points.</p></section><section><h3>Collections & Favorites</h3><p>The Collections tab shows what you own. Completing a collection gives a celebration. You can ★ favorite a collection you are working toward, and ★ favorite shop items so they are easier to find later.</p></section><section><h3>Saving</h3><p>Quick Save may not survive a Google Sites refresh. Use Save Code for a reliable backup. Copy the code somewhere safe, then use Load Save Code to restore your room and progress. Weekly questions are not stored in the code.</p></section></div></div>';
  document.body.appendChild(el);
  const close=()=>el.remove();
  el.querySelector(".help-close").onclick=close;
@@ -443,11 +493,12 @@ function showHelp(){
 function render(){
  if(s.screen==="setup")return setup();
  let wallItem=catalog.find(x=>x.id===s.wall),floorItem=catalog.find(x=>x.id===s.floor);
- app.innerHTML='<div class="shell"><div class="topbar"><div><b>🐾 Husky Habitats</b><div class="tiny">'+esc(s.first)+' '+esc(s.initial)+'.\'s Room</div></div><div class="stats"><span class="pill" title="Coins">🪙 '+s.coins+'</span><span class="pill" title="XP">⭐ '+s.xp+' XP</span><span class="pill" title="Streak">🔥 '+s.streak+'</span><button id="scoreBtn" class="pill score-pill" title="See your room score">🏆 '+roomScore()+'</button><button id="helpBtn" class="save-btn">❓ How to Play</button><button id="saveBtn" class="save-btn">💾 Save</button><span id="saveStatus" class="save-status" aria-live="polite"></span></div></div><div id="room" class="room" aria-label="Your room"><div class="wall-surface"></div><div class="floor-surface"></div><div class="baseboard"></div>'+s.placed.map((p,i)=>{let x=catalog.find(a=>a.id===p.id);let flip=p.dir==="right"?" flipped":"";return '<button class="placed turnable'+(x.cat==="Pets"?' pet-place':'')+'" data-place="'+i+'" style="left:'+p.x+'%;top:'+p.y+'%" aria-label="Move '+x.name+'. Double-click to flip.'+(x.cat==="Pets"?' Click once to pet.':'')+'">'+itemVisual(x,"room",flip,x.cat==="Pets"?i:null)+'</button>'}).join("")+'<div class="move-hint">Drag your things anywhere in the room ✨</div></div><div class="nav"><button class="primary" data-view="questions">📚 Answer Questions</button><button class="secondary" data-view="shop">🛍️ Shop</button><button class="secondary" data-view="inventory">🎒 Inventory</button><button class="secondary" data-view="collections">📖 Collections</button><button class="secondary" data-view="achievements">🏆 Achievements</button></div><div id="panel" class="card panel"></div></div>';
+ app.innerHTML='<div class="shell"><div class="topbar"><div><b>🐾 Husky Habitats</b><div class="tiny">'+esc(s.first)+' '+esc(s.initial)+'.\'s Room</div></div><div class="stats"><span class="pill" title="Coins">🪙 '+s.coins+'</span><span class="pill" title="XP">⭐ '+s.xp+' XP</span><span class="pill" title="Streak">🔥 '+s.streak+'</span><button id="scoreBtn" class="pill score-pill" title="See your room score">🏆 '+roomScore()+'</button><button id="helpBtn" class="save-btn">❓ How to Play</button><button id="saveBtn" class="save-btn">💾 Quick Save</button><button id="saveCodeBtn" class="save-btn">🔐 Save Code</button><span id="saveStatus" class="save-status" aria-live="polite"></span></div></div><div id="room" class="room" aria-label="Your room"><div class="wall-surface"></div><div class="floor-surface"></div><div class="baseboard"></div>'+s.placed.map((p,i)=>{let x=catalog.find(a=>a.id===p.id);let flip=p.dir==="right"?" flipped":"";return '<button class="placed turnable'+(x.cat==="Pets"?' pet-place':'')+'" data-place="'+i+'" style="left:'+p.x+'%;top:'+p.y+'%" aria-label="Move '+x.name+'. Double-click to flip.'+(x.cat==="Pets"?' Click once to pet.':'')+'">'+itemVisual(x,"room",flip,x.cat==="Pets"?i:null)+'</button>'}).join("")+'<div class="move-hint">Drag your things anywhere in the room ✨</div></div><div class="nav"><button class="primary" data-view="questions">📚 Answer Questions</button><button class="secondary" data-view="shop">🛍️ Shop</button><button class="secondary" data-view="inventory">🎒 Inventory</button><button class="secondary" data-view="collections">📖 Collections</button><button class="secondary" data-view="achievements">🏆 Achievements</button></div><div id="panel" class="card panel"></div></div>';
  document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>panel(b.dataset.view));
  const scoreBtn=document.querySelector("#scoreBtn"); if(scoreBtn)scoreBtn.onclick=showScoreBreakdown;
  const helpBtn=document.querySelector("#helpBtn"); if(helpBtn)helpBtn.onclick=showHelp;
  const saveBtn=document.querySelector("#saveBtn"); if(saveBtn)saveBtn.onclick=saveGame;
+ const saveCodeBtn=document.querySelector("#saveCodeBtn"); if(saveCodeBtn)saveCodeBtn.onclick=showSaveCode;
  const wallSurface=document.querySelector(".wall-surface");
  const floorSurface=document.querySelector(".floor-surface");
  if(wallSurface) wallSurface.style.backgroundImage=wallItem&&wallItem.img?'url("'+wallItem.img+'")':"none";
@@ -458,10 +509,11 @@ function render(){
  panel("questions");
 }
 function setup(){
- app.innerHTML='<div class="shell"><div class="card setup-card"><h1 class="title">🐾 Husky Habitats</h1><p class="sub">Build a room that is completely yours.</p><div class="row"><div class="field"><label>Your first name</label><input id="first" maxlength="18" placeholder="Your real first name"></div><div class="field"><label>Your last initial</label><input id="initial" maxlength="1" placeholder="R"></div></div><p class="tiny">Use your real first name and last initial so your teacher knows which habitat is yours.</p><div class="setup-actions"><button id="start" class="primary">Start My Habitat →</button><button id="continueSave" class="secondary" style="display:none">💾 Continue Saved Habitat</button></div><div id="setupmsg" class="feedback"></div></div></div>';
+ app.innerHTML='<div class="shell"><div class="card setup-card"><h1 class="title">🐾 Husky Habitats</h1><p class="sub">Build a room that is completely yours.</p><div class="row"><div class="field"><label>Your first name</label><input id="first" maxlength="18" placeholder="Your real first name"></div><div class="field"><label>Your last initial</label><input id="initial" maxlength="1" placeholder="R"></div></div><p class="tiny">Use your real first name and last initial so your teacher knows which habitat is yours.</p><div class="setup-actions"><button id="start" class="primary">Start My Habitat →</button><button id="continueSave" class="secondary" style="display:none">💾 Continue Saved Habitat</button><button id="loadSaveCodeStart" class="secondary">🔐 Load Save Code</button></div><div id="setupmsg" class="feedback"></div></div></div>';
  const savedButton=document.querySelector("#continueSave");
  try{if(localStorage.getItem(SAVE_KEY))savedButton.style.display=""}catch(e){}
  savedButton.onclick=()=>loadGame();
+ const loadCodeStart=document.querySelector("#loadSaveCodeStart"); if(loadCodeStart)loadCodeStart.onclick=loadSaveCodePrompt;
  document.querySelector("#start").onclick=()=>{let f=document.querySelector("#first").value.trim(),i=document.querySelector("#initial").value.trim();if(!f||!/^[A-Za-z]$/.test(i)){document.querySelector("#setupmsg").textContent="Please enter your real first name and one last initial.";return}s.first=f[0].toUpperCase()+f.slice(1).toLowerCase();s.initial=i.toUpperCase();s.screen="game";render()};
 }
 function ownedCount(id){return s.inventory.filter(x=>x===id).length}
@@ -472,7 +524,7 @@ function panel(v){
  if(v==="shop"){shopPanel(p,"All");}
  if(v==="collections"){collectionsPanel(p);}
  if(v==="achievements"){achievementsPanel(p);}
- if(v==="inventory"){let owned=catalog.filter(x=>ownedCount(x.id)>0);p.innerHTML='<h2>🎒 Inventory</h2><p class="tiny">Place as many copies as you own, then drag them where you want them.</p>'+(owned.length?'<div class="shop-grid">'+owned.sort((a,b)=>(s.favorites.includes(b.id)?1:0)-(s.favorites.includes(a.id)?1:0)).map(x=>'<div class="shop-item"><button class="favorite-btn '+(s.favorites.includes(x.id)?'favorited':'')+'" data-fav="'+x.id+'" title="Favorite">'+(s.favorites.includes(x.id)?'★':'☆')+'</button><div class="item-art">'+itemVisual(x,"shop")+'</div><b>'+x.name+'</b><div class="tiny">'+x.cat+' • Owned: '+ownedCount(x.id)+'</div><div class="inventory-actions"><button class="secondary" data-use="'+x.id+'" '+(((!["Walls","Floors"].includes(x.cat)&&placedCount(x.id)>=ownedCount(x.id))||(x.cat==="Walls"&&s.wall===x.id)||(x.cat==="Floors"&&s.floor===x.id))?"disabled":"")+'>'+useLabel(x)+'</button>'+((!["Walls","Floors"].includes(x.cat)&&placedCount(x.id)>0)?'<button class="secondary" data-remove="'+x.id+'">Remove One</button>':"")+'</div></div>').join("")+'</div>':'<p>Your inventory is empty. Answer questions and visit the shop!</p>');document.querySelectorAll("[data-fav]").forEach(b=>b.onclick=()=>{toggleFavorite(b.dataset.fav);panel("inventory")});document.querySelectorAll("[data-use]").forEach(b=>b.onclick=()=>useItem(b.dataset.use));document.querySelectorAll("[data-remove]").forEach(b=>b.onclick=()=>removeOne(b.dataset.remove));}
+ if(v==="inventory"){let owned=catalog.filter(x=>ownedCount(x.id)>0);p.innerHTML='<h2>🎒 Inventory</h2><p class="tiny">Place as many copies as you own, then drag them where you want them.</p>'+(owned.length?'<div class="shop-grid">'+owned.sort((a,b)=>(s.favorites.includes(b.id)?1:0)-(s.favorites.includes(a.id)?1:0)).map(x=>'<div class="shop-item"><button class="favorite-btn '+(s.favorites.includes(x.id)?'favorited':'')+'" data-fav="'+x.id+'" title="Favorite">'+(s.favorites.includes(x.id)?'★':'☆')+'</button><div class="item-art">'+itemVisual(x,"shop")+'</div><b>'+x.name+'</b><div class="tiny">'+x.cat+' • Owned: '+ownedCount(x.id)+'</div><div class="inventory-actions"><button class="secondary" data-use="'+x.id+'" '+(((!["Walls","Floors"].includes(x.cat)&&placedCount(x.id)>=ownedCount(x.id))||(x.cat==="Walls"&&s.wall===x.id)||(x.cat==="Floors"&&s.floor===x.id))?"disabled":"")+'>'+useLabel(x)+'</button>'+((!["Walls","Floors"].includes(x.cat)&&placedCount(x.id)>0)?'<button class="secondary" data-remove="'+x.id+'">Remove One</button>':"")+'<button class="secondary sell-btn" data-sell="'+x.id+'" '+(sellableCount(x.id)<=0?"disabled":"")+'>Sell 🪙 '+Math.floor(x.price*.5)+'</button></div>'+((s.nonSellable[x.id]||0)>0?'<div class="tiny mystery-nosell">🎁 '+(s.nonSellable[x.id]||0)+' Mystery Box cop'+((s.nonSellable[x.id]||0)===1?'y':'ies')+' cannot be sold.</div>':"")</div>').join("")+'</div>':'<p>Your inventory is empty. Answer questions and visit the shop!</p>');document.querySelectorAll("[data-fav]").forEach(b=>b.onclick=()=>{toggleFavorite(b.dataset.fav);panel("inventory")});document.querySelectorAll("[data-use]").forEach(b=>b.onclick=()=>useItem(b.dataset.use));document.querySelectorAll("[data-remove]").forEach(b=>b.onclick=()=>removeOne(b.dataset.remove));document.querySelectorAll("[data-sell]").forEach(b=>b.onclick=()=>sellItem(b.dataset.sell));}
 }
 function achievementsPanel(p){
  p.innerHTML='<h2>🏆 Achievements</h2><p class="tiny">Achievements are based on lifetime progress.</p><div class="achievement-grid">'+achievementDefs.map(a=>{let got=s.achievements.includes(a.id);return '<div class="achievement-card '+(got?'earned':'')+'"><div class="achievement-icon">'+(got?'🏆':'🔒')+'</div><b>'+a.name+'</b><div class="tiny">'+a.desc+'</div></div>'}).join("")+'</div>';
@@ -486,7 +538,7 @@ function shopPanel(p,active,query=""){
  const q=query.trim().toLowerCase();
  const base=active==="All"?catalog:catalog.filter(x=>x.cat===active);
  const items=q?base.filter(x=>(x.name+" "+x.cat+" "+x.id).toLowerCase().includes(q)):base;
- p.innerHTML='<h2>🛍️ Habitat Shop</h2><p class="tiny">Furniture, decor, pets, and windows can be bought more than once.</p><div class="shop-search-wrap"><span class="shop-search-icon">🔎</span><input id="shopSearch" class="shop-search" type="search" placeholder="Search the shop..." value="'+esc(query)+'" autocomplete="off"></div><div class="shop-tabs">'+cats.map(c=>'<button class="shop-tab '+(c===active?'active':'')+'" data-cat="'+c+'">'+c+'</button>').join("")+'</div><div id="shopResults" class="shop-grid">'+(items.length?items.map(x=>{let count=ownedCount(x.id),oneOnly=["Walls","Floors"].includes(x.cat);return '<div class="shop-item"><div class="item-art">'+itemVisual(x,"shop")+'</div><b>'+x.name+'</b><div class="tiny">'+x.cat+(count?' • Owned: '+count:'')+'</div><div class="price">🪙 '+x.price+'</div><button class="secondary" data-buy="'+x.id+'" '+(oneOnly&&count?"disabled":"")+'>'+(oneOnly&&count?"Owned":count?"Buy Another":"Buy")+'</button></div>'}).join(""):'<div class="shop-empty">No items match “'+esc(query)+'”.</div>')+'</div>';
+ p.innerHTML='<h2>🛍️ Habitat Shop</h2><p class="tiny">Furniture, decor, pets, and windows can be bought more than once.</p><div class="shop-search-wrap"><span class="shop-search-icon">🔎</span><input id="shopSearch" class="shop-search" type="search" placeholder="Search the shop..." value="'+esc(query)+'" autocomplete="off"></div><div class="shop-tabs">'+cats.map(c=>'<button class="shop-tab '+(c===active?'active':'')+'" data-cat="'+c+'">'+c+'</button>').join("")+'</div><div id="shopResults" class="shop-grid">'+(items.length?items.map(x=>{let count=ownedCount(x.id),oneOnly=["Walls","Floors"].includes(x.cat);return '<div class="shop-item"><div class="item-art">'+itemVisual(x,"shop")+'</div><b>'+x.name+'</b><div class="tiny">'+x.cat+(count?' • Owned: '+count:'')+'</div><div class="price">🪙 '+x.price+'</div><button class="secondary buy-btn '+(s.coins<x.price?'cant-afford':'')+'" data-buy="'+x.id+'" '+((oneOnly&&count)||s.coins<x.price?"disabled":"")+'>'+(oneOnly&&count?"Owned":s.coins<x.price?"Need 🪙 "+(x.price-s.coins):count?"Buy Another":"Buy")+'</button></div>'}).join(""):'<div class="shop-empty">No items match “'+esc(query)+'”.</div>')+'</div>';
  const input=p.querySelector("#shopSearch");
  input.focus();
  input.setSelectionRange(input.value.length,input.value.length);
@@ -540,11 +592,31 @@ function buyMysteryBox(){
  s.coins-=200;
  const pool=catalog.filter(x=>!["Walls","Floors"].includes(x.cat));
  const won=[0,1,2].map(()=>pool[Math.floor(Math.random()*pool.length)]);
- won.forEach(x=>s.inventory.push(x.id));
+ won.forEach(x=>{s.inventory.push(x.id);s.nonSellable[x.id]=(s.nonSellable[x.id]||0)+1});
  render();checkCollectionComplete();checkAchievements();saveSilently();
  const p=document.querySelector("#panel");
  p.innerHTML='<h2>🎁 Mystery Box!</h2><p>You got:</p><div class="mystery-reveal">'+won.map((x,i)=>'<div class="mystery-prize" style="animation-delay:'+(i*.35)+'s">'+itemVisual(x,"shop")+'<b>'+x.name+'</b></div>').join("")+'</div><button class="primary" id="backShop">Back to Shop</button>';
  document.querySelector("#backShop").onclick=()=>shopPanel(p,"All");
+}
+function sellableCount(id){
+ const blocked=Math.max(0,s.nonSellable[id]||0);
+ return Math.max(0,ownedCount(id)-blocked);
+}
+function sellItem(id){
+ const x=catalog.find(a=>a.id===id);if(!x||sellableCount(id)<=0)return;
+ // Do not sell a copy currently placed if every remaining sellable copy would be needed for placement.
+ if(!["Walls","Floors"].includes(x.cat)&&placedCount(id)>=ownedCount(id)){
+   alert("Remove one "+x.name+" from your room before selling it.");
+   return;
+ }
+ const idx=s.inventory.lastIndexOf(id);if(idx<0)return;
+ // Prefer removing a sellable copy: inventory copies are indistinguishable, so nonSellable count simply remains reserved.
+ s.inventory.splice(idx,1);
+ const refund=Math.floor(x.price*.5);
+ s.coins+=refund;
+ if(s.favorites.includes(id)&&ownedCount(id)===0)s.favorites=s.favorites.filter(f=>f!==id);
+ checkCollectionComplete();checkAchievements();saveSilently();
+ render();panel("inventory");
 }
 function useLabel(x){if(x.cat==="Walls")return s.wall===x.id?"In Use":"Use Wallpaper";if(x.cat==="Floors")return s.floor===x.id?"In Use":"Use Flooring";let available=ownedCount(x.id)-placedCount(x.id);return available>0?(placedCount(x.id)>0?"Place Another":"Place in Room"):"All Placed"}
 function useItem(id){let x=catalog.find(a=>a.id===id);if(x.cat==="Walls"){s.wall=id}else if(x.cat==="Floors"){s.floor=id}else if(placedCount(id)<ownedCount(id)){s.placed.push({id,x:42+(s.placed.length*8)%35,y:58-(s.placed.length%3)*10,dir:"left"})}render();saveSilently();panel("inventory")}
