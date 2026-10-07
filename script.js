@@ -226,13 +226,14 @@ const catalog=[
 {id:"walls-cute-purple",name:"Cute Purple Wallpaper",img:"images/items/Walls-cute-purple-001.png",price:50,cat:"Walls"},
 {id:"walls-cute-yellow",name:"Cute Yellow Wallpaper",img:"images/items/Walls-cute-yellow-001.png",price:50,cat:"Walls"},
 {id:"window-cute-white",name:"Cute White Window",img:"images/items/Window-cute-white-001.png",price:100,cat:"Windows"},
-{id:"decor-wizard-mushroom",name:"Wizard Mushroom decor",img:"images/items/decor-wizard-mushroom-001.png",price:100,cat:"Decor"}
+{id:"decor-wizard-mushroom",name:"Wizard Mushroom decor",img:"images/items/decor-wizard-mushroom-001.png",price:100,cat:"Decor"},
+{id:"decor-retro-lamp",name:"Retro Lamp",img:"images/items/Decor-retro-lamp-001.gif",price:100,cat:"Decor"}
 ];
 
 const collections=[
 {name:"Basic Collection",emoji:"🛋️",items:["bed-white","chair-basic-red","chair-basic-yellow","couch-basic-brown","dresser-basic-cream","dresser-basic-dark-brown","couch-blue","couch-green","couch-red","couch-yellow","tv-basic-dark","tv-basic-light","table-basic-covered"]},
 {name:"Angel Collection",emoji:"☁️",items:["bed-angel-cream","chair-angel-cream","couch-angel-cream","dresser-angel-cream","table-angel-cream","floors-angel-cream-tiles","harp-angel-white","piano-angel-white"]},
-{name:"Goth Collection",emoji:"🖤",items:["chair-goth-black","chair-goth-purple","couch-goth-purple","table-goth-purple","decor-goth-shelves"]},
+{name:"Goth Collection",emoji:"🖤",items:["chair-goth-black","chair-goth-purple","couch-goth-purple","table-goth-purple","decor-goth-shelves","candles-sunset"]},
 {name:"Geode Collection",emoji:"💎",items:["chair-geode-purple","geode-purple","endtable-geode","table-geode-blue"]},
 {name:"Floral Collection",emoji:"🌸",items:["floral-vines","floral-terrarium","dresser-floral-white","bookcase-floral","decor-floral-purple-box","decor-floral-yellow-box"]},
 {name:"Deco Collection",emoji:"✨",items:["chair-deco-green","chair-deco-red"]},
@@ -243,7 +244,7 @@ const collections=[
 {name:"Retro Collection",emoji:"📺",items:["bed-retro-blue","bed-retro-green","bed-retro-red","bed-retro-yellow","chair-retro-cushioned","chair-retro-light-wood","chair-retro-red","chair-retro-red-002","chair-retro-yellow","coffeetable-retro-glass","couch-retro-green","couch-retro-red","decor-retro-butterfly-painting","decor-retro-mirror","decor-retro-record-machine","decor-retro-rubber-tree-plant","decor-retro-wall-clock","endtable-retro-wooden","table-retro-glass"]},
 {name:"Sweets Collection",emoji:"🍓",items:["bed-sweets-strawberry","bookcase-sweets-ice-cream","couch-sweets-pink","dresser-sweets-chocolate","endtable-sweets-cream"]},
 {name:"Hello Kitty Collection",emoji:"🎀",items:["bed-hellokitty","decor-hellokitty-clock","decor-hellokitty-plant","dresser-hellokitty"]},
-{name:"Wizard Collection",emoji:"🧙",items:["bookcase-wizard","decor-wizard-book-pile","decor-wizard-book-pile-002","decor-wizard-cauldron","decor-wizard-painting","decor-wizard-potion-table","decor-wizard-shelves","desk-wizard","decor-wizard-mushroom","moon-stars"]}
+{name:"Wizard Collection",emoji:"🧙",items:["bookcase-wizard","decor-wizard-book-pile","decor-wizard-book-pile-002","decor-wizard-cauldron","decor-wizard-painting","decor-wizard-potion-table","decor-wizard-shelves","desk-wizard","decor-wizard-mushroom","moon-stars","crystal-ball"]}
 ];
 let s={screen:"setup",first:"",initial:"",coins:100,xp:0,streak:0,inventory:[],placed:[],wall:"plain",floor:"plain",q:null,answered:0,loot:null};
 const app=document.querySelector("#app");
