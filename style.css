@@ -313,3 +313,13 @@ background-size:100% 100%,auto;
 .shop-search{width:100%;padding:11px 14px 11px 40px;border:2px solid #c9d6df;border-radius:14px;background:#fff;color:#33404d;font-weight:700;outline:none}
 .shop-search:focus{border-color:#4c86a5;box-shadow:0 0 0 3px #4c86a51a}
 .shop-empty{grid-column:1/-1;text-align:center;padding:24px;color:#6d7780;font-weight:800}
+
+.buy-btn.cant-afford{background:#edf0f2;color:#929ba2;border-color:#d7dde1;opacity:.72}
+.mystery-nosell{margin-top:6px;color:#8a6d2d}
+.sell-btn{border-color:#d8c7a1}
+.savecode-overlay{position:fixed;inset:0;z-index:1300;background:#24344399;display:grid;place-items:center;padding:18px}
+.savecode-modal{position:relative;width:min(680px,94vw);background:#fff;border-radius:24px;border:3px solid #d7e2ea;padding:24px;box-shadow:0 20px 60px #0004}
+.savecode-modal h2{margin:0 42px 10px 0}
+.savecode-close{position:absolute;right:14px;top:12px;width:38px;height:38px;border-radius:50%;border:1px solid #cfd9e2;background:#fff;font-size:1.65rem;line-height:1;color:#56636d}
+.savecode-box{width:100%;height:150px;resize:vertical;border:2px solid #c9d6df;border-radius:14px;padding:12px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.78rem;word-break:break-all;margin:10px 0}
+.savecode-actions{display:flex;gap:10px;flex-wrap:wrap}
