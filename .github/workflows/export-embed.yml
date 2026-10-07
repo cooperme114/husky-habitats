@@ -21,7 +21,7 @@ jobs:
           import base64, mimetypes, re
           js = Path("script.js").read_text(encoding="utf-8")
           css = Path("style.css").read_text(encoding="utf-8")
-          refs = sorted(set(re.findall(r'images/items/[^"\\']+?\.(?:png|gif|jpg|jpeg|webp)', js, flags=re.I)))
+          refs = sorted(set(re.findall(r"images/items/[^\\\"']+?\\.(?:png|gif|jpg|jpeg|webp)", js, flags=re.I)))
           missing = []
           for ref in refs:
               p = Path(ref)
