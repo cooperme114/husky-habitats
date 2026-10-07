@@ -325,3 +325,9 @@ background-size:100% 100%,auto;
 
 .achievement-section{margin-top:20px}
 .achievement-section h3{margin:0 0 8px;color:#52616b}
+
+.sort-controls{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:8px 0 12px;padding:9px 11px;background:#f7fafc;border:1px solid #dce6ed;border-radius:14px}
+.sort-controls label{font-size:.86rem;font-weight:800;color:#56636d;display:flex;align-items:center;gap:7px}
+.sort-select{border:1px solid #c9d6df;background:#fff;border-radius:10px;padding:7px 9px;color:#33404d;font-weight:700}
+.sort-check{cursor:pointer;user-select:none}
+.sort-check input{width:17px;height:17px;accent-color:#4c86a5}
