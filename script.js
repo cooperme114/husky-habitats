@@ -246,7 +246,7 @@ const collections=[
 {name:"Hello Kitty Collection",emoji:"🎀",items:["bed-hellokitty","decor-hellokitty-clock","decor-hellokitty-plant","dresser-hellokitty"]},
 {name:"Deco Collection",emoji:"✨",items:["chair-deco-green","chair-deco-red"]}
 ];
-let s={screen:"setup",first:"",initial:"",coins:100,xp:0,streak:0,inventory:[],placed:[],wall:"plain",floor:"plain",q:null,answered:0,correct:0,loot:null,favorites:[],achievements:[],completedCollections:[],favoriteCollections:[],nonSellable:{}};
+let s={screen:"setup",first:"",initial:"",coins:100,xp:0,streak:0,inventory:[],placed:[],wall:"plain",floor:"plain",q:null,answered:0,correct:0,loot:null,favorites:[],achievements:[],completedCollections:[],favoriteCollections:[]};
 const app=document.querySelector("#app");
 const SAVE_KEY="huskyHabitatsSaveV1";
 function saveGame(){
@@ -267,7 +267,6 @@ function loadGame(){
     if(!Array.isArray(s.achievements))s.achievements=[];
     if(!Array.isArray(s.completedCollections))s.completedCollections=[];
     if(!Array.isArray(s.favoriteCollections))s.favoriteCollections=[];
-    if(!s.nonSellable||typeof s.nonSellable!=="object")s.nonSellable={};
     if(typeof s.correct!=="number")s.correct=Math.floor((s.xp||0)/10);
     render();
     showSaveStatus("Loaded saved habitat.");
@@ -338,7 +337,6 @@ function applySaveCode(code){
     if(!Array.isArray(s.achievements))s.achievements=[];
     if(!Array.isArray(s.completedCollections))s.completedCollections=[];
     if(!Array.isArray(s.favoriteCollections))s.favoriteCollections=[];
-    if(!s.nonSellable||typeof s.nonSellable!=="object")s.nonSellable={};
     if(typeof s.correct!=="number")s.correct=Math.floor((s.xp||0)/10);
     saveSilently();
     render();
@@ -524,7 +522,7 @@ function panel(v){
  if(v==="shop"){shopPanel(p,"All");}
  if(v==="collections"){collectionsPanel(p);}
  if(v==="achievements"){achievementsPanel(p);}
- if(v==="inventory"){let owned=catalog.filter(x=>ownedCount(x.id)>0);p.innerHTML='<h2>🎒 Inventory</h2><p class="tiny">Place as many copies as you own, then drag them where you want them.</p>'+(owned.length?'<div class="shop-grid">'+owned.sort((a,b)=>(s.favorites.includes(b.id)?1:0)-(s.favorites.includes(a.id)?1:0)).map(x=>'<div class="shop-item"><button class="favorite-btn '+(s.favorites.includes(x.id)?'favorited':'')+'" data-fav="'+x.id+'" title="Favorite">'+(s.favorites.includes(x.id)?'★':'☆')+'</button><div class="item-art">'+itemVisual(x,"shop")+'</div><b>'+x.name+'</b><div class="tiny">'+x.cat+' • Owned: '+ownedCount(x.id)+'</div><div class="inventory-actions"><button class="secondary" data-use="'+x.id+'" '+(((!["Walls","Floors"].includes(x.cat)&&placedCount(x.id)>=ownedCount(x.id))||(x.cat==="Walls"&&s.wall===x.id)||(x.cat==="Floors"&&s.floor===x.id))?"disabled":"")+'>'+useLabel(x)+'</button>'+((!["Walls","Floors"].includes(x.cat)&&placedCount(x.id)>0)?'<button class="secondary" data-remove="'+x.id+'">Remove One</button>':"")+'<button class="secondary sell-btn" data-sell="'+x.id+'" '+(sellableCount(x.id)<=0?"disabled":"")+'>Sell 🪙 '+Math.floor(x.price*.5)+'</button></div>'+((s.nonSellable[x.id]||0)>0?'<div class="tiny mystery-nosell">🎁 '+(s.nonSellable[x.id]||0)+' Mystery Box cop'+((s.nonSellable[x.id]||0)===1?'y':'ies')+' cannot be sold.</div>':"")</div>').join("")+'</div>':'<p>Your inventory is empty. Answer questions and visit the shop!</p>');document.querySelectorAll("[data-fav]").forEach(b=>b.onclick=()=>{toggleFavorite(b.dataset.fav);panel("inventory")});document.querySelectorAll("[data-use]").forEach(b=>b.onclick=()=>useItem(b.dataset.use));document.querySelectorAll("[data-remove]").forEach(b=>b.onclick=()=>removeOne(b.dataset.remove));document.querySelectorAll("[data-sell]").forEach(b=>b.onclick=()=>sellItem(b.dataset.sell));}
+ if(v==="inventory"){let owned=catalog.filter(x=>ownedCount(x.id)>0);p.innerHTML='<h2>🎒 Inventory</h2><p class="tiny">Place as many copies as you own, then drag them where you want them.</p>'+(owned.length?'<div class="shop-grid">'+owned.sort((a,b)=>(s.favorites.includes(b.id)?1:0)-(s.favorites.includes(a.id)?1:0)).map(x=>'<div class="shop-item"><button class="favorite-btn '+(s.favorites.includes(x.id)?'favorited':'')+'" data-fav="'+x.id+'" title="Favorite">'+(s.favorites.includes(x.id)?'★':'☆')+'</button><div class="item-art">'+itemVisual(x,"shop")+'</div><b>'+x.name+'</b><div class="tiny">'+x.cat+' • Owned: '+ownedCount(x.id)+'</div><div class="inventory-actions"><button class="secondary" data-use="'+x.id+'" '+(((!["Walls","Floors"].includes(x.cat)&&placedCount(x.id)>=ownedCount(x.id))||(x.cat==="Walls"&&s.wall===x.id)||(x.cat==="Floors"&&s.floor===x.id))?"disabled":"")+'>'+useLabel(x)+'</button>'+((!["Walls","Floors"].includes(x.cat)&&placedCount(x.id)>0)?'<button class="secondary" data-remove="'+x.id+'">Remove One</button>':"")+'<button class="secondary sell-btn" data-sell="'+x.id+'" '+(sellableCount(x.id)<=0?"disabled":"")+'>Sell 🪙 '+Math.floor(x.price*.5)+'</button></div>'</div>').join("")+'</div>':'<p>Your inventory is empty. Answer questions and visit the shop!</p>');document.querySelectorAll("[data-fav]").forEach(b=>b.onclick=()=>{toggleFavorite(b.dataset.fav);panel("inventory")});document.querySelectorAll("[data-use]").forEach(b=>b.onclick=()=>useItem(b.dataset.use));document.querySelectorAll("[data-remove]").forEach(b=>b.onclick=()=>removeOne(b.dataset.remove));document.querySelectorAll("[data-sell]").forEach(b=>b.onclick=()=>sellItem(b.dataset.sell));}
 }
 function achievementsPanel(p){
  p.innerHTML='<h2>🏆 Achievements</h2><p class="tiny">Achievements are based on lifetime progress.</p><div class="achievement-grid">'+achievementDefs.map(a=>{let got=s.achievements.includes(a.id);return '<div class="achievement-card '+(got?'earned':'')+'"><div class="achievement-icon">'+(got?'🏆':'🔒')+'</div><b>'+a.name+'</b><div class="tiny">'+a.desc+'</div></div>'}).join("")+'</div>';
@@ -592,16 +590,13 @@ function buyMysteryBox(){
  s.coins-=200;
  const pool=catalog.filter(x=>!["Walls","Floors"].includes(x.cat));
  const won=[0,1,2].map(()=>pool[Math.floor(Math.random()*pool.length)]);
- won.forEach(x=>{s.inventory.push(x.id);s.nonSellable[x.id]=(s.nonSellable[x.id]||0)+1});
+ won.forEach(x=>s.inventory.push(x.id));
  render();checkCollectionComplete();checkAchievements();saveSilently();
  const p=document.querySelector("#panel");
  p.innerHTML='<h2>🎁 Mystery Box!</h2><p>You got:</p><div class="mystery-reveal">'+won.map((x,i)=>'<div class="mystery-prize" style="animation-delay:'+(i*.35)+'s">'+itemVisual(x,"shop")+'<b>'+x.name+'</b></div>').join("")+'</div><button class="primary" id="backShop">Back to Shop</button>';
  document.querySelector("#backShop").onclick=()=>shopPanel(p,"All");
 }
-function sellableCount(id){
- const blocked=Math.max(0,s.nonSellable[id]||0);
- return Math.max(0,ownedCount(id)-blocked);
-}
+function sellableCount(id){return ownedCount(id)}
 function sellItem(id){
  const x=catalog.find(a=>a.id===id);if(!x||sellableCount(id)<=0)return;
  // Do not sell a copy currently placed if every remaining sellable copy would be needed for placement.
