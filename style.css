@@ -225,3 +225,14 @@ background-size:100% 100%,auto;
 @media(prefers-reduced-motion:reduce){
  .pet-heart,.mystery-prize,.achievement-toast,.fanfare-card,.fanfare-sparkle{animation:none}
 }
+
+.collection-favorite{
+ width:30px;height:30px;border-radius:50%;
+ border:1px solid #d6e0e7;background:#fff;color:#83909a;
+ font-size:1.15rem;line-height:1;padding:0;display:grid;place-items:center;
+ flex:0 0 auto;
+}
+.collection-favorite.favorited{
+ color:#e0a72d;background:#fff9df;border-color:#edd88e;
+}
+.collection-favorite:hover{background:#f7fafc}
