@@ -368,6 +368,68 @@ function showAchievement(a){
 function petHeart(el){
   const h=document.createElement("span");h.className="pet-heart";h.textContent="♥";el.appendChild(h);setTimeout(()=>h.remove(),3000);
 }
+function roomScoreBreakdown(){
+  const ids=roomItemIds();
+  const counts={};ids.forEach(id=>counts[id]=(counts[id]||0)+1);
+  const rows=[];
+  const used=new Set();
+
+  collections.forEach(col=>{
+    const unique=col.items.filter(id=>counts[id]>0&&!used.has(id));
+    if(!unique.length)return;
+    const mult=Math.max(1,unique.length);
+    const items=[];
+    let subtotal=0;
+
+    unique.forEach(id=>{
+      const x=catalog.find(a=>a.id===id);
+      const base=x&&x.cat==="Pets"?2:1;
+      const points=base*mult;
+      subtotal+=points;
+      items.push({name:x?x.name:id,base,mult,points,duplicate:false});
+      used.add(id);
+
+      if(counts[id]>1){
+        const extras=counts[id]-1;
+        subtotal+=base*extras;
+        for(let i=0;i<extras;i++)items.push({name:(x?x.name:id)+" (extra copy)",base,mult:1,points:base,duplicate:true});
+      }
+    });
+
+    rows.push({label:col.name,subtotal,items});
+  });
+
+  const others=[];
+  let otherSubtotal=0;
+  Object.entries(counts).forEach(([id,count])=>{
+    if(used.has(id))return;
+    const x=catalog.find(a=>a.id===id);
+    const base=x&&x.cat==="Pets"?2:1;
+    for(let i=0;i<count;i++){
+      others.push({name:x?x.name:id,base,mult:1,points:base,duplicate:false});
+      otherSubtotal+=base;
+    }
+  });
+  if(others.length)rows.push({label:"Other Items",subtotal:otherSubtotal,items:others});
+  return rows;
+}
+function showScoreBreakdown(){
+  const old=document.querySelector(".score-overlay");if(old)old.remove();
+  const rows=roomScoreBreakdown();
+  const el=document.createElement("div");el.className="score-overlay";
+  const content=rows.length?rows.map(group=>{
+    return '<section class="score-group"><div class="score-group-head"><b>'+esc(group.label)+'</b><span>'+group.subtotal+' pts</span></div><div class="score-lines">'+group.items.map(item=>{
+      const math=item.mult>1?(item.base+' × '+item.mult+' = '+item.points):(item.points+' point'+(item.points===1?'':'s'));
+      return '<div class="score-line"><span>'+esc(item.name)+'</span><span>'+math+'</span></div>';
+    }).join("")+'</div></section>';
+  }).join(""):'<p class="tiny">Place some items in your room to start earning points.</p>';
+  el.innerHTML='<div class="score-modal" role="dialog" aria-modal="true" aria-labelledby="scoreTitle"><button class="score-close" type="button" aria-label="Close room score">×</button><h2 id="scoreTitle">🏆 Room Score: '+roomScore()+'</h2>'+content+'<p class="score-note"><b>Collection Bonus:</b> Different items from the same collection multiply each other. Duplicate copies still earn their base points but do not increase the multiplier.</p></div>';
+  document.body.appendChild(el);
+  const close=()=>el.remove();
+  el.querySelector(".score-close").onclick=close;
+  el.addEventListener("click",e=>{if(e.target===el)close()});
+  document.addEventListener("keydown",function scoreEsc(e){if(e.key==="Escape"){close();document.removeEventListener("keydown",scoreEsc)}}); 
+}
 function showHelp(){
  const old=document.querySelector(".help-overlay");if(old)old.remove();
  const el=document.createElement("div");el.className="help-overlay";
@@ -381,8 +443,9 @@ function showHelp(){
 function render(){
  if(s.screen==="setup")return setup();
  let wallItem=catalog.find(x=>x.id===s.wall),floorItem=catalog.find(x=>x.id===s.floor);
- app.innerHTML='<div class="shell"><div class="topbar"><div><b>🐾 Husky Habitats</b><div class="tiny">'+esc(s.first)+' '+esc(s.initial)+'.\'s Room</div></div><div class="stats"><span class="pill">🪙 '+s.coins+'</span><span class="pill">⭐ '+s.xp+' XP</span><span class="pill">🔥 '+s.streak+'</span><span class="pill">🏆 '+roomScore()+'</span><button id="helpBtn" class="save-btn">❓ How to Play</button><button id="saveBtn" class="save-btn">💾 Save</button><span id="saveStatus" class="save-status" aria-live="polite"></span></div></div><div id="room" class="room" aria-label="Your room"><div class="wall-surface"></div><div class="floor-surface"></div><div class="baseboard"></div>'+s.placed.map((p,i)=>{let x=catalog.find(a=>a.id===p.id);let flip=p.dir==="right"?" flipped":"";return '<button class="placed'+(x.turnable?' turnable':'')+(x.cat==="Pets"?' pet-place':'')+'" data-place="'+i+'" style="left:'+p.x+'%;top:'+p.y+'%" aria-label="Move '+x.name+(x.turnable?'. Double-click to turn.':'')+'">'+itemVisual(x,"room",flip,x.cat==="Pets"?i:null)+'</button>'}).join("")+'<div class="move-hint">Drag your things anywhere in the room ✨</div></div><div class="nav"><button class="primary" data-view="questions">📚 Answer Questions</button><button class="secondary" data-view="shop">🛍️ Shop</button><button class="secondary" data-view="inventory">🎒 Inventory</button><button class="secondary" data-view="collections">📖 Collections</button><button class="secondary" data-view="achievements">🏆 Achievements</button></div><div id="panel" class="card panel"></div></div>';
+ app.innerHTML='<div class="shell"><div class="topbar"><div><b>🐾 Husky Habitats</b><div class="tiny">'+esc(s.first)+' '+esc(s.initial)+'.\'s Room</div></div><div class="stats"><span class="pill">🪙 '+s.coins+'</span><span class="pill">⭐ '+s.xp+' XP</span><span class="pill">🔥 '+s.streak+'</span><button id="scoreBtn" class="pill score-pill" title="See your room score">🏆 '+roomScore()+'</button><button id="helpBtn" class="save-btn">❓ How to Play</button><button id="saveBtn" class="save-btn">💾 Save</button><span id="saveStatus" class="save-status" aria-live="polite"></span></div></div><div id="room" class="room" aria-label="Your room"><div class="wall-surface"></div><div class="floor-surface"></div><div class="baseboard"></div>'+s.placed.map((p,i)=>{let x=catalog.find(a=>a.id===p.id);let flip=p.dir==="right"?" flipped":"";return '<button class="placed'+(x.turnable?' turnable':'')+(x.cat==="Pets"?' pet-place':'')+'" data-place="'+i+'" style="left:'+p.x+'%;top:'+p.y+'%" aria-label="Move '+x.name+(x.turnable?'. Double-click to turn.':'')+'">'+itemVisual(x,"room",flip,x.cat==="Pets"?i:null)+'</button>'}).join("")+'<div class="move-hint">Drag your things anywhere in the room ✨</div></div><div class="nav"><button class="primary" data-view="questions">📚 Answer Questions</button><button class="secondary" data-view="shop">🛍️ Shop</button><button class="secondary" data-view="inventory">🎒 Inventory</button><button class="secondary" data-view="collections">📖 Collections</button><button class="secondary" data-view="achievements">🏆 Achievements</button></div><div id="panel" class="card panel"></div></div>';
  document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>panel(b.dataset.view));
+ const scoreBtn=document.querySelector("#scoreBtn"); if(scoreBtn)scoreBtn.onclick=showScoreBreakdown;
  const helpBtn=document.querySelector("#helpBtn"); if(helpBtn)helpBtn.onclick=showHelp;
  const saveBtn=document.querySelector("#saveBtn"); if(saveBtn)saveBtn.onclick=saveGame;
  const wallSurface=document.querySelector(".wall-surface");
