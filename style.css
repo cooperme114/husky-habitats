@@ -303,3 +303,7 @@ background-size:100% 100%,auto;
  .score-line{align-items:flex-start;flex-direction:column;gap:2px}
  .score-line span:last-child{white-space:normal}
 }
+
+.room-item-image.item-pets-frog{
+  transform:scale(.67);
+}
