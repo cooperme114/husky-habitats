@@ -481,13 +481,17 @@ function collectionsPanel(p){
  p.innerHTML='<h2>📖 Collections</h2><p class="tiny">Own at least one item to check it off. Star a collection you want to keep an eye on.</p><div class="collections-grid">'+collections.map(col=>{let found=col.items.filter(id=>ownedCount(id)>0).length;let complete=found===col.items.length&&col.items.length>0;let fav=s.favoriteCollections.includes(col.name);return '<section class="collection-card '+(complete?'complete':'')+'"><div class="collection-head"><div><button class="collection-favorite '+(fav?'favorited':'')+'" data-colfav="'+esc(col.name)+'" title="Favorite collection">'+(fav?'★':'☆')+'</button><span class="collection-emoji">'+col.emoji+'</span><b>'+col.name+'</b></div><span class="collection-progress">'+found+'/'+col.items.length+' owned</span></div><div class="collection-items">'+col.items.map(id=>{let x=catalog.find(a=>a.id===id);if(!x)return "";let owned=ownedCount(id)>0;return '<div class="collection-item '+(owned?'owned':'')+'"><div class="collection-check">'+(owned?'✓':'○')+'</div><div class="collection-thumb">'+itemVisual(x,"shop")+'</div><div class="collection-name">'+x.name+'</div></div>'}).join("")+'</div></section>'}).join("")+'</div>';
  p.querySelectorAll("[data-colfav]").forEach(b=>b.onclick=()=>{toggleCollectionFavorite(b.dataset.colfav);collectionsPanel(p)});
 }
-function shopPanel(p,active){
- const cats=["All","★ Favorites","Furniture","Decor","Pets","Windows","Walls","Floors"];
- const items=active==="All"?catalog:active==="★ Favorites"?catalog.filter(x=>s.favorites.includes(x.id)):catalog.filter(x=>x.cat===active);
- p.innerHTML='<h2>🛍️ Habitat Shop</h2><div class="mystery-box"><div><b>🎁 Mystery Box</b><div class="tiny">3 random items. Duplicates are possible.</div></div><button class="primary" id="mysteryBuy">🪙 200</button></div><p class="tiny">Furniture, decor, pets, and windows can be bought more than once.</p><div class="shop-tabs">'+cats.map(c=>'<button class="shop-tab '+(c===active?'active':'')+'" data-cat="'+c+'">'+c+'</button>').join("")+'</div><div class="shop-grid">'+items.map(x=>{let count=ownedCount(x.id),oneOnly=["Walls","Floors"].includes(x.cat);return '<div class="shop-item"><button class="favorite-btn '+(s.favorites.includes(x.id)?'favorited':'')+'" data-fav="'+x.id+'" title="Favorite">'+(s.favorites.includes(x.id)?'★':'☆')+'</button><div class="item-art">'+itemVisual(x,"shop")+'</div><b>'+x.name+'</b><div class="tiny">'+x.cat+(count?' • Owned: '+count:'')+'</div><div class="price">🪙 '+x.price+'</div><button class="secondary" data-buy="'+x.id+'" '+(oneOnly&&count?"disabled":"")+'>'+(oneOnly&&count?"Owned":count?"Buy Another":"Buy")+'</button></div>'}).join("")+'</div>';
- const mystery=p.querySelector("#mysteryBuy");if(mystery)mystery.onclick=buyMysteryBox;
- p.querySelectorAll("[data-fav]").forEach(b=>b.onclick=()=>{toggleFavorite(b.dataset.fav);shopPanel(p,active)});
- p.querySelectorAll("[data-cat]").forEach(b=>b.onclick=()=>shopPanel(p,b.dataset.cat));
+function shopPanel(p,active,query=""){
+ const cats=["All","Furniture","Decor","Pets","Windows","Walls","Floors"];
+ const q=query.trim().toLowerCase();
+ const base=active==="All"?catalog:catalog.filter(x=>x.cat===active);
+ const items=q?base.filter(x=>(x.name+" "+x.cat+" "+x.id).toLowerCase().includes(q)):base;
+ p.innerHTML='<h2>🛍️ Habitat Shop</h2><p class="tiny">Furniture, decor, pets, and windows can be bought more than once.</p><div class="shop-search-wrap"><span class="shop-search-icon">🔎</span><input id="shopSearch" class="shop-search" type="search" placeholder="Search the shop..." value="'+esc(query)+'" autocomplete="off"></div><div class="shop-tabs">'+cats.map(c=>'<button class="shop-tab '+(c===active?'active':'')+'" data-cat="'+c+'">'+c+'</button>').join("")+'</div><div id="shopResults" class="shop-grid">'+(items.length?items.map(x=>{let count=ownedCount(x.id),oneOnly=["Walls","Floors"].includes(x.cat);return '<div class="shop-item"><div class="item-art">'+itemVisual(x,"shop")+'</div><b>'+x.name+'</b><div class="tiny">'+x.cat+(count?' • Owned: '+count:'')+'</div><div class="price">🪙 '+x.price+'</div><button class="secondary" data-buy="'+x.id+'" '+(oneOnly&&count?"disabled":"")+'>'+(oneOnly&&count?"Owned":count?"Buy Another":"Buy")+'</button></div>'}).join(""):'<div class="shop-empty">No items match “'+esc(query)+'”.</div>')+'</div>';
+ const input=p.querySelector("#shopSearch");
+ input.focus();
+ input.setSelectionRange(input.value.length,input.value.length);
+ input.oninput=()=>shopPanel(p,active,input.value);
+ p.querySelectorAll("[data-cat]").forEach(b=>b.onclick=()=>shopPanel(p,b.dataset.cat,query));
  p.querySelectorAll("[data-buy]").forEach(b=>b.onclick=()=>buy(b.dataset.buy));
 }
 function enableDragging(){
