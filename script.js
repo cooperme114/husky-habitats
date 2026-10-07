@@ -246,7 +246,7 @@ const collections=[
 {name:"Hello Kitty Collection",emoji:"🎀",items:["bed-hellokitty","decor-hellokitty-clock","decor-hellokitty-plant","dresser-hellokitty"]},
 {name:"Deco Collection",emoji:"✨",items:["chair-deco-green","chair-deco-red"]}
 ];
-let s={screen:"setup",first:"",initial:"",coins:100,xp:0,streak:0,inventory:[],placed:[],wall:"plain",floor:"plain",q:null,answered:0,correct:0,loot:null,favorites:[],achievements:[],completedCollections:[],favoriteCollections:[]};
+let s={screen:"setup",first:"",initial:"",coins:100,xp:0,streak:0,inventory:[],placed:[],wall:"plain",floor:"plain",q:null,answered:0,correct:0,loot:null,favorites:[],achievements:[],completedCollections:[],favoriteCollections:[],lifetime:{purchases:0,sales:0,mysteryBoxes:0,petsPetted:0,flips:0}};
 const app=document.querySelector("#app");
 const SAVE_KEY="huskyHabitatsSaveV1";
 function saveGame(){
@@ -268,6 +268,8 @@ function loadGame(){
     if(!Array.isArray(s.completedCollections))s.completedCollections=[];
     if(!Array.isArray(s.favoriteCollections))s.favoriteCollections=[];
     if(typeof s.correct!=="number")s.correct=Math.floor((s.xp||0)/10);
+    if(!s.lifetime||typeof s.lifetime!=="object")s.lifetime={purchases:0,sales:0,mysteryBoxes:0,petsPetted:0,flips:0};
+    for(const k of ["purchases","sales","mysteryBoxes","petsPetted","flips"])if(typeof s.lifetime[k]!=="number")s.lifetime[k]=0;
     render();
     showSaveStatus("Loaded saved habitat.");
     return true;
@@ -338,6 +340,8 @@ function applySaveCode(code){
     if(!Array.isArray(s.completedCollections))s.completedCollections=[];
     if(!Array.isArray(s.favoriteCollections))s.favoriteCollections=[];
     if(typeof s.correct!=="number")s.correct=Math.floor((s.xp||0)/10);
+    if(!s.lifetime||typeof s.lifetime!=="object")s.lifetime={purchases:0,sales:0,mysteryBoxes:0,petsPetted:0,flips:0};
+    for(const k of ["purchases","sales","mysteryBoxes","petsPetted","flips"])if(typeof s.lifetime[k]!=="number")s.lifetime[k]=0;
     saveSilently();
     render();
     showSaveStatus("Save code loaded!");
@@ -370,6 +374,13 @@ function loadSaveCodePrompt(){
   const code=prompt("Paste your Husky Habitats save code:");
   if(code)applySaveCode(code);
 }
+function totalPetsOwned(){return s.inventory.filter(id=>{const x=catalog.find(a=>a.id===id);return x&&x.cat==="Pets"}).length}
+function uniquePetsOwned(){return new Set(s.inventory.filter(id=>{const x=catalog.find(a=>a.id===id);return x&&x.cat==="Pets"})).size}
+function placedPets(){return s.placed.filter(p=>{const x=catalog.find(a=>a.id===p.id);return x&&x.cat==="Pets"}).length}
+function maxCopiesOwned(){const counts={};let max=0;s.inventory.forEach(id=>{counts[id]=(counts[id]||0)+1;if(counts[id]>max)max=counts[id]});return max}
+function placedCollectionNames(){return new Set(s.placed.map(p=>collectionForItem(p.id)).filter(Boolean).map(c=>c.name))}
+function maxPlacedFromOneCollection(){let max=0;collections.forEach(c=>{const n=s.placed.filter(p=>c.items.includes(p.id)).length;if(n>max)max=n});return max}
+function collectionComplete(name){const c=collections.find(x=>x.name===name);return !!(c&&c.items.length&&c.items.every(id=>ownedCount(id)>0))}
 function completedCollectionNames(){return collections.filter(c=>c.items.length&&c.items.every(id=>ownedCount(id)>0)).map(c=>c.name)}
 function checkCollectionComplete(){
   const now=completedCollectionNames();
@@ -386,22 +397,124 @@ function showCollectionFanfare(name){
   setTimeout(()=>{if(el.isConnected)close()},5000);
 }
 const achievementDefs=[
+ // Questions
  {id:"correct-10",name:"Getting Started",desc:"Answer 10 questions correctly.",test:()=>s.correct>=10},
  {id:"correct-25",name:"On a Roll",desc:"Answer 25 questions correctly.",test:()=>s.correct>=25},
  {id:"correct-50",name:"Half Century",desc:"Answer 50 questions correctly.",test:()=>s.correct>=50},
- {id:"correct-75",name:"Root Scholar",desc:"Answer 75 questions correctly.",test:()=>s.correct>=75},
+ {id:"correct-75",name:"Rising Scholar",desc:"Answer 75 questions correctly.",test:()=>s.correct>=75},
  {id:"correct-100",name:"Century Club",desc:"Answer 100 questions correctly.",test:()=>s.correct>=100},
- {id:"correct-200",name:"Word Wizard",desc:"Answer 200 questions correctly.",test:()=>s.correct>=200},
- {id:"correct-500",name:"Stem Master",desc:"Answer 500 questions correctly.",test:()=>s.correct>=500},
+ {id:"correct-200",name:"Double Century",desc:"Answer 200 questions correctly.",test:()=>s.correct>=200},
+ {id:"correct-300",name:"Knowledge Machine",desc:"Answer 300 questions correctly.",test:()=>s.correct>=300},
+ {id:"correct-400",name:"Homework Hero",desc:"Answer 400 questions correctly.",test:()=>s.correct>=400},
+ {id:"correct-500",name:"Knowledge Keeper",desc:"Answer 500 questions correctly.",test:()=>s.correct>=500},
+ {id:"correct-750",name:"Brainiac",desc:"Answer 750 questions correctly.",test:()=>s.correct>=750},
  {id:"correct-1000",name:"Husky Legend",desc:"Answer 1,000 questions correctly.",test:()=>s.correct>=1000},
- {id:"collection-1",name:"Collector",desc:"Complete your first collection.",test:()=>completedCollectionNames().length>=1},
- {id:"collection-3",name:"Collection Curator",desc:"Complete 3 collections.",test:()=>completedCollectionNames().length>=3},
- {id:"collection-5",name:"Master Collector",desc:"Complete 5 collections.",test:()=>completedCollectionNames().length>=5},
- {id:"pets-10",name:"Pet Pack",desc:"Own 10 pets.",test:()=>s.inventory.filter(id=>{let x=catalog.find(a=>a.id===id);return x&&x.cat==="Pets"}).length>=10},
+ {id:"correct-1500",name:"Still Going?!",desc:"Answer 1,500 questions correctly.",test:()=>s.correct>=1500},
+ {id:"correct-2000",name:"Unstoppable",desc:"Answer 2,000 questions correctly.",test:()=>s.correct>=2000},
+ {id:"correct-2500",name:"Scholar Supreme",desc:"Answer 2,500 questions correctly.",test:()=>s.correct>=2500},
+ {id:"correct-5000",name:"Walking Encyclopedia",desc:"Answer 5,000 questions correctly.",test:()=>s.correct>=5000},
+
+ // Streaks
+ {id:"streak-5",name:"Heating Up",desc:"Reach a 5-answer streak.",test:()=>s.streak>=5},
+ {id:"streak-10",name:"Hot Streak",desc:"Reach a 10-answer streak.",test:()=>s.streak>=10},
+ {id:"streak-25",name:"Locked In",desc:"Reach a 25-answer streak.",test:()=>s.streak>=25},
+ {id:"streak-50",name:"No Mistakes Here",desc:"Reach a 50-answer streak.",test:()=>s.streak>=50},
+ {id:"streak-75",name:"Laser Focus",desc:"Reach a 75-answer streak.",test:()=>s.streak>=75},
+ {id:"streak-100",name:"Perfect Century",desc:"Reach a 100-answer streak.",test:()=>s.streak>=100},
+ {id:"streak-150",name:"How?!",desc:"Reach a 150-answer streak.",test:()=>s.streak>=150},
+ {id:"streak-250",name:"Untouchable",desc:"Reach a 250-answer streak.",test:()=>s.streak>=250},
+
+ // Coins and shopping
+ {id:"coins-500",name:"Pocket Change",desc:"Have 500 coins at one time.",test:()=>s.coins>=500},
+ {id:"coins-1000",name:"Piggy Bank",desc:"Have 1,000 coins at one time.",test:()=>s.coins>=1000},
+ {id:"coins-2500",name:"Big Saver",desc:"Have 2,500 coins at one time.",test:()=>s.coins>=2500},
+ {id:"coins-5000",name:"Dragon Hoard",desc:"Have 5,000 coins at one time.",test:()=>s.coins>=5000},
+ {id:"buy-1",name:"Window Shopper",desc:"Buy your first item.",test:()=>s.lifetime.purchases>=1},
+ {id:"buy-10",name:"Shopping Spree",desc:"Buy 10 items.",test:()=>s.lifetime.purchases>=10},
+ {id:"buy-25",name:"Retail Therapy",desc:"Buy 25 items.",test:()=>s.lifetime.purchases>=25},
+ {id:"buy-50",name:"Frequent Shopper",desc:"Buy 50 items.",test:()=>s.lifetime.purchases>=50},
+ {id:"buy-100",name:"Shopaholic",desc:"Buy 100 items.",test:()=>s.lifetime.purchases>=100},
+ {id:"sell-1",name:"Secondhand Shop",desc:"Sell your first item.",test:()=>s.lifetime.sales>=1},
+ {id:"sell-10",name:"Spring Cleaning",desc:"Sell 10 items.",test:()=>s.lifetime.sales>=10},
+ {id:"box-1",name:"Mystery Shopper",desc:"Open your first Mystery Box.",test:()=>s.lifetime.mysteryBoxes>=1},
+ {id:"box-10",name:"Feeling Lucky",desc:"Open 10 Mystery Boxes.",test:()=>s.lifetime.mysteryBoxes>=10},
+ {id:"box-25",name:"Box Addict",desc:"Open 25 Mystery Boxes.",test:()=>s.lifetime.mysteryBoxes>=25},
+
+ // Ownership
+ {id:"own-1",name:"First Possession",desc:"Own your first item.",test:()=>s.inventory.length>=1},
  {id:"unique-25",name:"Room Starter",desc:"Own 25 unique items.",test:()=>new Set(s.inventory).size>=25},
  {id:"unique-50",name:"Habitat Hoarder",desc:"Own 50 unique items.",test:()=>new Set(s.inventory).size>=50},
- {id:"unique-100",name:"Mega Collector",desc:"Own 100 unique items.",test:()=>new Set(s.inventory).size>=100}
-];
+ {id:"unique-100",name:"Mega Collector",desc:"Own 100 unique items.",test:()=>new Set(s.inventory).size>=100},
+ {id:"unique-150",name:"Treasure Trove",desc:"Own 150 unique items.",test:()=>new Set(s.inventory).size>=150},
+ {id:"unique-200",name:"Museum Curator",desc:"Own 200 unique items.",test:()=>new Set(s.inventory).size>=200},
+ {id:"unique-250",name:"One of Everything",desc:"Own 250 unique items.",test:()=>new Set(s.inventory).size>=250},
+ {id:"copies-2",name:"Double Trouble",desc:"Own 2 copies of one item.",test:()=>maxCopiesOwned()>=2},
+ {id:"copies-5",name:"Why Stop at One?",desc:"Own 5 copies of one item.",test:()=>maxCopiesOwned()>=5},
+ {id:"copies-10",name:"Okay, You REALLY Like That",desc:"Own 10 copies of one item.",test:()=>maxCopiesOwned()>=10},
+ {id:"copies-25",name:"Army Builder",desc:"Own 25 copies of one item.",test:()=>maxCopiesOwned()>=25},
+
+ // Collections
+ {id:"collection-1",name:"Collector",desc:"Complete 1 collection.",test:()=>completedCollectionNames().length>=1},
+ {id:"collection-3",name:"Collection Curator",desc:"Complete 3 collections.",test:()=>completedCollectionNames().length>=3},
+ {id:"collection-5",name:"Master Collector",desc:"Complete 5 collections.",test:()=>completedCollectionNames().length>=5},
+ {id:"collection-10",name:"Collection Connoisseur",desc:"Complete 10 collections.",test:()=>completedCollectionNames().length>=10},
+ {id:"collection-12",name:"Gotta Get 'Em All",desc:"Complete 12 collections.",test:()=>completedCollectionNames().length>=12},
+ {id:"collection-basic",name:"Basic, But Brilliant",desc:"Complete the Basic Collection.",test:()=>collectionComplete("Basic Collection")},
+ {id:"collection-classic",name:"Class Act",desc:"Complete the Classic Collection.",test:()=>collectionComplete("Classic Collection")},
+ {id:"collection-antique",name:"Old Soul",desc:"Complete the Antique Collection.",test:()=>collectionComplete("Antique Collection")},
+ {id:"collection-retro",name:"Totally Retro",desc:"Complete the Retro Collection.",test:()=>collectionComplete("Retro Collection")},
+ {id:"collection-cute",name:"Adorable",desc:"Complete the Cute Collection.",test:()=>collectionComplete("Cute Collection")},
+ {id:"collection-cozy",name:"Maximum Cozy",desc:"Complete the Cozy Collection.",test:()=>collectionComplete("Cozy Collection")},
+ {id:"collection-wizard",name:"Master of the Arcane",desc:"Complete the Wizard Collection.",test:()=>collectionComplete("Wizard Collection")},
+ {id:"collection-angel",name:"Heavenly",desc:"Complete the Angel Collection.",test:()=>collectionComplete("Angel Collection")},
+ {id:"collection-goth",name:"Creature of the Night",desc:"Complete the Goth Collection.",test:()=>collectionComplete("Goth Collection")},
+ {id:"collection-floral",name:"In Full Bloom",desc:"Complete the Floral Collection.",test:()=>collectionComplete("Floral Collection")},
+ {id:"collection-sweets",name:"Sweet Tooth",desc:"Complete the Sweets Collection.",test:()=>collectionComplete("Sweets Collection")},
+ {id:"collection-geode",name:"Rock Collector",desc:"Complete the Geode Collection.",test:()=>collectionComplete("Geode Collection")},
+ {id:"collection-hellokitty",name:"Hello, Kitty!",desc:"Complete the Hello Kitty Collection.",test:()=>collectionComplete("Hello Kitty Collection")},
+ {id:"collection-deco",name:"Art Deco",desc:"Complete the Deco Collection.",test:()=>collectionComplete("Deco Collection")},
+
+ // Pets
+ {id:"pet-1",name:"New Best Friend",desc:"Own your first pet.",test:()=>totalPetsOwned()>=1},
+ {id:"pets-10",name:"Pet Pack",desc:"Own 10 pets.",test:()=>totalPetsOwned()>=10},
+ {id:"pets-unique-20",name:"Pet Paradise",desc:"Own 20 unique pets.",test:()=>uniquePetsOwned()>=20},
+ {id:"pets-unique-30",name:"Dr. Dolittle",desc:"Own 30 unique pets.",test:()=>uniquePetsOwned()>=30},
+ {id:"pets-placed-2",name:"Double the Cuteness",desc:"Place 2 pets in your room.",test:()=>placedPets()>=2},
+ {id:"pets-placed-5",name:"Pet Party",desc:"Place 5 pets in your room.",test:()=>placedPets()>=5},
+ {id:"pets-placed-10",name:"Petting Zoo",desc:"Place 10 pets in your room.",test:()=>placedPets()>=10},
+ {id:"pets-placed-20",name:"Animal House",desc:"Place 20 pets in your room.",test:()=>placedPets()>=20},
+ {id:"pet-25",name:"Best Friends Forever",desc:"Pet animals 25 times.",test:()=>s.lifetime.petsPetted>=25},
+ {id:"pet-100",name:"Professional Petter",desc:"Pet animals 100 times.",test:()=>s.lifetime.petsPetted>=100},
+ {id:"pet-500",name:"Please Let Them Rest",desc:"Pet animals 500 times.",test:()=>s.lifetime.petsPetted>=500},
+
+ // Decorating
+ {id:"placed-10",name:"Interior Designer",desc:"Place 10 items in your room.",test:()=>s.placed.length>=10},
+ {id:"placed-25",name:"More Is More",desc:"Place 25 items in your room.",test:()=>s.placed.length>=25},
+ {id:"placed-50",name:"Maximalist",desc:"Place 50 items in your room.",test:()=>s.placed.length>=50},
+ {id:"placed-75",name:"Where Is the Floor?",desc:"Place 75 items in your room.",test:()=>s.placed.length>=75},
+ {id:"wall-1",name:"Fresh Paint",desc:"Use a wallpaper.",test:()=>s.wall!=="plain"},
+ {id:"floor-1",name:"New Floors",desc:"Use a flooring.",test:()=>s.floor!=="plain"},
+ {id:"room-custom-10",name:"Make It Yours",desc:"Use wallpaper and flooring with 10 placed items.",test:()=>s.wall!=="plain"&&s.floor!=="plain"&&s.placed.length>=10},
+ {id:"room-collections-5",name:"Mix & Match",desc:"Place items from 5 different collections.",test:()=>placedCollectionNames().size>=5},
+ {id:"room-collections-10",name:"Eclectic Taste",desc:"Place items from 10 different collections.",test:()=>placedCollectionNames().size>=10},
+ {id:"room-one-collection-10",name:"Commit to the Bit",desc:"Place 10 items from one collection.",test:()=>maxPlacedFromOneCollection()>=10},
+ {id:"flip-1",name:"Turn Around",desc:"Flip an object.",test:()=>s.lifetime.flips>=1},
+ {id:"flip-25",name:"No, the OTHER Way",desc:"Flip objects 25 times.",test:()=>s.lifetime.flips>=25},
+
+ // Room score
+ {id:"score-10",name:"Cozy Corner",desc:"Reach a Room Score of 10.",test:()=>roomScore()>=10},
+ {id:"score-25",name:"Looking Good",desc:"Reach a Room Score of 25.",test:()=>roomScore()>=25},
+ {id:"score-50",name:"Room with a View",desc:"Reach a Room Score of 50.",test:()=>roomScore()>=50},
+ {id:"score-100",name:"Designer Habitat",desc:"Reach a Room Score of 100.",test:()=>roomScore()>=100},
+ {id:"score-250",name:"Showroom",desc:"Reach a Room Score of 250.",test:()=>roomScore()>=250},
+ {id:"score-500",name:"Dream Habitat",desc:"Reach a Room Score of 500.",test:()=>roomScore()>=500},
+ {id:"score-1000",name:"Architectural Marvel",desc:"Reach a Room Score of 1,000.",test:()=>roomScore()>=1000},
+
+ // Special
+ {id:"jimothy-10",name:"Jimothy's Chosen",desc:"Own 10 Jimothys.",test:()=>ownedCount("pets-jimothy")>=10},
+ {id:"gamma-25",name:"Gamma Gamma Gamma",desc:"Own 25 Gammas.",test:()=>ownedCount("gamma")>=25},
+ {id:"frog-25",name:"Frog Situation",desc:"Place 25 frogs in your room.",test:()=>s.placed.filter(p=>p.id==="pets-frog").length>=25}
+]
 function checkAchievements(){
   const newly=[];
   achievementDefs.forEach(a=>{if(a.test()&&!s.achievements.includes(a.id)){s.achievements.push(a.id);newly.push(a)}});
@@ -414,6 +527,7 @@ function showAchievement(a){
   document.body.appendChild(el);setTimeout(()=>el.remove(),4000);
 }
 function petHeart(el){
+  s.lifetime.petsPetted++;checkAchievements();saveSilently();
   const h=document.createElement("span");h.className="pet-heart";h.textContent="♥";el.appendChild(h);setTimeout(()=>h.remove(),3000);
 }
 function roomScoreBreakdown(){
@@ -522,10 +636,26 @@ function panel(v){
  if(v==="shop"){shopPanel(p,"All");}
  if(v==="collections"){collectionsPanel(p);}
  if(v==="achievements"){achievementsPanel(p);}
- if(v==="inventory"){let owned=catalog.filter(x=>ownedCount(x.id)>0);p.innerHTML='<h2>🎒 Inventory</h2><p class="tiny">Place as many copies as you own, then drag them where you want them.</p>'+(owned.length?'<div class="shop-grid">'+owned.sort((a,b)=>(s.favorites.includes(b.id)?1:0)-(s.favorites.includes(a.id)?1:0)).map(x=>'<div class="shop-item"><button class="favorite-btn '+(s.favorites.includes(x.id)?'favorited':'')+'" data-fav="'+x.id+'" title="Favorite">'+(s.favorites.includes(x.id)?'★':'☆')+'</button><div class="item-art">'+itemVisual(x,"shop")+'</div><b>'+x.name+'</b><div class="tiny">'+x.cat+' • Owned: '+ownedCount(x.id)+'</div><div class="inventory-actions"><button class="secondary" data-use="'+x.id+'" '+(((!["Walls","Floors"].includes(x.cat)&&placedCount(x.id)>=ownedCount(x.id))||(x.cat==="Walls"&&s.wall===x.id)||(x.cat==="Floors"&&s.floor===x.id))?"disabled":"")+'>'+useLabel(x)+'</button>'+((!["Walls","Floors"].includes(x.cat)&&placedCount(x.id)>0)?'<button class="secondary" data-remove="'+x.id+'">Remove One</button>':"")+'<button class="secondary sell-btn" data-sell="'+x.id+'" '+(sellableCount(x.id)<=0?"disabled":"")+'>Sell 🪙 '+Math.floor(x.price*.5)+'</button></div>'</div>').join("")+'</div>':'<p>Your inventory is empty. Answer questions and visit the shop!</p>');document.querySelectorAll("[data-fav]").forEach(b=>b.onclick=()=>{toggleFavorite(b.dataset.fav);panel("inventory")});document.querySelectorAll("[data-use]").forEach(b=>b.onclick=()=>useItem(b.dataset.use));document.querySelectorAll("[data-remove]").forEach(b=>b.onclick=()=>removeOne(b.dataset.remove));document.querySelectorAll("[data-sell]").forEach(b=>b.onclick=()=>sellItem(b.dataset.sell));}
+ if(v==="inventory"){
+   let owned=catalog.filter(x=>ownedCount(x.id)>0);
+   p.innerHTML='<h2>🎒 Inventory</h2><p class="tiny">Place as many copies as you own, then drag them where you want them.</p>'+
+   (owned.length?'<div class="shop-grid">'+owned.sort((a,b)=>(s.favorites.includes(b.id)?1:0)-(s.favorites.includes(a.id)?1:0)).map(x=>{
+     const useDisabled=((!["Walls","Floors"].includes(x.cat)&&placedCount(x.id)>=ownedCount(x.id))||(x.cat==="Walls"&&s.wall===x.id)||(x.cat==="Floors"&&s.floor===x.id));
+     return '<div class="shop-item"><button class="favorite-btn '+(s.favorites.includes(x.id)?'favorited':'')+'" data-fav="'+x.id+'" title="Favorite">'+(s.favorites.includes(x.id)?'★':'☆')+'</button><div class="item-art">'+itemVisual(x,"shop")+'</div><b>'+x.name+'</b><div class="tiny">'+x.cat+' • Owned: '+ownedCount(x.id)+'</div><div class="inventory-actions"><button class="secondary" data-use="'+x.id+'" '+(useDisabled?"disabled":"")+'>'+useLabel(x)+'</button>'+((!["Walls","Floors"].includes(x.cat)&&placedCount(x.id)>0)?'<button class="secondary" data-remove="'+x.id+'">Remove One</button>':"")+'<button class="secondary sell-btn" data-sell="'+x.id+'">Sell 🪙 '+Math.floor(x.price*.5)+'</button></div></div>';
+   }).join("")+'</div>':'<p>Your inventory is empty. Answer questions and visit the shop!</p>');
+   document.querySelectorAll("[data-fav]").forEach(b=>b.onclick=()=>{toggleFavorite(b.dataset.fav);panel("inventory")});
+   document.querySelectorAll("[data-use]").forEach(b=>b.onclick=()=>useItem(b.dataset.use));
+   document.querySelectorAll("[data-remove]").forEach(b=>b.onclick=()=>removeOne(b.dataset.remove));
+   document.querySelectorAll("[data-sell]").forEach(b=>b.onclick=()=>sellItem(b.dataset.sell));
+ }
 }
 function achievementsPanel(p){
- p.innerHTML='<h2>🏆 Achievements</h2><p class="tiny">Achievements are based on lifetime progress.</p><div class="achievement-grid">'+achievementDefs.map(a=>{let got=s.achievements.includes(a.id);return '<div class="achievement-card '+(got?'earned':'')+'"><div class="achievement-icon">'+(got?'🏆':'🔒')+'</div><b>'+a.name+'</b><div class="tiny">'+a.desc+'</div></div>'}).join("")+'</div>';
+ const groups=[
+  ["Questions",0,15],["Streaks",15,23],["Coins & Shopping",23,37],["Ownership",37,48],
+  ["Collections",48,67],["Pets",67,78],["Decorating",78,90],["Room Score",90,97],["Special",97,100]
+ ];
+ p.innerHTML='<h2>🏆 Achievements</h2><p class="tiny">100 long-term goals. Once unlocked, an achievement stays unlocked.</p>'+
+ groups.map(g=>'<section class="achievement-section"><h3>'+g[0]+'</h3><div class="achievement-grid">'+achievementDefs.slice(g[1],g[2]).map(a=>{let got=s.achievements.includes(a.id);return '<div class="achievement-card '+(got?'earned':'')+'"><div class="achievement-icon">'+(got?'🏆':'🔒')+'</div><b>'+a.name+'</b><div class="tiny">'+a.desc+'</div></div>'}).join("")+'</div></section>').join("");
 }
 function collectionsPanel(p){
  p.innerHTML='<h2>📖 Collections</h2><p class="tiny">Own at least one item to check it off. Star a collection you want to keep an eye on.</p><div class="collections-grid">'+collections.map(col=>{let found=col.items.filter(id=>ownedCount(id)>0).length;let complete=found===col.items.length&&col.items.length>0;let fav=s.favoriteCollections.includes(col.name);return '<section class="collection-card '+(complete?'complete':'')+'"><div class="collection-head"><div><button class="collection-favorite '+(fav?'favorited':'')+'" data-colfav="'+esc(col.name)+'" title="Favorite collection">'+(fav?'★':'☆')+'</button><span class="collection-emoji">'+col.emoji+'</span><b>'+col.name+'</b></div><span class="collection-progress">'+found+'/'+col.items.length+' owned</span></div><div class="collection-items">'+col.items.map(id=>{let x=catalog.find(a=>a.id===id);if(!x)return "";let owned=ownedCount(id)>0;return '<div class="collection-item '+(owned?'owned':'')+'"><div class="collection-check">'+(owned?'✓':'○')+'</div><div class="collection-thumb">'+itemVisual(x,"shop")+'</div><div class="collection-name">'+x.name+'</div></div>'}).join("")+'</div></section>'}).join("")+'</div>';
@@ -584,10 +714,11 @@ function itemVisual(x,where,extra="",petIndex=null){
 }
 function newQ(){let keys=Object.keys(stems),stem=keys[Math.floor(Math.random()*keys.length)],correct=stems[stem],wrong=[...new Set(Object.values(stems).filter(x=>x!==correct))].sort(()=>Math.random()-.5).slice(0,3);s.q={stem,correct,opts:[correct,...wrong].sort(()=>Math.random()-.5)};s.loot=null;s.questionLocked=false}
 function answer(a){if(s.questionLocked)return;s.questionLocked=true;let f=document.querySelector("#feedback");document.querySelectorAll("[data-a]").forEach(b=>b.disabled=true);if(a===s.q.correct){s.coins+=20;s.xp+=10;s.streak++;s.answered++;s.correct++;f.textContent="Correct! +20 coins 🪙";let rewardDelay=1100;if(s.streak>0&&s.streak%25===0){let pool=catalog.filter(x=>!s.inventory.includes(x.id)&&!["Walls","Floors"].includes(x.cat));if(pool.length){let item=pool[Math.floor(Math.random()*pool.length)];s.inventory.push(item.id);s.loot=item;checkCollectionComplete();checkAchievements();f.textContent="🔥 "+s.streak+"-answer streak! You earned "+item.name+"!";rewardDelay=3200}}checkAchievements();saveSilently();setTimeout(()=>{newQ();render()},rewardDelay)}else{s.streak=0;s.answered++;f.textContent="Not quite. "+s.q.stem+" means "+s.q.correct+".";document.querySelector(".pill:last-child").textContent="🔥 0";setTimeout(()=>{newQ();render()},1400)}}
-function buy(id){let x=catalog.find(a=>a.id===id);if(s.coins<x.price){alert("You need "+(x.price-s.coins)+" more coins.");return}s.coins-=x.price;s.inventory.push(id);render();checkCollectionComplete();checkAchievements();saveSilently();panel("shop")}
+function buy(id){let x=catalog.find(a=>a.id===id);if(s.coins<x.price){alert("You need "+(x.price-s.coins)+" more coins.");return}s.coins-=x.price;s.inventory.push(id);s.lifetime.purchases++;render();checkCollectionComplete();checkAchievements();saveSilently();panel("shop")}
 function buyMysteryBox(){
  if(s.coins<200){alert("You need "+(200-s.coins)+" more coins.");return}
  s.coins-=200;
+ s.lifetime.mysteryBoxes++;
  const pool=catalog.filter(x=>!["Walls","Floors"].includes(x.cat));
  const won=[0,1,2].map(()=>pool[Math.floor(Math.random()*pool.length)]);
  won.forEach(x=>s.inventory.push(x.id));
@@ -607,6 +738,7 @@ function sellItem(id){
  const idx=s.inventory.lastIndexOf(id);if(idx<0)return;
  // Prefer removing a sellable copy: inventory copies are indistinguishable, so nonSellable count simply remains reserved.
  s.inventory.splice(idx,1);
+ s.lifetime.sales++;
  const refund=Math.floor(x.price*.5);
  s.coins+=refund;
  if(s.favorites.includes(id)&&ownedCount(id)===0)s.favorites=s.favorites.filter(f=>f!==id);
@@ -614,8 +746,8 @@ function sellItem(id){
  render();panel("inventory");
 }
 function useLabel(x){if(x.cat==="Walls")return s.wall===x.id?"In Use":"Use Wallpaper";if(x.cat==="Floors")return s.floor===x.id?"In Use":"Use Flooring";let available=ownedCount(x.id)-placedCount(x.id);return available>0?(placedCount(x.id)>0?"Place Another":"Place in Room"):"All Placed"}
-function useItem(id){let x=catalog.find(a=>a.id===id);if(x.cat==="Walls"){s.wall=id}else if(x.cat==="Floors"){s.floor=id}else if(placedCount(id)<ownedCount(id)){s.placed.push({id,x:42+(s.placed.length*8)%35,y:58-(s.placed.length%3)*10,dir:"left"})}render();saveSilently();panel("inventory")}
+function useItem(id){let x=catalog.find(a=>a.id===id);if(x.cat==="Walls"){s.wall=id}else if(x.cat==="Floors"){s.floor=id}else if(placedCount(id)<ownedCount(id)){s.placed.push({id,x:42+(s.placed.length*8)%35,y:58-(s.placed.length%3)*10,dir:"left"})}checkAchievements();render();saveSilently();panel("inventory")}
 function removeOne(id){let found=s.placed.map(p=>p.id).lastIndexOf(id);if(found>=0)s.placed.splice(found,1);render();panel("inventory")}
-function turnItem(index){if(!s.placed[index])return;s.placed[index].dir=s.placed[index].dir==="right"?"left":"right";saveSilently();render();}
+function turnItem(index){if(!s.placed[index])return;s.placed[index].dir=s.placed[index].dir==="right"?"left":"right";s.lifetime.flips++;checkAchievements();saveSilently();render();}
 function esc(x){return x.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 render();
