@@ -246,7 +246,7 @@ const collections=[
 {name:"Hello Kitty Collection",emoji:"🎀",items:["bed-hellokitty","decor-hellokitty-clock","decor-hellokitty-plant","dresser-hellokitty"]},
 {name:"Deco Collection",emoji:"✨",items:["chair-deco-green","chair-deco-red"]}
 ];
-let s={screen:"setup",first:"",initial:"",coins:100,xp:0,streak:0,inventory:[],placed:[],wall:"plain",floor:"plain",q:null,answered:0,correct:0,loot:null,favorites:[],achievements:[],completedCollections:[]};
+let s={screen:"setup",first:"",initial:"",coins:100,xp:0,streak:0,inventory:[],placed:[],wall:"plain",floor:"plain",q:null,answered:0,correct:0,loot:null,favorites:[],achievements:[],completedCollections:[],favoriteCollections:[]};
 const app=document.querySelector("#app");
 const SAVE_KEY="huskyHabitatsSaveV1";
 function saveGame(){
@@ -266,6 +266,7 @@ function loadGame(){
     if(!Array.isArray(s.favorites))s.favorites=[];
     if(!Array.isArray(s.achievements))s.achievements=[];
     if(!Array.isArray(s.completedCollections))s.completedCollections=[];
+    if(!Array.isArray(s.favoriteCollections))s.favoriteCollections=[];
     if(typeof s.correct!=="number")s.correct=Math.floor((s.xp||0)/10);
     render();
     showSaveStatus("Loaded saved habitat.");
@@ -313,6 +314,11 @@ function roomScore(){
 function toggleFavorite(id){
   const i=s.favorites.indexOf(id);
   if(i>=0)s.favorites.splice(i,1);else s.favorites.push(id);
+  saveSilently();
+}
+function toggleCollectionFavorite(name){
+  const i=s.favoriteCollections.indexOf(name);
+  if(i>=0)s.favoriteCollections.splice(i,1);else s.favoriteCollections.push(name);
   saveSilently();
 }
 function saveSilently(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(s))}catch(e){}}
@@ -398,7 +404,8 @@ function achievementsPanel(p){
  p.innerHTML='<h2>🏆 Achievements</h2><p class="tiny">Achievements are based on lifetime progress.</p><div class="achievement-grid">'+achievementDefs.map(a=>{let got=s.achievements.includes(a.id);return '<div class="achievement-card '+(got?'earned':'')+'"><div class="achievement-icon">'+(got?'🏆':'🔒')+'</div><b>'+a.name+'</b><div class="tiny">'+a.desc+'</div></div>'}).join("")+'</div>';
 }
 function collectionsPanel(p){
- p.innerHTML='<h2>📖 Collections</h2><p class="tiny">Own at least one item to check it off. Mix and match however you want in your room.</p><div class="collections-grid">'+collections.map(col=>{let found=col.items.filter(id=>ownedCount(id)>0).length;let complete=found===col.items.length&&col.items.length>0;return '<section class="collection-card '+(complete?'complete':'')+'"><div class="collection-head"><div><span class="collection-emoji">'+col.emoji+'</span><b>'+col.name+'</b></div><span class="collection-progress">'+found+'/'+col.items.length+' owned</span></div><div class="collection-items">'+col.items.map(id=>{let x=catalog.find(a=>a.id===id);if(!x)return "";let owned=ownedCount(id)>0;return '<div class="collection-item '+(owned?'owned':'')+'"><div class="collection-check">'+(owned?'✓':'○')+'</div><div class="collection-thumb">'+itemVisual(x,"shop")+'</div><div class="collection-name">'+x.name+'</div></div>'}).join("")+'</div></section>'}).join("")+'</div>';
+ p.innerHTML='<h2>📖 Collections</h2><p class="tiny">Own at least one item to check it off. Star a collection you want to keep an eye on.</p><div class="collections-grid">'+collections.map(col=>{let found=col.items.filter(id=>ownedCount(id)>0).length;let complete=found===col.items.length&&col.items.length>0;let fav=s.favoriteCollections.includes(col.name);return '<section class="collection-card '+(complete?'complete':'')+'"><div class="collection-head"><div><button class="collection-favorite '+(fav?'favorited':'')+'" data-colfav="'+esc(col.name)+'" title="Favorite collection">'+(fav?'★':'☆')+'</button><span class="collection-emoji">'+col.emoji+'</span><b>'+col.name+'</b></div><span class="collection-progress">'+found+'/'+col.items.length+' owned</span></div><div class="collection-items">'+col.items.map(id=>{let x=catalog.find(a=>a.id===id);if(!x)return "";let owned=ownedCount(id)>0;return '<div class="collection-item '+(owned?'owned':'')+'"><div class="collection-check">'+(owned?'✓':'○')+'</div><div class="collection-thumb">'+itemVisual(x,"shop")+'</div><div class="collection-name">'+x.name+'</div></div>'}).join("")+'</div></section>'}).join("")+'</div>';
+ p.querySelectorAll("[data-colfav]").forEach(b=>b.onclick=()=>{toggleCollectionFavorite(b.dataset.colfav);collectionsPanel(p)});
 }
 function shopPanel(p,active){
  const cats=["All","★ Favorites","Furniture","Decor","Pets","Windows","Walls","Floors"];
@@ -414,7 +421,18 @@ function enableDragging(){
  room.querySelectorAll(".placed").forEach(el=>{
    el.addEventListener("pointerdown",e=>{
      e.preventDefault(); const idx=+el.dataset.place; el.setPointerCapture(e.pointerId); el.classList.add("dragging");
-     const move=ev=>{const r=room.getBoundingClientRect();let x=((ev.clientX-r.left)/r.width)*100;let y=((ev.clientY-r.top)/r.height)*100;x=Math.max(3,Math.min(91,x));y=Math.max(4,Math.min(80,y));s.placed[idx].x=x;s.placed[idx].y=y;el.style.left=x+"%";el.style.top=y+"%";};
+     const move=ev=>{
+       const r=room.getBoundingClientRect();
+       const visual=el.querySelector(".room-item-image")||el;
+       const vr=visual.getBoundingClientRect();
+       const halfW=Math.min(r.width/2,vr.width/2);
+       const halfH=Math.min(r.height/2,vr.height/2);
+       let px=ev.clientX-r.left,py=ev.clientY-r.top;
+       px=Math.max(halfW,Math.min(r.width-halfW,px));
+       py=Math.max(halfH,Math.min(r.height-halfH,py));
+       let x=(px/r.width)*100,y=(py/r.height)*100;
+       s.placed[idx].x=x;s.placed[idx].y=y;el.style.left=x+"%";el.style.top=y+"%";
+     };
      const up=()=>{el.classList.remove("dragging");el.removeEventListener("pointermove",move);el.removeEventListener("pointerup",up);el.removeEventListener("pointercancel",up);};
      el.addEventListener("pointermove",move);el.addEventListener("pointerup",up);el.addEventListener("pointercancel",up);
    });
