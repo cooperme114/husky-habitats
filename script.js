@@ -262,7 +262,7 @@ function loadGame(){
     const raw=localStorage.getItem(SAVE_KEY);
     if(!raw)return false;
     const saved=JSON.parse(raw);
-    s={...s,...saved,screen:"game"};
+    s={...s,...saved,screen:"game"}; if(typeof s.questionLocked!=="boolean")s.questionLocked=false;
     if(!Array.isArray(s.favorites))s.favorites=[];
     if(!Array.isArray(s.achievements))s.achievements=[];
     if(!Array.isArray(s.completedCollections))s.completedCollections=[];
@@ -468,7 +468,7 @@ function ownedCount(id){return s.inventory.filter(x=>x===id).length}
 function placedCount(id){return s.placed.filter(x=>x.id===id).length}
 function panel(v){
  const p=document.querySelector("#panel");
- if(v==="questions"){if(!s.q)newQ();p.innerHTML='<h2>Earn Coins</h2><p>What does the Greek/Latin stem <b>'+s.q.stem+'</b> mean?</p><div class="answers">'+s.q.opts.map(o=>'<button class="answer" data-a="'+o+'">'+o+'</button>').join("")+'</div><div id="feedback" class="feedback"></div>'+ (s.loot?'<div class="loot">🎁 <b>Loot drop!</b> '+itemVisual(s.loot,"loot")+' <span>'+s.loot.name+' was added to your inventory!</span></div>':"");document.querySelectorAll("[data-a]").forEach(b=>b.onclick=()=>answer(b.dataset.a));}
+ if(v==="questions"){if(!s.q)newQ();p.innerHTML='<h2>Earn Coins</h2><p>What does the Greek/Latin stem <b>'+s.q.stem+'</b> mean?</p><div class="answers">'+s.q.opts.map(o=>'<button class="answer" data-a="'+o+'" '+(s.questionLocked?'disabled':'')+'>'+o+'</button>').join("")+'</div><div id="feedback" class="feedback"></div>'+ (s.loot?'<div class="loot">🎁 <b>Loot drop!</b> '+itemVisual(s.loot,"loot")+' <span>'+s.loot.name+' was added to your inventory!</span></div>':"");if(!s.questionLocked)document.querySelectorAll("[data-a]").forEach(b=>b.onclick=()=>answer(b.dataset.a));}
  if(v==="shop"){shopPanel(p,"All");}
  if(v==="collections"){collectionsPanel(p);}
  if(v==="achievements"){achievementsPanel(p);}
@@ -532,8 +532,8 @@ function itemVisual(x,where,extra="",petIndex=null){
  }
  return '<span class="fallback-icon">'+(x.icon||"")+'</span>';
 }
-function newQ(){let keys=Object.keys(stems),stem=keys[Math.floor(Math.random()*keys.length)],correct=stems[stem],wrong=[...new Set(Object.values(stems).filter(x=>x!==correct))].sort(()=>Math.random()-.5).slice(0,3);s.q={stem,correct,opts:[correct,...wrong].sort(()=>Math.random()-.5)};s.loot=null}
-function answer(a){let f=document.querySelector("#feedback");document.querySelectorAll("[data-a]").forEach(b=>b.disabled=true);if(a===s.q.correct){s.coins+=20;s.xp+=10;s.streak++;s.answered++;s.correct++;f.textContent="Correct! +20 coins 🪙";let rewardDelay=1100;if(s.streak>0&&s.streak%25===0){let pool=catalog.filter(x=>!s.inventory.includes(x.id)&&!["Walls","Floors"].includes(x.cat));if(pool.length){let item=pool[Math.floor(Math.random()*pool.length)];s.inventory.push(item.id);s.loot=item;checkCollectionComplete();checkAchievements();f.textContent="🔥 "+s.streak+"-answer streak! You earned "+item.name+"!";rewardDelay=3200}}checkAchievements();saveSilently();setTimeout(()=>{newQ();render()},rewardDelay)}else{s.streak=0;s.answered++;f.textContent="Not quite. "+s.q.stem+" means "+s.q.correct+".";document.querySelector(".pill:last-child").textContent="🔥 0";setTimeout(()=>{newQ();render()},1400)}}
+function newQ(){let keys=Object.keys(stems),stem=keys[Math.floor(Math.random()*keys.length)],correct=stems[stem],wrong=[...new Set(Object.values(stems).filter(x=>x!==correct))].sort(()=>Math.random()-.5).slice(0,3);s.q={stem,correct,opts:[correct,...wrong].sort(()=>Math.random()-.5)};s.loot=null;s.questionLocked=false}
+function answer(a){if(s.questionLocked)return;s.questionLocked=true;let f=document.querySelector("#feedback");document.querySelectorAll("[data-a]").forEach(b=>b.disabled=true);if(a===s.q.correct){s.coins+=20;s.xp+=10;s.streak++;s.answered++;s.correct++;f.textContent="Correct! +20 coins 🪙";let rewardDelay=1100;if(s.streak>0&&s.streak%25===0){let pool=catalog.filter(x=>!s.inventory.includes(x.id)&&!["Walls","Floors"].includes(x.cat));if(pool.length){let item=pool[Math.floor(Math.random()*pool.length)];s.inventory.push(item.id);s.loot=item;checkCollectionComplete();checkAchievements();f.textContent="🔥 "+s.streak+"-answer streak! You earned "+item.name+"!";rewardDelay=3200}}checkAchievements();saveSilently();setTimeout(()=>{newQ();render()},rewardDelay)}else{s.streak=0;s.answered++;f.textContent="Not quite. "+s.q.stem+" means "+s.q.correct+".";document.querySelector(".pill:last-child").textContent="🔥 0";setTimeout(()=>{newQ();render()},1400)}}
 function buy(id){let x=catalog.find(a=>a.id===id);if(s.coins<x.price){alert("You need "+(x.price-s.coins)+" more coins.");return}s.coins-=x.price;s.inventory.push(id);render();checkCollectionComplete();checkAchievements();saveSilently();panel("shop")}
 function buyMysteryBox(){
  if(s.coins<200){alert("You need "+(200-s.coins)+" more coins.");return}
