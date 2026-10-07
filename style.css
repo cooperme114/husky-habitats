@@ -307,3 +307,9 @@ background-size:100% 100%,auto;
 .room-item-image.item-pets-frog{
   transform:scale(.67);
 }
+
+.shop-search-wrap{position:relative;margin:14px 0 10px}
+.shop-search-icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);pointer-events:none}
+.shop-search{width:100%;padding:11px 14px 11px 40px;border:2px solid #c9d6df;border-radius:14px;background:#fff;color:#33404d;font-weight:700;outline:none}
+.shop-search:focus{border-color:#4c86a5;box-shadow:0 0 0 3px #4c86a51a}
+.shop-empty{grid-column:1/-1;text-align:center;padding:24px;color:#6d7780;font-weight:800}
