@@ -249,6 +249,8 @@ const collections=[
 let s={screen:"setup",first:"",initial:"",coins:100,xp:0,streak:0,inventory:[],placed:[],wall:"plain",floor:"plain",q:null,answered:0,correct:0,loot:null,favorites:[],achievements:[],completedCollections:[],favoriteCollections:[],lifetime:{purchases:0,sales:0,mysteryBoxes:0,petsPetted:0,flips:0}};
 const app=document.querySelector("#app");
 const SAVE_KEY="huskyHabitatsSaveV1";
+let shopUi={cat:"All",query:"",sort:"az",favoritesFirst:false,ownedFirst:false};
+let inventoryUi={sort:"az",favoritesFirst:true};
 function saveGame(){
   try{
     localStorage.setItem(SAVE_KEY,JSON.stringify(s));
@@ -628,21 +630,43 @@ function setup(){
  const loadCodeStart=document.querySelector("#loadSaveCodeStart"); if(loadCodeStart)loadCodeStart.onclick=loadSaveCodePrompt;
  document.querySelector("#start").onclick=()=>{let f=document.querySelector("#first").value.trim(),i=document.querySelector("#initial").value.trim();if(!f||!/^[A-Za-z]$/.test(i)){document.querySelector("#setupmsg").textContent="Please enter your real first name and one last initial.";return}s.first=f[0].toUpperCase()+f.slice(1).toLowerCase();s.initial=i.toUpperCase();s.screen="game";render()};
 }
+function sortItems(items,sort,favoritesFirst=false,ownedFirst=false){
+ const indexed=new Map(catalog.map((x,i)=>[x.id,i]));
+ return [...items].sort((a,b)=>{
+   if(favoritesFirst){
+     const d=(s.favorites.includes(b.id)?1:0)-(s.favorites.includes(a.id)?1:0);
+     if(d)return d;
+   }
+   if(ownedFirst){
+     const d=(ownedCount(b.id)>0?1:0)-(ownedCount(a.id)>0?1:0);
+     if(d)return d;
+   }
+   if(sort==="za")return b.name.localeCompare(a.name);
+   if(sort==="newest")return (indexed.get(b.id)||0)-(indexed.get(a.id)||0);
+   if(sort==="oldest")return (indexed.get(a.id)||0)-(indexed.get(b.id)||0);
+   if(sort==="price-low")return a.price-b.price||a.name.localeCompare(b.name);
+   if(sort==="price-high")return b.price-a.price||a.name.localeCompare(b.name);
+   return a.name.localeCompare(b.name);
+ });
+}
 function ownedCount(id){return s.inventory.filter(x=>x===id).length}
 function placedCount(id){return s.placed.filter(x=>x.id===id).length}
 function panel(v){
  const p=document.querySelector("#panel");
  if(v==="questions"){if(!s.q)newQ();p.innerHTML='<h2>Earn Coins</h2><p>What does the Greek/Latin stem <b>'+s.q.stem+'</b> mean?</p><div class="answers">'+s.q.opts.map(o=>'<button class="answer" data-a="'+o+'" '+(s.questionLocked?'disabled':'')+'>'+o+'</button>').join("")+'</div><div id="feedback" class="feedback"></div>'+ (s.loot?'<div class="loot">🎁 <b>Loot drop!</b> '+itemVisual(s.loot,"loot")+' <span>'+s.loot.name+' was added to your inventory!</span></div>':"");if(!s.questionLocked)document.querySelectorAll("[data-a]").forEach(b=>b.onclick=()=>answer(b.dataset.a));}
- if(v==="shop"){shopPanel(p,"All");}
+ if(v==="shop"){shopPanel(p);}
  if(v==="collections"){collectionsPanel(p);}
  if(v==="achievements"){achievementsPanel(p);}
  if(v==="inventory"){
-   let owned=catalog.filter(x=>ownedCount(x.id)>0);
+   let owned=sortItems(catalog.filter(x=>ownedCount(x.id)>0),inventoryUi.sort,inventoryUi.favoritesFirst,false);
    p.innerHTML='<h2>🎒 Inventory</h2><p class="tiny">Place as many copies as you own, then drag them where you want them.</p>'+
-   (owned.length?'<div class="shop-grid">'+owned.sort((a,b)=>(s.favorites.includes(b.id)?1:0)-(s.favorites.includes(a.id)?1:0)).map(x=>{
+   '<div class="sort-controls"><label>Sort by <select id="inventorySort" class="sort-select"><option value="az">A–Z</option><option value="za">Z–A</option><option value="newest">Newest First</option><option value="oldest">Oldest First</option><option value="price-low">Price: Low to High</option><option value="price-high">Price: High to Low</option></select></label><label class="sort-check"><input id="inventoryFavFirst" type="checkbox" '+(inventoryUi.favoritesFirst?'checked':'')+'> ★ Favorites first</label></div>'+
+   (owned.length?'<div class="shop-grid">'+owned.map(x=>{
      const useDisabled=((!["Walls","Floors"].includes(x.cat)&&placedCount(x.id)>=ownedCount(x.id))||(x.cat==="Walls"&&s.wall===x.id)||(x.cat==="Floors"&&s.floor===x.id));
      return '<div class="shop-item"><button class="favorite-btn '+(s.favorites.includes(x.id)?'favorited':'')+'" data-fav="'+x.id+'" title="Favorite">'+(s.favorites.includes(x.id)?'★':'☆')+'</button><div class="item-art">'+itemVisual(x,"shop")+'</div><b>'+x.name+'</b><div class="tiny">'+x.cat+' • Owned: '+ownedCount(x.id)+'</div><div class="inventory-actions"><button class="secondary" data-use="'+x.id+'" '+(useDisabled?"disabled":"")+'>'+useLabel(x)+'</button>'+((!["Walls","Floors"].includes(x.cat)&&placedCount(x.id)>0)?'<button class="secondary" data-remove="'+x.id+'">Remove One</button>':"")+'<button class="secondary sell-btn" data-sell="'+x.id+'">Sell 🪙 '+Math.floor(x.price*.5)+'</button></div></div>';
    }).join("")+'</div>':'<p>Your inventory is empty. Answer questions and visit the shop!</p>');
+   const invSort=p.querySelector("#inventorySort");if(invSort){invSort.value=inventoryUi.sort;invSort.onchange=()=>{inventoryUi.sort=invSort.value;panel("inventory")}}
+   const invFav=p.querySelector("#inventoryFavFirst");if(invFav)invFav.onchange=()=>{inventoryUi.favoritesFirst=invFav.checked;panel("inventory")};
    document.querySelectorAll("[data-fav]").forEach(b=>b.onclick=()=>{toggleFavorite(b.dataset.fav);panel("inventory")});
    document.querySelectorAll("[data-use]").forEach(b=>b.onclick=()=>useItem(b.dataset.use));
    document.querySelectorAll("[data-remove]").forEach(b=>b.onclick=()=>removeOne(b.dataset.remove));
@@ -661,19 +685,32 @@ function collectionsPanel(p){
  p.innerHTML='<h2>📖 Collections</h2><p class="tiny">Own at least one item to check it off. Star a collection you want to keep an eye on.</p><div class="collections-grid">'+collections.map(col=>{let found=col.items.filter(id=>ownedCount(id)>0).length;let complete=found===col.items.length&&col.items.length>0;let fav=s.favoriteCollections.includes(col.name);return '<section class="collection-card '+(complete?'complete':'')+'"><div class="collection-head"><div><button class="collection-favorite '+(fav?'favorited':'')+'" data-colfav="'+esc(col.name)+'" title="Favorite collection">'+(fav?'★':'☆')+'</button><span class="collection-emoji">'+col.emoji+'</span><b>'+col.name+'</b></div><span class="collection-progress">'+found+'/'+col.items.length+' owned</span></div><div class="collection-items">'+col.items.map(id=>{let x=catalog.find(a=>a.id===id);if(!x)return "";let owned=ownedCount(id)>0;return '<div class="collection-item '+(owned?'owned':'')+'"><div class="collection-check">'+(owned?'✓':'○')+'</div><div class="collection-thumb">'+itemVisual(x,"shop")+'</div><div class="collection-name">'+x.name+'</div></div>'}).join("")+'</div></section>'}).join("")+'</div>';
  p.querySelectorAll("[data-colfav]").forEach(b=>b.onclick=()=>{toggleCollectionFavorite(b.dataset.colfav);collectionsPanel(p)});
 }
-function shopPanel(p,active,query=""){
+function shopPanel(p,active=null,query=null){
+ if(active!==null)shopUi.cat=active;
+ if(query!==null)shopUi.query=query;
  const cats=["All","Furniture","Decor","Pets","Windows","Walls","Floors"];
- const q=query.trim().toLowerCase();
- const base=active==="All"?catalog:catalog.filter(x=>x.cat===active);
- const items=q?base.filter(x=>(x.name+" "+x.cat+" "+x.id).toLowerCase().includes(q)):base;
- p.innerHTML='<h2>🛍️ Habitat Shop</h2><p class="tiny">Furniture, decor, pets, and windows can be bought more than once.</p><div class="shop-search-wrap"><span class="shop-search-icon">🔎</span><input id="shopSearch" class="shop-search" type="search" placeholder="Search the shop..." value="'+esc(query)+'" autocomplete="off"></div><div class="shop-tabs">'+cats.map(c=>'<button class="shop-tab '+(c===active?'active':'')+'" data-cat="'+c+'">'+c+'</button>').join("")+'</div><div id="shopResults" class="shop-grid">'+(items.length?items.map(x=>{let count=ownedCount(x.id),oneOnly=["Walls","Floors"].includes(x.cat);return '<div class="shop-item"><div class="item-art">'+itemVisual(x,"shop")+'</div><b>'+x.name+'</b><div class="tiny">'+x.cat+(count?' • Owned: '+count:'')+'</div><div class="price">🪙 '+x.price+'</div><button class="secondary buy-btn '+(s.coins<x.price?'cant-afford':'')+'" data-buy="'+x.id+'" '+((oneOnly&&count)||s.coins<x.price?"disabled":"")+'>'+(oneOnly&&count?"Owned":s.coins<x.price?"Need 🪙 "+(x.price-s.coins):count?"Buy Another":"Buy")+'</button></div>'}).join(""):'<div class="shop-empty">No items match “'+esc(query)+'”.</div>')+'</div>';
+ const q=shopUi.query.trim().toLowerCase();
+ const base=shopUi.cat==="All"?catalog:catalog.filter(x=>x.cat===shopUi.cat);
+ const filtered=q?base.filter(x=>(x.name+" "+x.cat+" "+x.id).toLowerCase().includes(q)):base;
+ const items=sortItems(filtered,shopUi.sort,shopUi.favoritesFirst,shopUi.ownedFirst);
+ p.innerHTML='<h2>🛍️ Habitat Shop</h2><p class="tiny">Furniture, decor, pets, and windows can be bought more than once.</p>'+
+ '<div class="shop-search-wrap"><span class="shop-search-icon">🔎</span><input id="shopSearch" class="shop-search" type="search" placeholder="Search the shop..." value="'+esc(shopUi.query)+'" autocomplete="off"></div>'+
+ '<div class="sort-controls"><label>Sort by <select id="shopSort" class="sort-select"><option value="az">A–Z</option><option value="za">Z–A</option><option value="newest">Newest First</option><option value="oldest">Oldest First</option><option value="price-low">Price: Low to High</option><option value="price-high">Price: High to Low</option></select></label><label class="sort-check"><input id="shopFavFirst" type="checkbox" '+(shopUi.favoritesFirst?'checked':'')+'> ★ Favorites first</label><label class="sort-check"><input id="shopOwnedFirst" type="checkbox" '+(shopUi.ownedFirst?'checked':'')+'> Owned first</label></div>'+
+ '<div class="shop-tabs">'+cats.map(c=>'<button class="shop-tab '+(c===shopUi.cat?'active':'')+'" data-cat="'+c+'">'+c+'</button>').join("")+'</div>'+
+ '<div id="shopResults" class="shop-grid">'+(items.length?items.map(x=>{let count=ownedCount(x.id),oneOnly=["Walls","Floors"].includes(x.cat);return '<div class="shop-item"><button class="favorite-btn '+(s.favorites.includes(x.id)?'favorited':'')+'" data-shopfav="'+x.id+'" title="Favorite">'+(s.favorites.includes(x.id)?'★':'☆')+'</button><div class="item-art">'+itemVisual(x,"shop")+'</div><b>'+x.name+'</b><div class="tiny">'+x.cat+(count?' • Owned: '+count:'')+'</div><div class="price">🪙 '+x.price+'</div><button class="secondary buy-btn '+(s.coins<x.price?'cant-afford':'')+'" data-buy="'+x.id+'" '+((oneOnly&&count)||s.coins<x.price?"disabled":"")+'>'+(oneOnly&&count?"Owned":s.coins<x.price?"Need 🪙 "+(x.price-s.coins):count?"Buy Another":"Buy")+'</button></div>'}).join(""):'<div class="shop-empty">No items match “'+esc(shopUi.query)+'”.</div>')+'</div>';
  const input=p.querySelector("#shopSearch");
- input.focus();
- input.setSelectionRange(input.value.length,input.value.length);
- input.oninput=()=>shopPanel(p,active,input.value);
- p.querySelectorAll("[data-cat]").forEach(b=>b.onclick=()=>shopPanel(p,b.dataset.cat,query));
+ if(input){
+   input.focus();input.setSelectionRange(input.value.length,input.value.length);
+   input.oninput=()=>shopPanel(p,null,input.value);
+ }
+ const sort=p.querySelector("#shopSort");if(sort){sort.value=shopUi.sort;sort.onchange=()=>{shopUi.sort=sort.value;shopPanel(p)}}
+ const fav=p.querySelector("#shopFavFirst");if(fav)fav.onchange=()=>{shopUi.favoritesFirst=fav.checked;shopPanel(p)};
+ const own=p.querySelector("#shopOwnedFirst");if(own)own.onchange=()=>{shopUi.ownedFirst=own.checked;shopPanel(p)};
+ p.querySelectorAll("[data-cat]").forEach(b=>b.onclick=()=>shopPanel(p,b.dataset.cat,null));
+ p.querySelectorAll("[data-shopfav]").forEach(b=>b.onclick=()=>{toggleFavorite(b.dataset.shopfav);shopPanel(p)});
  p.querySelectorAll("[data-buy]").forEach(b=>b.onclick=()=>buy(b.dataset.buy));
 }
+
 function enableDragging(){
  const room=document.querySelector("#room"); if(!room)return;
  room.querySelectorAll(".placed").forEach(el=>{
@@ -714,7 +751,7 @@ function itemVisual(x,where,extra="",petIndex=null){
 }
 function newQ(){let keys=Object.keys(stems),stem=keys[Math.floor(Math.random()*keys.length)],correct=stems[stem],wrong=[...new Set(Object.values(stems).filter(x=>x!==correct))].sort(()=>Math.random()-.5).slice(0,3);s.q={stem,correct,opts:[correct,...wrong].sort(()=>Math.random()-.5)};s.loot=null;s.questionLocked=false}
 function answer(a){if(s.questionLocked)return;s.questionLocked=true;let f=document.querySelector("#feedback");document.querySelectorAll("[data-a]").forEach(b=>b.disabled=true);if(a===s.q.correct){s.coins+=20;s.xp+=10;s.streak++;s.answered++;s.correct++;f.textContent="Correct! +20 coins 🪙";let rewardDelay=1100;if(s.streak>0&&s.streak%25===0){let pool=catalog.filter(x=>!s.inventory.includes(x.id)&&!["Walls","Floors"].includes(x.cat));if(pool.length){let item=pool[Math.floor(Math.random()*pool.length)];s.inventory.push(item.id);s.loot=item;checkCollectionComplete();checkAchievements();f.textContent="🔥 "+s.streak+"-answer streak! You earned "+item.name+"!";rewardDelay=3200}}checkAchievements();saveSilently();setTimeout(()=>{newQ();render()},rewardDelay)}else{s.streak=0;s.answered++;f.textContent="Not quite. "+s.q.stem+" means "+s.q.correct+".";document.querySelector(".pill:last-child").textContent="🔥 0";setTimeout(()=>{newQ();render()},1400)}}
-function buy(id){let x=catalog.find(a=>a.id===id);if(s.coins<x.price){alert("You need "+(x.price-s.coins)+" more coins.");return}s.coins-=x.price;s.inventory.push(id);s.lifetime.purchases++;render();checkCollectionComplete();checkAchievements();saveSilently();panel("shop")}
+function buy(id){let x=catalog.find(a=>a.id===id);if(s.coins<x.price){alert("You need "+(x.price-s.coins)+" more coins.");return}s.coins-=x.price;s.inventory.push(id);s.lifetime.purchases++;render();checkCollectionComplete();checkAchievements();saveSilently();const p=document.querySelector("#panel");if(p)shopPanel(p)}
 function buyMysteryBox(){
  if(s.coins<200){alert("You need "+(200-s.coins)+" more coins.");return}
  s.coins-=200;
@@ -725,7 +762,7 @@ function buyMysteryBox(){
  render();checkCollectionComplete();checkAchievements();saveSilently();
  const p=document.querySelector("#panel");
  p.innerHTML='<h2>🎁 Mystery Box!</h2><p>You got:</p><div class="mystery-reveal">'+won.map((x,i)=>'<div class="mystery-prize" style="animation-delay:'+(i*.35)+'s">'+itemVisual(x,"shop")+'<b>'+x.name+'</b></div>').join("")+'</div><button class="primary" id="backShop">Back to Shop</button>';
- document.querySelector("#backShop").onclick=()=>shopPanel(p,"All");
+ document.querySelector("#backShop").onclick=()=>shopPanel(p);
 }
 function sellableCount(id){return ownedCount(id)}
 function sellItem(id){
