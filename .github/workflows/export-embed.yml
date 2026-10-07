@@ -21,18 +21,17 @@ jobs:
           import base64, mimetypes, re
           js = Path("script.js").read_text(encoding="utf-8")
           css = Path("style.css").read_text(encoding="utf-8")
-          refs = sorted(set(re.findall(r"images/items/[^\\\"']+?\\.(?:png|gif|jpg|jpeg|webp)", js, flags=re.I)))
-          missing = []
-          for ref in refs:
-              p = Path(ref)
-              if not p.exists():
-                  missing.append(ref)
+          refs = []
+          for p in sorted(Path("images/items").iterdir()):
+              if not p.is_file() or p.suffix.lower() not in {".png", ".gif", ".jpg", ".jpeg", ".webp"}:
                   continue
+              ref = p.as_posix()
+              if ref not in js:
+                  continue
+              refs.append(ref)
               mime = mimetypes.guess_type(p.name)[0] or "application/octet-stream"
               uri = "data:" + mime + ";base64," + base64.b64encode(p.read_bytes()).decode("ascii")
               js = js.replace(ref, uri)
-          if missing:
-              raise SystemExit("Missing assets: " + ", ".join(missing))
           out = '<div id="app"></div>\n<style>\n' + css + '\n</style>\n<script>\n' + js + '\n</script>\n'
           Path("google-sites/embed-code.txt").write_text(out, encoding="utf-8")
           print(f"Embedded {len(refs)} referenced assets; output {len(out):,} characters")
