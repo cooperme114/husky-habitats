@@ -322,3 +322,6 @@ background-size:100% 100%,auto;
 .savecode-close{position:absolute;right:14px;top:12px;width:38px;height:38px;border-radius:50%;border:1px solid #cfd9e2;background:#fff;font-size:1.65rem;line-height:1;color:#56636d}
 .savecode-box{width:100%;height:150px;resize:vertical;border:2px solid #c9d6df;border-radius:14px;padding:12px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.78rem;word-break:break-all;margin:10px 0}
 .savecode-actions{display:flex;gap:10px;flex-wrap:wrap}
+
+.achievement-section{margin-top:20px}
+.achievement-section h3{margin:0 0 8px;color:#52616b}
