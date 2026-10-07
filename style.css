@@ -315,7 +315,6 @@ background-size:100% 100%,auto;
 .shop-empty{grid-column:1/-1;text-align:center;padding:24px;color:#6d7780;font-weight:800}
 
 .buy-btn.cant-afford{background:#edf0f2;color:#929ba2;border-color:#d7dde1;opacity:.72}
-.mystery-nosell{margin-top:6px;color:#8a6d2d}
 .sell-btn{border-color:#d8c7a1}
 .savecode-overlay{position:fixed;inset:0;z-index:1300;background:#24344399;display:grid;place-items:center;padding:18px}
 .savecode-modal{position:relative;width:min(680px,94vw);background:#fff;border-radius:24px;border:3px solid #d7e2ea;padding:24px;box-shadow:0 20px 60px #0004}
