@@ -524,7 +524,7 @@ function itemVisual(x,where,extra="",petIndex=null){
      const duration=2.6+(idx%4)*0.35;
      petStyle=' style="animation-delay:'+delay+'s;animation-duration:'+duration+'s"';
    }
-   return '<img class="'+cls+petClass+extra+'" src="'+x.img+'" alt=""'+petStyle+'>';
+   return '<img class="'+cls+' item-'+x.id+petClass+extra+'" src="'+x.img+'" alt=""'+petStyle+'>';
  }
  return '<span class="fallback-icon">'+(x.icon||"")+'</span>';
 }
