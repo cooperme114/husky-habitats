@@ -1,14 +1,41 @@
 name: Export Google Sites Embed
 on:
   push:
+    branches: [main]
     paths:
-      - "google-sites/embed-code.txt"
+      - "index.html"
+      - "script.js"
+      - "style.css"
+      - "images/items/**"
       - ".github/workflows/export-embed.yml"
+  workflow_dispatch:
 jobs:
   export:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Build self-contained Google Sites embed
+        shell: python
+        run: |
+          from pathlib import Path
+          import base64, mimetypes, re
+          js = Path("script.js").read_text(encoding="utf-8")
+          css = Path("style.css").read_text(encoding="utf-8")
+          refs = sorted(set(re.findall(r'images/items/[^"\\']+?\.(?:png|gif|jpg|jpeg|webp)', js, flags=re.I)))
+          missing = []
+          for ref in refs:
+              p = Path(ref)
+              if not p.exists():
+                  missing.append(ref)
+                  continue
+              mime = mimetypes.guess_type(p.name)[0] or "application/octet-stream"
+              uri = "data:" + mime + ";base64," + base64.b64encode(p.read_bytes()).decode("ascii")
+              js = js.replace(ref, uri)
+          if missing:
+              raise SystemExit("Missing assets: " + ", ".join(missing))
+          out = '<div id="app"></div>\n<style>\n' + css + '\n</style>\n<script>\n' + js + '\n</script>\n'
+          Path("google-sites/embed-code.txt").write_text(out, encoding="utf-8")
+          print(f"Embedded {len(refs)} referenced assets; output {len(out):,} characters")
       - uses: actions/upload-artifact@v4
         with:
           name: husky-habitats-google-sites
