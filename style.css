@@ -362,3 +362,7 @@ background-size:100% 100%,auto;
 
 .item-size-controls{transform:translate(-50%,0);gap:2px;padding:3px;border-radius:9px}
 .item-size-controls button{width:27px;height:25px;padding:0;border-radius:6px;font-size:.9rem;line-height:25px}
+
+.item-size-controls{flex-direction:column;align-items:center}
+.item-size-controls .size-row{display:flex;gap:2px}
+.item-size-controls .flip-control{width:83px;height:22px;line-height:22px;margin-top:1px;font-size:.85rem}
