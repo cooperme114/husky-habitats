@@ -494,11 +494,11 @@ function applySaveCode(code){
     return false;
   }
 }
-function showSaveCode(){
+function showSaveCode(startWithLoad=false){
   const old=document.querySelector(".savecode-overlay");if(old)old.remove();
   const el=document.createElement("div");el.className="savecode-overlay";
   const code=makeSaveCode();
-  el.innerHTML='<div class="savecode-modal" role="dialog" aria-modal="true"><button class="savecode-close" type="button" aria-label="Close">×</button><h2>🔐 Backup Save Code</h2><p class="tiny">Copy this code somewhere safe. It restores your room and progress even after a refresh or on another device.</p><textarea id="saveCodeBox" class="savecode-box" readonly>'+code+'</textarea><div class="savecode-actions"><button id="copySaveCode" class="primary" type="button">Copy Save Code</button><button id="loadCodeHere" class="secondary" type="button">Load a Save Code</button></div></div>';
+  el.innerHTML='<div class="savecode-modal" role="dialog" aria-modal="true"><button class="savecode-close" type="button" aria-label="Close">×</button><h2>🔐 Save Codes</h2><p class="tiny">Copy your code to back up your habitat, or paste a saved code below to restore it.</p><label for="saveCodeBox"><b>Your Backup Code</b></label><textarea id="saveCodeBox" class="savecode-box" readonly>'+code+'</textarea><div class="savecode-actions"><button id="copySaveCode" class="primary" type="button">Copy Save Code</button></div><label for="loadSaveBox"><b>Load a Saved Habitat</b></label><textarea id="loadSaveBox" class="savecode-box" placeholder="Paste your HH1- save code here" spellcheck="false" autocomplete="off"></textarea><div class="savecode-actions"><button id="loadCodeHere" class="primary" type="button">Load Save Code</button></div><p id="loadCodeError" class="tiny" role="alert"></p></div>';
   document.body.appendChild(el);
   const close=()=>el.remove();
   el.querySelector(".savecode-close").onclick=close;
@@ -509,14 +509,13 @@ function showSaveCode(){
     catch(e){document.execCommand("copy");el.querySelector("#copySaveCode").textContent="Copied! ✓"}
   };
   el.querySelector("#loadCodeHere").onclick=()=>{
-    const codeIn=prompt("Paste your Husky Habitats save code:");
-    if(codeIn&&applySaveCode(codeIn))close();
+    const value=el.querySelector("#loadSaveBox").value.trim();
+    if(!value){el.querySelector("#loadCodeError").textContent="Paste your save code first.";return}
+    if(applySaveCode(value))close();
   };
+  if(startWithLoad)el.querySelector("#loadSaveBox").focus();
 }
-function loadSaveCodePrompt(){
-  const code=prompt("Paste your Husky Habitats save code:");
-  if(code)applySaveCode(code);
-}
+function loadSaveCodePrompt(){showSaveCode(true)}
 function totalPetsOwned(){return s.inventory.filter(id=>{const x=catalog.find(a=>a.id===id);return x&&x.cat==="Pets"}).length}
 function uniquePetsOwned(){return new Set(s.inventory.filter(id=>{const x=catalog.find(a=>a.id===id);return x&&x.cat==="Pets"})).size}
 function placedPets(){return s.placed.filter(p=>{const x=catalog.find(a=>a.id===p.id);return x&&x.cat==="Pets"}).length}
