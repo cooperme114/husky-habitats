@@ -864,12 +864,13 @@ function panel(v){
  if(v==="shop"){shopPanel(p);}
  if(v==="collections"){collectionsPanel(p);}
  if(v==="achievements"){achievementsPanel(p);}
+ if(v==="trophies"){trophyCasePanel(p);}
  if(v==="inventory"){
    let owned=sortItems(catalog.filter(x=>ownedCount(x.id)>0),inventoryUi.sort,inventoryUi.favoritesFirst,false);
    p.innerHTML='<h2>🎒 Inventory</h2><p class="tiny">Place as many copies as you own, then drag them where you want them.</p>'+
    '<div class="sort-controls"><label>Sort by <select id="inventorySort" class="sort-select"><option value="az">A–Z</option><option value="za">Z–A</option><option value="newest">Newest First</option><option value="oldest">Oldest First</option><option value="price-low">Price: Low to High</option><option value="price-high">Price: High to Low</option></select></label><label class="sort-check"><input id="inventoryFavFirst" type="checkbox" '+(inventoryUi.favoritesFirst?'checked':'')+'> ★ Favorites first</label></div>'+
    (owned.length?'<div class="shop-grid">'+owned.map(x=>{
-     const useDisabled=((!["Walls","Floors"].includes(x.cat)&&placedCount(x.id)>=ownedCount(x.id))||(x.cat==="Walls"&&s.wall===x.id)||(x.cat==="Floors"&&s.floor===x.id));
+     const useDisabled=((!["Walls","Floors","Trophies"].includes(x.cat)&&placedCount(x.id)>=ownedCount(x.id))||(x.cat==="Walls"&&s.wall===x.id)||(x.cat==="Floors"&&s.floor===x.id));
      return '<div class="shop-item"><button class="favorite-btn '+(s.favorites.includes(x.id)?'favorited':'')+'" data-fav="'+x.id+'" title="Favorite">'+(s.favorites.includes(x.id)?'★':'☆')+'</button><button class="item-art preview-trigger" data-preview="'+x.id+'" title="Preview '+esc(x.name)+'">'+itemVisual(x,"shop")+'</button><b>'+x.name+'</b><div class="tiny">'+x.cat+' • Owned: '+ownedCount(x.id)+'</div><div class="inventory-actions"><button class="secondary" data-use="'+x.id+'" '+(useDisabled?"disabled":"")+'>'+useLabel(x)+'</button>'+((!["Walls","Floors"].includes(x.cat)&&placedCount(x.id)>0)?'<button class="secondary" data-remove="'+x.id+'">Remove One</button>':"")+(x.cat==="Trophies"?'':'<button class="secondary sell-btn" data-sell="'+x.id+'">Sell 🪙 '+Math.floor(x.price*.5)+'</button>')+'</div></div>';
    }).join("")+'</div>':'<p>Your inventory is empty. Answer questions and visit the shop!</p>');
    const invSort=p.querySelector("#inventorySort");if(invSort){invSort.value=inventoryUi.sort;invSort.onchange=()=>{inventoryUi.sort=invSort.value;panel("inventory")}}
@@ -880,13 +881,30 @@ function panel(v){
    document.querySelectorAll("[data-sell]").forEach(b=>b.onclick=()=>sellItem(b.dataset.sell));
  }
 }
+function trophyCasePanel(p){
+ syncTrophies();
+ const groups=[["Questions","questions"],["Streaks","streak"],["Shopping","coin"],["Decorating","furniture"],["Pets","pet"]];
+ const tiers=["bronze","silver","gold"];
+ const earned=Object.values(trophyAwards).filter(id=>s.inventory.includes(id)).length;
+ p.innerHTML='<h2>🏆 Trophy Case</h2><p class="tiny">'+earned+' / 15 trophies earned. Earn trophies through achievements, then display them in your room!</p><button class="secondary" id="backAchievements">← Back to Achievements</button>'+
+ groups.map(([label,type])=>'<section class="achievement-section"><h3>'+label+'</h3><div class="achievement-grid">'+tiers.map(tier=>{
+ const id="trophy-"+type+"-"+tier;
+ const x=catalog.find(item=>item.id===id);
+ const achievementId=Object.keys(trophyAwards).find(a=>trophyAwards[a]===id);
+ const a=achievementDefs.find(def=>def.id===achievementId);
+ const got=s.achievements.includes(achievementId);
+ return '<div class="achievement-card '+(got?'earned':'')+'"><div style="height:110px;display:flex;align-items:center;justify-content:center"><img src="'+x.img+'" alt="'+esc(x.name)+'" style="max-width:100%;max-height:105px;object-fit:contain;'+(got?'':'filter:grayscale(1);opacity:.35;')+'"></div><b>'+esc(x.name)+'</b><div class="tiny">'+(got?'✓ Earned':esc(a.desc))+'</div></div>';
+ }).join("")+'</div></section>').join("");
+ p.querySelector("#backAchievements").onclick=()=>panel("achievements");
+}
 function achievementsPanel(p){
  const groups=[
   ["Questions",0,15],["Streaks",15,23],["Coins & Shopping",23,37],["Ownership",37,48],
   ["Collections",48,67],["Pets",67,78],["Decorating",78,90],["Room Score",90,97],["Special",97,100]
  ];
- p.innerHTML='<h2>🏆 Achievements</h2><p class="tiny">100 long-term goals. Once unlocked, an achievement stays unlocked.</p>'+
+ p.innerHTML='<h2>🏆 Achievements</h2><button class="primary" id="viewTrophyCase">🏆 View Trophy Case</button><p class="tiny">100 long-term goals. Once unlocked, an achievement stays unlocked.</p>'+
  groups.map(g=>'<section class="achievement-section"><h3>'+g[0]+'</h3><div class="achievement-grid">'+achievementDefs.slice(g[1],g[2]).map(a=>{let got=s.achievements.includes(a.id);return '<div class="achievement-card '+(got?'earned':'')+'"><div class="achievement-icon">'+(got?'🏆':'🔒')+'</div><b>'+a.name+'</b><div class="tiny">'+a.desc+'</div></div>'}).join("")+'</div></section>').join("");
+ p.querySelector('#viewTrophyCase').onclick=()=>panel('trophies');
 }
 function collectionsPanel(p){
  p.innerHTML='<h2>📖 Collections</h2><p class="tiny">Own at least one item to check it off. Star a collection you want to keep an eye on.</p><div class="collections-grid">'+collections.map(col=>{let found=col.items.filter(id=>ownedCount(id)>0).length;let complete=found===col.items.length&&col.items.length>0;let fav=s.favoriteCollections.includes(col.name);return '<section class="collection-card '+(complete?'complete':'')+'"><div class="collection-head"><div><button class="collection-favorite '+(fav?'favorited':'')+'" data-colfav="'+esc(col.name)+'" title="Favorite collection">'+(fav?'★':'☆')+'</button><span class="collection-emoji">'+col.emoji+'</span><b>'+col.name+'</b></div><span class="collection-progress">'+found+'/'+col.items.length+' owned</span></div><div class="collection-items">'+col.items.map(id=>{let x=catalog.find(a=>a.id===id);if(!x)return "";let owned=ownedCount(id)>0;return '<div class="collection-item '+(owned?'owned':'')+'"><div class="collection-check">'+(owned?'✓':'○')+'</div><div class="collection-thumb">'+itemVisual(x,"shop")+'</div><div class="collection-name">'+x.name+'</div></div>'}).join("")+'</div></section>'}).join("")+'</div>';
