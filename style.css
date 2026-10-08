@@ -383,3 +383,16 @@ background-size:100% 100%,auto;
 .placed.pet-place.size-small .room-item-image.item-pets-frog{scale:.25}
 .placed.pet-place.size-normal .room-item-image.item-pets-frog{scale:.333}
 .placed.pet-place.size-large .room-item-image.item-pets-frog{scale:.416}
+
+/* Consistent shop thumbnails and larger, proportional item previews. */
+.shop-item .item-art{height:112px;min-height:112px;display:grid;place-items:center;width:100%;box-sizing:border-box}
+.shop-item .item-art .item-image{max-width:100%;max-height:100px;width:auto;height:auto;object-fit:contain;image-rendering:pixelated}
+.preview-trigger{border:0;background:transparent;cursor:zoom-in;padding:5px}
+.preview-trigger:hover{background:#f0f7fa;border-radius:12px}
+.preview-overlay{position:fixed;inset:0;z-index:9999;background:#182838a8;display:grid;place-items:center;padding:20px}
+.preview-modal{position:relative;background:white;border-radius:20px;padding:25px;max-width:min(90vw,480px);width:100%;text-align:center;box-sizing:border-box}
+.preview-close{position:absolute;right:12px;top:8px;border:0;background:transparent;font-size:28px;cursor:pointer}
+.preview-image{height:300px;display:grid;place-items:center;overflow:hidden}
+.preview-image .item-image{max-width:100%;max-height:285px;width:auto;height:auto;object-fit:contain;image-rendering:pixelated}
+.item-locked{cursor:default}
+.item-size-controls .edit-row{flex-wrap:wrap;justify-content:center;max-width:116px}
