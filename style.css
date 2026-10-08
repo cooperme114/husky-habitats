@@ -372,3 +372,8 @@ background-size:100% 100%,auto;
 
 .placed.pet-place + .item-size-controls{}
 .item-size-controls[data-pet="true"]{margin-top:6px}
+
+/* Pet sizing is separate from animated transform so bob/squish/hop/wiggle do not override size. */
+.placed.pet-place.size-small .room-item-image{scale:.75}
+.placed.pet-place.size-normal .room-item-image{scale:1}
+.placed.pet-place.size-large .room-item-image{scale:1.25}
