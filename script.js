@@ -33,7 +33,7 @@ const catalog=[
 {id:"couch-green",name:"Green Couch",img:"images/items/Couch-basic-green-001.png",price:75,cat:"Furniture"},
 {id:"couch-red",name:"Red Couch",img:"images/items/Couch-basic-red-001.png",price:75,cat:"Furniture"},
 {id:"couch-yellow",name:"Yellow Couch",img:"images/items/Couch-basic-yellow-001.png",price:75,cat:"Furniture"},
-{id:"jackolantern",name:"Jack-o'-Lantern",img:"images/items/Decor-jackolantern-001.png",price:100,cat:"Decor"},
+{id:"jackolantern",name:"Halloween Jack-o\'-Lantern",img:"images/items/Decor-jackolantern-001.png",price:100,cat:"Holiday"},
 {id:"moon-stars",name:"Moon & Stars",img:"images/items/Decor-moon-and-stars-001.png",price:100,cat:"Decor"},
 {id:"string-lights",name:"String Lights",img:"images/items/Lights-string-001.png",price:100,cat:"Decor"},
 {id:"squirrel",name:"Squirrel",img:"images/items/Pet-squirrel-001.png",price:150,cat:"Pets"},
