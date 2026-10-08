@@ -331,3 +331,19 @@ background-size:100% 100%,auto;
 .sort-select{border:1px solid #c9d6df;background:#fff;border-radius:10px;padding:7px 9px;color:#33404d;font-weight:700}
 .sort-check{cursor:pointer;user-select:none}
 .sort-check input{width:17px;height:17px;accent-color:#4c86a5}
+
+.question-overlay{position:absolute;inset:0;z-index:40;background:linear-gradient(180deg,#f8fbfd,#eef5f8);display:grid;place-items:center;padding:28px 22px}
+.question-overlay.hidden{display:none}
+.question-card{width:min(680px,92%);background:#fff;border:2px solid #d7e2ea;border-radius:24px;padding:26px;box-shadow:0 14px 34px #38506622;text-align:center}
+.question-kicker{text-transform:uppercase;letter-spacing:.08em;font-weight:900;color:#71808a}
+.question-card h2{margin:.25rem 0 .7rem}
+.question-prompt{font-size:1.25rem;margin:0 0 14px}
+.question-answers{max-width:560px;margin:16px auto 0}
+.question-feedback{font-size:1.05rem}
+.question-close{position:absolute;right:14px;top:12px;width:42px;height:42px;border-radius:50%;border:1px solid #cfd9e2;background:#fff;color:#56636d;font-size:1.8rem;line-height:1;z-index:2}
+.question-close:hover{background:#f3f7fa}
+@media(max-width:600px){
+ .question-overlay{padding:18px 12px}
+ .question-card{padding:20px 16px}
+ .question-prompt{font-size:1.08rem}
+}
