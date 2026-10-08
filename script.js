@@ -607,8 +607,8 @@ function showHelp(){
 function render(){
  if(s.screen==="setup")return setup();
  let wallItem=catalog.find(x=>x.id===s.wall),floorItem=catalog.find(x=>x.id===s.floor);
- app.innerHTML='<div class="shell"><div class="topbar"><div><b>🐾 Husky Habitats</b><div class="tiny">'+esc(s.first)+' '+esc(s.initial)+'.\'s Room</div></div><div class="stats"><span class="pill" title="Coins">🪙 '+s.coins+'</span><span class="pill" title="XP">⭐ '+s.xp+' XP</span><span class="pill" title="Streak">🔥 '+s.streak+'</span><button id="scoreBtn" class="pill score-pill" title="See your room score">🏆 '+roomScore()+'</button><button id="helpBtn" class="save-btn">❓ How to Play</button><button id="saveBtn" class="save-btn">💾 Quick Save</button><button id="saveCodeBtn" class="save-btn">🔐 Save Code</button><span id="saveStatus" class="save-status" aria-live="polite"></span></div></div><div id="room" class="room" aria-label="Your room"><div class="wall-surface"></div><div class="floor-surface"></div><div class="baseboard"></div>'+s.placed.map((p,i)=>{let x=catalog.find(a=>a.id===p.id);let flip=p.dir==="right"?" flipped":"";return '<button class="placed turnable'+(x.cat==="Pets"?' pet-place':'')+'" data-place="'+i+'" style="left:'+p.x+'%;top:'+p.y+'%" aria-label="Move '+x.name+'. Double-click to flip.'+(x.cat==="Pets"?' Click once to pet.':'')+'">'+itemVisual(x,"room",flip,x.cat==="Pets"?i:null)+'</button>'}).join("")+'<div class="move-hint">Drag your things anywhere in the room ✨</div></div><div class="nav"><button class="primary" data-view="questions">📚 Answer Questions</button><button class="secondary" data-view="shop">🛍️ Shop</button><button class="secondary" data-view="inventory">🎒 Inventory</button><button class="secondary" data-view="collections">📖 Collections</button><button class="secondary" data-view="achievements">🏆 Achievements</button></div><div id="panel" class="card panel"></div></div>';
- document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>panel(b.dataset.view));
+ app.innerHTML='<div class="shell"><div class="topbar"><div><b>🐾 Husky Habitats</b><div class="tiny">'+esc(s.first)+' '+esc(s.initial)+'.\'s Room</div></div><div class="stats"><span id="coinPill" class="pill" title="Coins">🪙 '+s.coins+'</span><span id="xpPill" class="pill" title="XP">⭐ '+s.xp+' XP</span><span id="streakPill" class="pill" title="Streak">🔥 '+s.streak+'</span><button id="scoreBtn" class="pill score-pill" title="See your room score">🏆 '+roomScore()+'</button><button id="helpBtn" class="save-btn">❓ How to Play</button><button id="saveBtn" class="save-btn">💾 Quick Save</button><button id="saveCodeBtn" class="save-btn">🔐 Save Code</button><span id="saveStatus" class="save-status" aria-live="polite"></span></div></div><div id="room" class="room" aria-label="Your room"><div class="wall-surface"></div><div class="floor-surface"></div><div class="baseboard"></div>'+s.placed.map((p,i)=>{let x=catalog.find(a=>a.id===p.id);let flip=p.dir==="right"?" flipped":"";return '<button class="placed turnable'+(x.cat==="Pets"?' pet-place':'')+'" data-place="'+i+'" style="left:'+p.x+'%;top:'+p.y+'%" aria-label="Move '+x.name+'. Double-click to flip.'+(x.cat==="Pets"?' Click once to pet.':'')+'">'+itemVisual(x,"room",flip,x.cat==="Pets"?i:null)+'</button>'}).join("")+'<div class="move-hint">Drag your things anywhere in the room ✨</div><div id="questionOverlay" class="question-overlay hidden"></div></div><div class="nav"><button class="primary" data-view="questions">📚 Answer Questions</button><button class="secondary" data-view="shop">🛍️ Shop</button><button class="secondary" data-view="inventory">🎒 Inventory</button><button class="secondary" data-view="collections">📖 Collections</button><button class="secondary" data-view="achievements">🏆 Achievements</button></div><div id="panel" class="card panel"></div></div>';
+ document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>{if(b.dataset.view==="questions")showQuestionOverlay();else panel(b.dataset.view)});
  const scoreBtn=document.querySelector("#scoreBtn"); if(scoreBtn)scoreBtn.onclick=showScoreBreakdown;
  const helpBtn=document.querySelector("#helpBtn"); if(helpBtn)helpBtn.onclick=showHelp;
  const saveBtn=document.querySelector("#saveBtn"); if(saveBtn)saveBtn.onclick=saveGame;
@@ -620,7 +620,7 @@ function render(){
  enableDragging();
  document.querySelectorAll(".placed").forEach(b=>b.addEventListener("dblclick",e=>{e.preventDefault();e.stopPropagation();turnItem(+b.dataset.place)}));
  document.querySelectorAll(".placed.pet-place").forEach(b=>b.addEventListener("click",e=>{if(b.classList.contains("dragging"))return;e.stopPropagation();petHeart(b)}));
- panel("questions");
+ const p=document.querySelector("#panel");if(p)p.innerHTML='<p class="tiny">Choose Answer Questions, Shop, Inventory, Collections, or Achievements.</p>';
 }
 function setup(){
  app.innerHTML='<div class="shell"><div class="card setup-card"><h1 class="title">🐾 Husky Habitats</h1><p class="sub">Build a room that is completely yours.</p><div class="row"><div class="field"><label>Your first name</label><input id="first" maxlength="18" placeholder="Your real first name"></div><div class="field"><label>Your last initial</label><input id="initial" maxlength="1" placeholder="R"></div></div><p class="tiny">Use your real first name and last initial so your teacher knows which habitat is yours.</p><div class="setup-actions"><button id="start" class="primary">Start My Habitat →</button><button id="continueSave" class="secondary" style="display:none">💾 Continue Saved Habitat</button><button id="loadSaveCodeStart" class="secondary">🔐 Load Save Code</button></div><div id="setupmsg" class="feedback"></div></div></div>';
@@ -651,9 +651,26 @@ function sortItems(items,sort,favoritesFirst=false,ownedFirst=false){
 }
 function ownedCount(id){return s.inventory.filter(x=>x===id).length}
 function placedCount(id){return s.placed.filter(x=>x.id===id).length}
+function updateTopStats(){
+ const c=document.querySelector("#coinPill"),x=document.querySelector("#xpPill"),st=document.querySelector("#streakPill"),sc=document.querySelector("#scoreBtn");
+ if(c)c.textContent="🪙 "+s.coins;
+ if(x)x.textContent="⭐ "+s.xp+" XP";
+ if(st)st.textContent="🔥 "+s.streak;
+ if(sc)sc.textContent="🏆 "+roomScore();
+}
+function showQuestionOverlay(){
+ if(!s.q)newQ();
+ const q=document.querySelector("#questionOverlay");if(!q)return;
+ q.classList.remove("hidden");
+ q.innerHTML='<button id="closeQuestions" class="question-close" type="button" aria-label="Back to room">×</button><div class="question-card"><div class="tiny question-kicker">Answer Questions</div><h2>Earn Coins</h2><p class="question-prompt">What does the Greek/Latin stem <b>'+s.q.stem+'</b> mean?</p><div class="answers question-answers">'+s.q.opts.map(o=>'<button class="answer" data-a="'+o+'" '+(s.questionLocked?'disabled':'')+'>'+o+'</button>').join("")+'</div><div id="feedback" class="feedback question-feedback"></div>'+(s.loot?'<div class="loot">🎁 <b>Loot drop!</b> '+itemVisual(s.loot,"loot")+' <span>'+s.loot.name+' was added to your inventory!</span></div>':"")+'</div>';
+ q.querySelector("#closeQuestions").onclick=hideQuestionOverlay;
+ if(!s.questionLocked)q.querySelectorAll("[data-a]").forEach(b=>b.onclick=()=>answer(b.dataset.a));
+}
+function hideQuestionOverlay(){
+ const q=document.querySelector("#questionOverlay");if(q)q.classList.add("hidden");
+}
 function panel(v){
  const p=document.querySelector("#panel");
- if(v==="questions"){if(!s.q)newQ();p.innerHTML='<h2>Earn Coins</h2><p>What does the Greek/Latin stem <b>'+s.q.stem+'</b> mean?</p><div class="answers">'+s.q.opts.map(o=>'<button class="answer" data-a="'+o+'" '+(s.questionLocked?'disabled':'')+'>'+o+'</button>').join("")+'</div><div id="feedback" class="feedback"></div>'+ (s.loot?'<div class="loot">🎁 <b>Loot drop!</b> '+itemVisual(s.loot,"loot")+' <span>'+s.loot.name+' was added to your inventory!</span></div>':"");if(!s.questionLocked)document.querySelectorAll("[data-a]").forEach(b=>b.onclick=()=>answer(b.dataset.a));}
  if(v==="shop"){shopPanel(p);}
  if(v==="collections"){collectionsPanel(p);}
  if(v==="achievements"){achievementsPanel(p);}
@@ -750,7 +767,34 @@ function itemVisual(x,where,extra="",petIndex=null){
  return '<span class="fallback-icon">'+(x.icon||"")+'</span>';
 }
 function newQ(){let keys=Object.keys(stems),stem=keys[Math.floor(Math.random()*keys.length)],correct=stems[stem],wrong=[...new Set(Object.values(stems).filter(x=>x!==correct))].sort(()=>Math.random()-.5).slice(0,3);s.q={stem,correct,opts:[correct,...wrong].sort(()=>Math.random()-.5)};s.loot=null;s.questionLocked=false}
-function answer(a){if(s.questionLocked)return;s.questionLocked=true;let f=document.querySelector("#feedback");document.querySelectorAll("[data-a]").forEach(b=>b.disabled=true);if(a===s.q.correct){s.coins+=20;s.xp+=10;s.streak++;s.answered++;s.correct++;f.textContent="Correct! +20 coins 🪙";let rewardDelay=1100;if(s.streak>0&&s.streak%25===0){let pool=catalog.filter(x=>!s.inventory.includes(x.id)&&!["Walls","Floors"].includes(x.cat));if(pool.length){let item=pool[Math.floor(Math.random()*pool.length)];s.inventory.push(item.id);s.loot=item;checkCollectionComplete();checkAchievements();f.textContent="🔥 "+s.streak+"-answer streak! You earned "+item.name+"!";rewardDelay=3200}}checkAchievements();saveSilently();setTimeout(()=>{newQ();render()},rewardDelay)}else{s.streak=0;s.answered++;f.textContent="Not quite. "+s.q.stem+" means "+s.q.correct+".";document.querySelector(".pill:last-child").textContent="🔥 0";setTimeout(()=>{newQ();render()},1400)}}
+function answer(a){
+ if(s.questionLocked)return;
+ s.questionLocked=true;
+ let f=document.querySelector("#feedback");
+ document.querySelectorAll("#questionOverlay [data-a]").forEach(b=>b.disabled=true);
+ if(a===s.q.correct){
+   s.coins+=20;s.xp+=10;s.streak++;s.answered++;s.correct++;
+   updateTopStats();
+   if(f)f.textContent="Correct! +20 coins 🪙";
+   let rewardDelay=1100;
+   if(s.streak>0&&s.streak%25===0){
+     let pool=catalog.filter(x=>!s.inventory.includes(x.id)&&!["Walls","Floors"].includes(x.cat));
+     if(pool.length){
+       let item=pool[Math.floor(Math.random()*pool.length)];
+       s.inventory.push(item.id);s.loot=item;checkCollectionComplete();checkAchievements();
+       if(f)f.textContent="🔥 "+s.streak+"-answer streak! You earned "+item.name+"!";
+       rewardDelay=3200;
+     }
+   }
+   checkAchievements();saveSilently();
+   setTimeout(()=>{newQ();showQuestionOverlay()},rewardDelay);
+ }else{
+   s.streak=0;s.answered++;updateTopStats();
+   if(f)f.textContent="Not quite. "+s.q.stem+" means "+s.q.correct+".";
+   saveSilently();
+   setTimeout(()=>{newQ();showQuestionOverlay()},1400);
+ }
+}
 function buy(id){let x=catalog.find(a=>a.id===id);if(s.coins<x.price){alert("You need "+(x.price-s.coins)+" more coins.");return}s.coins-=x.price;s.inventory.push(id);s.lifetime.purchases++;render();checkCollectionComplete();checkAchievements();saveSilently();const p=document.querySelector("#panel");if(p)shopPanel(p)}
 function buyMysteryBox(){
  if(s.coins<200){alert("You need "+(200-s.coins)+" more coins.");return}
