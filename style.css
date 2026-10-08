@@ -369,3 +369,6 @@ background-size:100% 100%,auto;
 
 .item-size-controls .edit-row{display:flex;gap:2px}
 .item-size-controls .edit-row button{width:27px;height:22px;line-height:22px;padding:0;border-radius:6px;font-size:.85rem}
+
+.placed.pet-place + .item-size-controls{}
+.item-size-controls[data-pet="true"]{margin-top:6px}
