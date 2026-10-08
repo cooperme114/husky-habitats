@@ -333,7 +333,20 @@ const catalog=[
 {"id":"window-basic-small","name":"Window Basic Small","img":"images/items/Window-basic-small-001.png","price":75,"cat":"Windows"},
 {"id":"window-wizard-moon","name":"Window Wizard Moon","img":"images/items/Window-wizard-moon-001.png","price":100,"cat":"Windows"},
 {"id":"decor-flag-india","name":"Flag India","img":"images/items/decor-flag-india.png","price":100,"cat":"Flags"},
-{"id":"decor-france-flag","name":"France Flag","img":"images/items/decor-france-flag.png","price":100,"cat":"Flags"}
+{"id":"decor-france-flag","name":"France Flag","img":"images/items/decor-france-flag.png","price":100,"cat":"Flags"},
+{id:"decor-diwali-diya-row",name:"Diwali Diya Row",img:"images/items/Decor-diwali-diya-row-001.png",price:100,cat:"Holiday"},
+{id:"decor-diwali-elephant-statue",name:"Diwali Elephant Statue",img:"images/items/Decor-diwali-elephant-statue-001.png",price:100,cat:"Holiday"},
+{id:"decor-diwali-floating-flowers",name:"Diwali Floating Flowers",img:"images/items/Decor-diwali-floating flowers.png",price:100,cat:"Holiday"},
+{id:"decor-diwali-kandil-lantern",name:"Diwali Kandil Lantern",img:"images/items/Decor-diwali-kandil-lantern-001.png",price:100,cat:"Holiday"},
+{id:"decor-diwali-lanterns",name:"Diwali Lanterns",img:"images/items/Decor-diwali-lanterns-001.png",price:100,cat:"Holiday"},
+{id:"decor-diwali-marigold-strand",name:"Diwali Marigold Strand",img:"images/items/Decor-diwali-marigold-strand-001.png",price:100,cat:"Holiday"},
+{id:"decor-diwali-peacock-statue",name:"Diwali Peacock Statue",img:"images/items/Decor-diwali-peacock-statue-001.png",price:100,cat:"Holiday"},
+{id:"decor-diwali-string-lights",name:"Diwali String Lights",img:"images/items/Decor-diwali-string-lights-001.png",price:100,cat:"Holiday"},
+{id:"decor-diwali-toran",name:"Diwali Toran",img:"images/items/Decor-diwali-toran-001.png",price:100,cat:"Holiday"},
+{id:"rug-diwali-rangoli",name:"Diwali Rangoli",img:"images/items/Rug-diwali-rangoli-001.png",price:100,cat:"Rugs"},
+{id:"rug-diwali-rangoli-002",name:"Diwali Rangoli 002",img:"images/items/Rug-diwali-rangoli-002.png",price:100,cat:"Rugs"},
+{id:"rug-diwali-rangoli-003",name:"Diwali Rangoli 003",img:"images/items/Rug-diwali-rangoli-003.png",price:100,cat:"Rugs"},
+{id:"decor-diwali-cushions",name:"Diwali Cushions",img:"images/items/decor-diwali-cushions-001.png",price:100,cat:"Holiday"}
 ];
 
 const collections=[
@@ -346,6 +359,7 @@ const collections=[
 {name:"Halloween Collection",emoji:"🎃",items:["jackolantern","decor-halloween-candles","decor-halloween-cauldron","decor-halloween-dead-tree","decor-halloween-jackolantern-002","decor-halloween-pumpkin-stack","decor-halloween-skull","decor-halloween-string-lights","decor-halloween-wheel-barrow","decor-halloween-witch-hat","pets-halloween-ghost-dog","pets-halloween-happy-pumpkkin","pets-halloween-pumpkin-turtle","pets-halloween-skeleton","pets-halloween-skeleton-cat","pets-halloween-tall-ghost"]},
 {name:"Cozy Collection",emoji:"🩷",items:["chair-cozy-pink","couch-cozy-pink","cozy-calendar-pink","cozy-candles","cozy-flowers-pink","dresser-cozy-pink","cozy-friend","piano-cozy-pink","table-cozy-pink","vanity-cozy-pink","bed-cozy-pink","bed-cozy-yellow","couch-cozy-orange","couch-cozy-purple","decor-cute-stuffed-unicorn"]},
 {name:"Opulent Collection",emoji:"👑",items:["bed-opulent-purple-wood","bed-opulent-yellow-wood","couch-opulent-leather-couch","decor-opulent-billiards-table","decor-opulent-judge-painting","decor-opulent-map-painting","decor-opulent-moose-head","decor-opulent-ship-display","decor-opulent-suitcase-stack","desk-opulent-wooden-study","fireplace-opulent-wooden","rug-opulent-bear-skin","table-opulent-wooden","vanity-opulent-wooden"]},
+{name:"Diwali Collection",emoji:"🪔",items:["decor-diwali-diya-row","decor-diwali-elephant-statue","decor-diwali-floating-flowers","decor-diwali-kandil-lantern","decor-diwali-lanterns","decor-diwali-marigold-strand","decor-diwali-peacock-statue","decor-diwali-string-lights","decor-diwali-toran","rug-diwali-rangoli","rug-diwali-rangoli-002","rug-diwali-rangoli-003","decor-diwali-cushions"]},
 {name:"Angel Collection",emoji:"☁️",items:["bed-angel-cream","chair-angel-cream","couch-angel-cream","dresser-angel-cream","table-angel-cream","floors-angel-cream-tiles","harp-angel-white","piano-angel-white","pets-chao-hero"]},
 {name:"Goth Collection",emoji:"🖤",items:["chair-goth-black","chair-goth-purple","couch-goth-purple","table-goth-purple","decor-goth-shelves","candles-sunset","gamma","pets-chao-dark","wallpaper-goth-eyes"]},
 {name:"Floral Collection",emoji:"🌸",items:["floral-vines","floral-terrarium","dresser-floral-white","bookcase-floral","decor-floral-purple-box","decor-floral-yellow-box","wallpaper-floral-black","wallpaper-floral-green"]},
@@ -863,7 +877,7 @@ function shopPanel(p,active=null,query=null){
  if(query!==null)shopUi.query=query;
  const cats=["All","Furniture","Decor","Rugs","Flags","Pets","Pet Supplies","Holiday","Windows","Walls","Floors"];
  const q=shopUi.query.trim().toLowerCase();
- const base=shopUi.cat==="All"?catalog:catalog.filter(x=>shopUi.cat==="Holiday"?/halloween/i.test(x.img||""):x.cat===shopUi.cat);
+ const base=shopUi.cat==="All"?catalog:catalog.filter(x=>shopUi.cat==="Holiday"?/halloween|diwali/i.test(x.img||""):x.cat===shopUi.cat);
  const filtered=q?base.filter(x=>(x.name+" "+x.cat+" "+x.id).toLowerCase().includes(q)):base;
  const items=sortItems(filtered,shopUi.sort,shopUi.favoritesFirst,shopUi.ownedFirst);
  p.innerHTML='<h2>🛍️ Habitat Shop</h2><p class="tiny">Furniture, decor, pets, and windows can be bought more than once.</p>'+
