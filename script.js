@@ -252,7 +252,7 @@ const catalog=[
 {"id":"decor-halloween-candles","name":"Halloween Candles","img":"images/items/Decor-halloween-candles-001.png","price":100,"cat":"Holiday"},
 {"id":"decor-halloween-cauldron","name":"Halloween Cauldron","img":"images/items/Decor-halloween-cauldron-001.png","price":100,"cat":"Holiday"},
 {"id":"decor-halloween-dead-tree","name":"Halloween Dead Tree","img":"images/items/Decor-halloween-dead-tree-001.png","price":100,"cat":"Holiday"},
-{"id":"decor-halloween-jackolantern-002","name":"Halloween Jackolantern 002","img":"images/items/Decor-halloween-jackolantern-002.gif","price":100,"cat":"Holiday"},
+{"id":"decor-halloween-jackolantern-002","name":"Halloween Jack-o\'-Lantern (Animated)","img":"images/items/Decor-halloween-jackolantern-002.gif","price":100,"cat":"Holiday"},
 {"id":"decor-halloween-pumpkin-stack","name":"Halloween Pumpkin Stack","img":"images/items/Decor-halloween-pumpkin-stack-001.png","price":100,"cat":"Holiday"},
 {"id":"decor-halloween-skull","name":"Halloween Skull","img":"images/items/Decor-halloween-skull-001.png","price":100,"cat":"Holiday"},
 {"id":"decor-halloween-string-lights","name":"Halloween String Lights","img":"images/items/Decor-halloween-string-lights-001.png","price":100,"cat":"Holiday"},
@@ -353,7 +353,7 @@ const collections=[
 {name:"Deco Collection",emoji:"✨",items:["chair-deco-green","chair-deco-red"]},
 {name:"Opulent Collection",emoji:"👑",items:["bed-opulent-purple-wood","bed-opulent-yellow-wood","couch-opulent-leather-couch","decor-opulent-billiards-table","decor-opulent-judge-painting","decor-opulent-map-painting","decor-opulent-moose-head","decor-opulent-ship-display","decor-opulent-suitcase-stack","desk-opulent-wooden-study","fireplace-opulent-wooden","rug-opulent-bear-skin","table-opulent-wooden","vanity-opulent-wooden"]},
 {name:"Rattan Collection",emoji:"🪴",items:["bathroom-rattan-sink","bed-rattan-blue","couch-rattan-blue","couch-rattan-white","decor-rattan-cushion-green","decor-rattan-ukelele","rug-rattan-cream-and-blue","vanity-rattan-light"]},
-{name:"Halloween Collection",emoji:"🎃",items:["decor-halloween-candles","decor-halloween-cauldron","decor-halloween-dead-tree","decor-halloween-jackolantern-002","decor-halloween-pumpkin-stack","decor-halloween-skull","decor-halloween-string-lights","decor-halloween-wheel-barrow","decor-halloween-witch-hat","pets-halloween-ghost-dog","pets-halloween-happy-pumpkkin","pets-halloween-pumpkin-turtle","pets-halloween-skeleton","pets-halloween-skeleton-cat","pets-halloween-tall-ghost"]},
+{name:"Halloween Collection",emoji:"🎃",items:["jackolantern","decor-halloween-candles","decor-halloween-cauldron","decor-halloween-dead-tree","decor-halloween-jackolantern-002","decor-halloween-pumpkin-stack","decor-halloween-skull","decor-halloween-string-lights","decor-halloween-wheel-barrow","decor-halloween-witch-hat","pets-halloween-ghost-dog","pets-halloween-happy-pumpkkin","pets-halloween-pumpkin-turtle","pets-halloween-skeleton","pets-halloween-skeleton-cat","pets-halloween-tall-ghost"]},
 {name:"Mermaid Collection",emoji:"🧜",items:["wallpaper-mermaid-blue","wallpaper-mermaid-lavender"]}
 ];
 let s={screen:"setup",first:"",initial:"",coins:100,xp:0,streak:0,inventory:[],placed:[],wall:"plain",floor:"plain",q:null,answered:0,correct:0,loot:null,favorites:[],achievements:[],completedCollections:[],favoriteCollections:[],lifetime:{purchases:0,sales:0,mysteryBoxes:0,petsPetted:0,flips:0}};
