@@ -307,17 +307,17 @@ const catalog=[
 {"id":"pets-halloween-skeleton-cat","name":"Halloween Skeleton Cat","img":"images/items/Pets-halloween-skeleton-cat-001.png","price":150,"cat":"Pets"},
 {"id":"pets-halloween-tall-ghost","name":"Halloween Tall Ghost","img":"images/items/Pets-halloween-tall-ghost-001.png","price":150,"cat":"Pets"},
 {"id":"pets-pigeon","name":"Pigeon","img":"images/items/Pets-pigeon-001.png","price":150,"cat":"Pets"},
-{"id":"rug-basic-geometric-black","name":"Rug Basic Geometric Black","img":"images/items/Rug-basic-geometric-black-001.png","price":100,"cat":"Decor"},
-{"id":"rug-basic-geometric-purple","name":"Rug Basic Geometric Purple","img":"images/items/Rug-basic-geometric-purple-001.png","price":100,"cat":"Decor"},
-{"id":"rug-basic-swirl-blue","name":"Rug Basic Swirl Blue","img":"images/items/Rug-basic-swirl-blue-001.png","price":100,"cat":"Decor"},
-{"id":"rug-basic-swirl-green","name":"Rug Basic Swirl Green","img":"images/items/Rug-basic-swirl-green-001.png","price":100,"cat":"Decor"},
-{"id":"rug-opulent-bear-skin","name":"Rug Opulent Bear Skin","img":"images/items/Rug-opulent-bear-skin-001.png","price":100,"cat":"Decor"},
-{"id":"rug-rattan-cream-and-blue","name":"Rug Rattan Cream And Blue","img":"images/items/Rug-rattan-cream-and-blue-001.png","price":100,"cat":"Decor"},
-{"id":"rug-retro-blue","name":"Rug Retro Blue","img":"images/items/Rug-retro-blue-001.png","price":100,"cat":"Decor"},
-{"id":"rug-retro-frame","name":"Rug Retro Frame","img":"images/items/Rug-retro-frame-001.png","price":100,"cat":"Decor"},
-{"id":"rug-retro-gray","name":"Rug Retro Gray","img":"images/items/Rug-retro-gray-001.png","price":100,"cat":"Decor"},
-{"id":"rug-retro-patterned","name":"Rug Retro Patterned","img":"images/items/Rug-retro-patterned-001.png","price":100,"cat":"Decor"},
-{"id":"rug-wizard-blue","name":"Rug Wizard Blue","img":"images/items/Rug-wizard-blue-001.png","price":100,"cat":"Decor"},
+{"id":"rug-basic-geometric-black","name":"Rug Basic Geometric Black","img":"images/items/Rug-basic-geometric-black-001.png","price":100,"cat":"Rugs"},
+{"id":"rug-basic-geometric-purple","name":"Rug Basic Geometric Purple","img":"images/items/Rug-basic-geometric-purple-001.png","price":100,"cat":"Rugs"},
+{"id":"rug-basic-swirl-blue","name":"Rug Basic Swirl Blue","img":"images/items/Rug-basic-swirl-blue-001.png","price":100,"cat":"Rugs"},
+{"id":"rug-basic-swirl-green","name":"Rug Basic Swirl Green","img":"images/items/Rug-basic-swirl-green-001.png","price":100,"cat":"Rugs"},
+{"id":"rug-opulent-bear-skin","name":"Rug Opulent Bear Skin","img":"images/items/Rug-opulent-bear-skin-001.png","price":100,"cat":"Rugs"},
+{"id":"rug-rattan-cream-and-blue","name":"Rug Rattan Cream And Blue","img":"images/items/Rug-rattan-cream-and-blue-001.png","price":100,"cat":"Rugs"},
+{"id":"rug-retro-blue","name":"Rug Retro Blue","img":"images/items/Rug-retro-blue-001.png","price":100,"cat":"Rugs"},
+{"id":"rug-retro-frame","name":"Rug Retro Frame","img":"images/items/Rug-retro-frame-001.png","price":100,"cat":"Rugs"},
+{"id":"rug-retro-gray","name":"Rug Retro Gray","img":"images/items/Rug-retro-gray-001.png","price":100,"cat":"Rugs"},
+{"id":"rug-retro-patterned","name":"Rug Retro Patterned","img":"images/items/Rug-retro-patterned-001.png","price":100,"cat":"Rugs"},
+{"id":"rug-wizard-blue","name":"Rug Wizard Blue","img":"images/items/Rug-wizard-blue-001.png","price":100,"cat":"Rugs"},
 {"id":"table-opulent-wooden","name":"Table Opulent Wooden","img":"images/items/Table-opulent-wooden-001.png","price":100,"cat":"Furniture"},
 {"id":"vanity-opulent-wooden","name":"Vanity Opulent Wooden","img":"images/items/Vanity-opulent-wooden-001.png","price":100,"cat":"Furniture"},
 {"id":"vanity-rattan-light","name":"Vanity Rattan Light","img":"images/items/Vanity-rattan-light-001.png","price":100,"cat":"Furniture"},
@@ -854,7 +854,7 @@ function collectionsPanel(p){
 function shopPanel(p,active=null,query=null){
  if(active!==null)shopUi.cat=active;
  if(query!==null)shopUi.query=query;
- const cats=["All","Furniture","Decor","Pets","Pet Supplies","Windows","Walls","Floors"];
+ const cats=["All","Furniture","Decor","Rugs","Flags","Pets","Pet Supplies","Windows","Walls","Floors"];
  const q=shopUi.query.trim().toLowerCase();
  const base=shopUi.cat==="All"?catalog:catalog.filter(x=>x.cat===shopUi.cat);
  const filtered=q?base.filter(x=>(x.name+" "+x.cat+" "+x.id).toLowerCase().includes(q)):base;
