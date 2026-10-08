@@ -786,13 +786,13 @@ function showHelp(){
 function render(){
  if(s.screen==="setup")return setup();
  let wallItem=catalog.find(x=>x.id===s.wall),floorItem=catalog.find(x=>x.id===s.floor);
- app.innerHTML='<div class="shell"><div class="topbar"><div><b>🐾 Husky Habitats</b><div class="tiny">'+esc(s.first)+' '+esc(s.initial)+'.\'s Room</div></div><div class="stats"><span id="coinPill" class="pill" title="Coins">🪙 '+s.coins+'</span><span id="xpPill" class="pill" title="XP">⭐ '+s.xp+' XP</span><span id="streakPill" class="pill" title="Streak">🔥 '+s.streak+'</span><button id="scoreBtn" class="pill score-pill" title="See your room score">🏆 '+roomScore()+'</button><button id="helpBtn" class="save-btn">❓ How to Play</button><button id="saveBtn" class="save-btn">💾 Quick Save</button><button id="saveCodeBtn" class="save-btn">🔐 Save Code</button><span id="saveStatus" class="save-status" aria-live="polite"></span></div></div><div id="room" class="room" aria-label="Your room"><div class="wall-surface"></div><div class="floor-surface"></div><div class="baseboard"></div>'+s.placed.map((p,i)=>{let x=catalog.find(a=>a.id===p.id);let flip=p.dir==="right"?" flipped":"";let musical=isMusicalItem(x);let size=p.size||"normal";return '<button class="placed turnable size-'+size+(x.cat==="Pets"?' pet-place':'')+(musical?' music-place':'')+(p.locked?' item-locked':'')+'" data-place="'+i+'" style="left:'+p.x+'%;top:'+p.y+'%" aria-label="Move '+x.name+'. Click once for size and flip options.'+(x.cat==="Pets"?' Click once to pet.':'')+(musical?' Click once for music notes.':'')+'">'+itemVisual(x,"room",flip,x.cat==="Pets"?i:null)+'</button>'}).join("")+'<div class="move-hint">Drag your things anywhere in the room ✨</div><div id="questionOverlay" class="question-overlay hidden"></div></div><div class="nav"><button class="primary" data-view="questions">📚 Answer Questions</button><button class="secondary" data-view="shop">🛍️ Shop</button><button class="secondary" data-view="inventory">🎒 Inventory</button><button class="secondary" data-view="collections">📖 Collections</button><button class="secondary" data-view="achievements">🏆 Achievements</button><button class="secondary" id="clearRoomBtn">🧹 Clear Room</button></div><div id="panel" class="card panel"></div></div>';
+ app.innerHTML='<div class="shell"><div class="topbar"><div><b>🐾 Husky Habitats</b><div class="tiny">'+esc(s.first)+' '+esc(s.initial)+'.\'s Room</div></div><div class="stats"><span id="coinPill" class="pill" title="Coins">🪙 '+s.coins+'</span><span id="xpPill" class="pill" title="XP">⭐ '+s.xp+' XP</span><span id="streakPill" class="pill" title="Streak">🔥 '+s.streak+'</span><button id="scoreBtn" class="pill score-pill" title="See your room score">🏆 '+roomScore()+'</button><button id="helpBtn" class="save-btn">❓ How to Play</button><button id="saveBtn" class="save-btn">💾 Quick Save</button><button id="saveCodeBtn" class="save-btn">🔐 Save Code</button><button id="classroomBtn" class="save-btn">📚 Classroom Tools</button><span id="saveStatus" class="save-status" aria-live="polite"></span></div></div><div id="room" class="room" aria-label="Your room"><div class="wall-surface"></div><div class="floor-surface"></div><div class="baseboard"></div>'+s.placed.map((p,i)=>{let x=catalog.find(a=>a.id===p.id);let flip=p.dir==="right"?" flipped":"";let musical=isMusicalItem(x);let size=p.size||"normal";return '<button class="placed turnable size-'+size+(x.cat==="Pets"?' pet-place':'')+(musical?' music-place':'')+(p.locked?' item-locked':'')+'" data-place="'+i+'" style="left:'+p.x+'%;top:'+p.y+'%" aria-label="Move '+x.name+'. Click once for size and flip options.'+(x.cat==="Pets"?' Click once to pet.':'')+(musical?' Click once for music notes.':'')+'">'+itemVisual(x,"room",flip,x.cat==="Pets"?i:null)+'</button>'}).join("")+'<div class="move-hint">Drag your things anywhere in the room ✨</div><div id="questionOverlay" class="question-overlay hidden"></div></div><div class="nav"><button class="primary" data-view="questions">📚 Answer Questions</button><button class="secondary" data-view="shop">🛍️ Shop</button><button class="secondary" data-view="inventory">🎒 Inventory</button><button class="secondary" data-view="collections">📖 Collections</button><button class="secondary" data-view="achievements">🏆 Achievements</button><button class="secondary" id="clearRoomBtn">🧹 Clear Room</button></div><div id="panel" class="card panel"></div></div>';
  document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>{if(b.dataset.view==="questions")showQuestionOverlay();else panel(b.dataset.view)});
  const clearRoomBtn=document.querySelector("#clearRoomBtn");if(clearRoomBtn)clearRoomBtn.onclick=()=>{if(!s.placed.length)return;if(confirm("Remove all placed items from your room? You will keep everything you own, your coins, and your progress.")){s.placed=[];saveSilently();render();}};
  const scoreBtn=document.querySelector("#scoreBtn"); if(scoreBtn)scoreBtn.onclick=showScoreBreakdown;
  const helpBtn=document.querySelector("#helpBtn"); if(helpBtn)helpBtn.onclick=showHelp;
  const saveBtn=document.querySelector("#saveBtn"); if(saveBtn)saveBtn.onclick=saveGame;
- const saveCodeBtn=document.querySelector("#saveCodeBtn"); if(saveCodeBtn)saveCodeBtn.onclick=showSaveCode;
+ const saveCodeBtn=document.querySelector("#saveCodeBtn"); if(saveCodeBtn)saveCodeBtn.onclick=showSaveCode;const classroomBtn=document.querySelector("#classroomBtn");if(classroomBtn)classroomBtn.onclick=showClassroomTools;
  const wallSurface=document.querySelector(".wall-surface");
  const floorSurface=document.querySelector(".floor-surface");
  if(wallSurface) wallSurface.style.backgroundImage=wallItem&&wallItem.img?'url("'+wallItem.img+'")':"none";
@@ -812,11 +812,11 @@ function render(){
  const p=document.querySelector("#panel");if(p)p.innerHTML='<p class="tiny">Choose Answer Questions, Shop, Inventory, Collections, or Achievements.</p>';
 }
 function setup(){
- app.innerHTML='<div class="shell"><div class="card setup-card"><h1 class="title">🐾 Husky Habitats</h1><p class="sub">Build a room that is completely yours.</p><div class="row"><div class="field"><label>Your first name</label><input id="first" maxlength="18" placeholder="Your real first name"></div><div class="field"><label>Your last initial</label><input id="initial" maxlength="1" placeholder="R"></div></div><p class="tiny">Use your real first name and last initial so your teacher knows which habitat is yours.</p><div class="setup-actions"><button id="start" class="primary">Start My Habitat →</button><button id="continueSave" class="secondary" style="display:none">💾 Continue Saved Habitat</button><button id="loadSaveCodeStart" class="secondary">🔐 Load Save Code</button></div><div id="setupmsg" class="feedback"></div></div></div>';
+ app.innerHTML='<div class="shell"><div class="card setup-card"><h1 class="title">🐾 Husky Habitats</h1><p class="sub">Build a room that is completely yours.</p><div class="row"><div class="field"><label>Your first name</label><input id="first" maxlength="18" placeholder="Your real first name"></div><div class="field"><label>Your last initial</label><input id="initial" maxlength="1" placeholder="R"></div></div><p class="tiny">Use your real first name and last initial so your teacher knows which habitat is yours.</p><div class="setup-actions"><button id="start" class="primary">Start My Habitat →</button><button id="continueSave" class="secondary" style="display:none">💾 Continue Saved Habitat</button><button id="loadSaveCodeStart" class="secondary">🔐 Load Save Code</button><button id="classroomStart" class="secondary">📚 Classroom Tools</button></div><div id="setupmsg" class="feedback"></div></div></div>';
  const savedButton=document.querySelector("#continueSave");
  try{if(localStorage.getItem(SAVE_KEY))savedButton.style.display=""}catch(e){}
  savedButton.onclick=()=>loadGame();
- const loadCodeStart=document.querySelector("#loadSaveCodeStart"); if(loadCodeStart)loadCodeStart.onclick=loadSaveCodePrompt;
+ const loadCodeStart=document.querySelector("#loadSaveCodeStart"); if(loadCodeStart)loadCodeStart.onclick=loadSaveCodePrompt;const classroomStart=document.querySelector("#classroomStart");if(classroomStart)classroomStart.onclick=showClassroomTools;
  document.querySelector("#start").onclick=()=>{let f=document.querySelector("#first").value.trim(),i=document.querySelector("#initial").value.trim();if(!f||!/^[A-Za-z]$/.test(i)){document.querySelector("#setupmsg").textContent="Please enter your real first name and one last initial.";return}s.first=f[0].toUpperCase()+f.slice(1).toLowerCase();s.initial=i.toUpperCase();s.screen="game";render()};
 }
 function sortItems(items,sort,favoritesFirst=false,ownedFirst=false){
@@ -851,7 +851,7 @@ function showQuestionOverlay(){
  if(!s.q)newQ();
  const q=document.querySelector("#questionOverlay");if(!q)return;
  q.classList.remove("hidden");
- q.innerHTML='<button id="closeQuestions" class="question-close" type="button" aria-label="Back to room">×</button><div class="question-card"><div class="tiny question-kicker">Answer Questions</div><h2>Earn Coins</h2><p class="question-prompt">What does the Greek/Latin stem <b>'+s.q.stem+'</b> mean?</p><div class="answers question-answers">'+s.q.opts.map(o=>'<button class="answer" data-a="'+o+'" '+(s.questionLocked?'disabled':'')+'>'+o+'</button>').join("")+'</div><div id="feedback" class="feedback question-feedback"></div>'+(s.loot?'<div class="loot">🎁 <b>Loot drop!</b> '+itemVisual(s.loot,"loot")+' <span>'+s.loot.name+' was added to your inventory!</span></div>':"")+'</div>';
+ q.innerHTML='<button id="closeQuestions" class="question-close" type="button" aria-label="Back to room">×</button><div class="question-card"><div class="tiny question-kicker">Answer Questions</div><h2>Earn Coins</h2><p class="question-prompt">'+(s.q.classroom?esc(s.q.prompt):'What does the Greek/Latin stem <b>'+esc(s.q.stem)+'</b> mean?')+'</p><div class="answers question-answers">'+s.q.opts.map(o=>'<button class="answer" data-a="'+o+'" '+(s.questionLocked?'disabled':'')+'>'+o+'</button>').join("")+'</div><div id="feedback" class="feedback question-feedback"></div>'+(s.loot?'<div class="loot">🎁 <b>Loot drop!</b> '+itemVisual(s.loot,"loot")+' <span>'+s.loot.name+' was added to your inventory!</span></div>':"")+'</div>';
  q.querySelector("#closeQuestions").onclick=hideQuestionOverlay;
  if(!s.questionLocked)q.querySelectorAll("[data-a]").forEach(b=>b.onclick=()=>answer(b.dataset.a));
 }
@@ -983,16 +983,44 @@ function itemVisual(x,where,extra="",petIndex=null){
  }
  return '<span class="fallback-icon">'+(x.icon||"")+'</span>';
 }
-function newQ(){let keys=Object.keys(stems),stem=keys[Math.floor(Math.random()*keys.length)],correct=stems[stem],wrong=[...new Set(Object.values(stems).filter(x=>x!==correct))].sort(()=>Math.random()-.5).slice(0,3);s.q={stem,correct,opts:[correct,...wrong].sort(()=>Math.random()-.5)};s.loot=null;s.questionLocked=false}
+
+const CLASS_KEY="huskyHabitatsClassroomV1";
+let classroom=null;
+function encodeClassData(prefix,obj){return prefix+btoa(unescape(encodeURIComponent(JSON.stringify(obj))))}
+function decodeClassData(prefix,code){const raw=code.trim().replace(/\s/g,"");if(!raw.startsWith(prefix))throw Error("Wrong code type");return JSON.parse(decodeURIComponent(escape(atob(raw.slice(prefix.length)))))}
+function loadClassroom(){try{const c=JSON.parse(localStorage.getItem(CLASS_KEY));if(c&&c.version===1)classroom=c}catch(e){}}
+function applyClassroomCode(code){
+ try{
+  const c=decodeClassData("HC1-",code);
+  if(c.version!==1||!Array.isArray(c.questions)||c.questions.length>100||c.questions.some(q=>!q||typeof q.prompt!=="string"||q.prompt.length>300||!Array.isArray(q.options)||q.options.length!==4||q.options.some(o=>typeof o!=="string"||!o.trim()||o.length>160)||!Number.isInteger(q.correct)||q.correct<0||q.correct>3)||!Number.isInteger(c.coinsPerCorrect)||c.coinsPerCorrect<0||c.coinsPerCorrect>200||!Number.isInteger(c.xpPerCorrect)||c.xpPerCorrect<0||c.xpPerCorrect>100)throw Error("Invalid classroom code");
+  classroom={version:1,title:String(c.title||"Classroom Questions").slice(0,100),questions:c.questions,coinsPerCorrect:c.coinsPerCorrect,xpPerCorrect:c.xpPerCorrect};
+  try{localStorage.setItem(CLASS_KEY,JSON.stringify(classroom))}catch(e){}
+  s.q=null;s.questionLocked=false;saveSilently();render();alert("Classroom update loaded! "+classroom.questions.length+" questions ready.");
+ }catch(e){alert("This classroom update code could not be loaded. Please check the entire code.")}
+}
+function showClassroomTools(){
+ const old=document.querySelector(".savecode-overlay");if(old)old.remove();
+ const el=document.createElement("div");el.className="savecode-overlay";
+ el.innerHTML='<div class="savecode-modal" role="dialog" aria-modal="true"><button class="savecode-close" type="button" aria-label="Close">×</button><h2>📚 Classroom Tools</h2><p class="tiny">Load a classroom update from your teacher. Your habitat and save code stay the same.</p><textarea id="classroomCodeInput" class="savecode-box" placeholder="Paste HC1- classroom update code" spellcheck="false"></textarea><div class="savecode-actions"><button id="applyClassroom" class="primary" type="button">Load Classroom Update</button></div><p class="tiny">Current set: '+esc(classroom?classroom.title:"Original Greek/Latin Stems")+'</p><hr><h3>📊 Submit Progress</h3><p class="tiny">Copy this short progress code and paste it into your teacher’s Google Form. It includes your name, question totals, coins, XP and trophies, but not your room or full save code.</p><textarea id="progressCodeBox" class="savecode-box" readonly></textarea><div class="savecode-actions"><button id="copyProgress" class="primary" type="button">Copy Progress Code</button></div></div>';
+ document.body.appendChild(el);
+ el.querySelector(".savecode-close").onclick=()=>el.remove();
+ el.onclick=e=>{if(e.target===el)el.remove()};
+ el.querySelector("#applyClassroom").onclick=()=>{const code=el.querySelector("#classroomCodeInput").value;if(code.trim())applyClassroomCode(code);else alert("Paste a classroom code first.")};
+ const progress={version:1,name:(s.first||"")+" "+(s.initial||"")+".",answered:s.answered||0,correct:s.correct||0,coins:s.coins||0,xp:s.xp||0,streak:s.streak||0,trophies:s.inventory.filter(id=>id.startsWith("trophy-")).length,questionSet:classroom?classroom.title:"Original Greek/Latin Stems",submittedAt:new Date().toISOString()};
+ el.querySelector("#progressCodeBox").value=encodeClassData("HP1-",progress);
+ el.querySelector("#copyProgress").onclick=async()=>{const box=el.querySelector("#progressCodeBox");box.select();try{await navigator.clipboard.writeText(box.value)}catch(e){document.execCommand("copy")}el.querySelector("#copyProgress").textContent="Copied! ✓"};
+}
+loadClassroom();
+function newQ(){if(classroom&&classroom.questions.length){const q=classroom.questions[Math.floor(Math.random()*classroom.questions.length)];s.q={stem:"",prompt:q.prompt,correct:q.options[q.correct],opts:[...q.options],classroom:true};s.loot=null;s.questionLocked=false;return}let keys=Object.keys(stems),stem=keys[Math.floor(Math.random()*keys.length)],correct=stems[stem],wrong=[...new Set(Object.values(stems).filter(x=>x!==correct))].sort(()=>Math.random()-.5).slice(0,3);s.q={stem,correct,opts:[correct,...wrong].sort(()=>Math.random()-.5)};s.loot=null;s.questionLocked=false}
 function answer(a){
  if(s.questionLocked)return;
  s.questionLocked=true;
  let f=document.querySelector("#feedback");
  document.querySelectorAll("#questionOverlay [data-a]").forEach(b=>b.disabled=true);
  if(a===s.q.correct){
-   s.coins+=20;s.xp+=10;s.streak++;s.answered++;s.correct++;
+   s.coins+=(classroom?classroom.coinsPerCorrect:20);s.xp+=(classroom?classroom.xpPerCorrect:10);s.streak++;s.answered++;s.correct++;
    updateTopStats();
-   if(f)f.textContent="Correct! +20 coins 🪙";
+   if(f)f.textContent="Correct! +"+(classroom?classroom.coinsPerCorrect:20)+" coins 🪙";
    let rewardDelay=1100;
    if(s.streak>0&&s.streak%25===0){
      let pool=catalog.filter(x=>!s.inventory.includes(x.id)&&!["Walls","Floors"].includes(x.cat));
@@ -1007,7 +1035,7 @@ function answer(a){
    setTimeout(()=>{newQ();showQuestionOverlay()},rewardDelay);
  }else{
    s.streak=0;s.answered++;updateTopStats();
-   if(f)f.textContent="Not quite. "+s.q.stem+" means "+s.q.correct+".";
+   if(f)f.textContent="Not quite. The correct answer is "+s.q.correct+".";
    saveSilently();
    setTimeout(()=>{newQ();showQuestionOverlay()},1400);
  }
