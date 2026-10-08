@@ -249,15 +249,15 @@ const catalog=[
 {"id":"decor-brazil-flag","name":"Brazil Flag","img":"images/items/Decor-brazil-flag-001.png","price":100,"cat":"Flags"},
 {"id":"decor-canada-flag","name":"Canada Flag","img":"images/items/Decor-canada-flag.png","price":100,"cat":"Flags"},
 {"id":"decor-germany-flag","name":"Germany Flag","img":"images/items/Decor-germany-flag.png","price":100,"cat":"Flags"},
-{"id":"decor-halloween-candles","name":"Halloween Candles","img":"images/items/Decor-halloween-candles-001.png","price":100,"cat":"Decor"},
-{"id":"decor-halloween-cauldron","name":"Halloween Cauldron","img":"images/items/Decor-halloween-cauldron-001.png","price":100,"cat":"Decor"},
-{"id":"decor-halloween-dead-tree","name":"Halloween Dead Tree","img":"images/items/Decor-halloween-dead-tree-001.png","price":100,"cat":"Decor"},
-{"id":"decor-halloween-jackolantern-002","name":"Halloween Jackolantern 002","img":"images/items/Decor-halloween-jackolantern-002.gif","price":100,"cat":"Decor"},
-{"id":"decor-halloween-pumpkin-stack","name":"Halloween Pumpkin Stack","img":"images/items/Decor-halloween-pumpkin-stack-001.png","price":100,"cat":"Decor"},
-{"id":"decor-halloween-skull","name":"Halloween Skull","img":"images/items/Decor-halloween-skull-001.png","price":100,"cat":"Decor"},
-{"id":"decor-halloween-string-lights","name":"Halloween String Lights","img":"images/items/Decor-halloween-string-lights-001.png","price":100,"cat":"Decor"},
-{"id":"decor-halloween-wheel-barrow","name":"Halloween Wheel Barrow","img":"images/items/Decor-halloween-wheel-barrow-001.png","price":100,"cat":"Decor"},
-{"id":"decor-halloween-witch-hat","name":"Halloween Witch Hat","img":"images/items/Decor-halloween-witch-hat-001.png","price":100,"cat":"Decor"},
+{"id":"decor-halloween-candles","name":"Halloween Candles","img":"images/items/Decor-halloween-candles-001.png","price":100,"cat":"Holiday"},
+{"id":"decor-halloween-cauldron","name":"Halloween Cauldron","img":"images/items/Decor-halloween-cauldron-001.png","price":100,"cat":"Holiday"},
+{"id":"decor-halloween-dead-tree","name":"Halloween Dead Tree","img":"images/items/Decor-halloween-dead-tree-001.png","price":100,"cat":"Holiday"},
+{"id":"decor-halloween-jackolantern-002","name":"Halloween Jackolantern 002","img":"images/items/Decor-halloween-jackolantern-002.gif","price":100,"cat":"Holiday"},
+{"id":"decor-halloween-pumpkin-stack","name":"Halloween Pumpkin Stack","img":"images/items/Decor-halloween-pumpkin-stack-001.png","price":100,"cat":"Holiday"},
+{"id":"decor-halloween-skull","name":"Halloween Skull","img":"images/items/Decor-halloween-skull-001.png","price":100,"cat":"Holiday"},
+{"id":"decor-halloween-string-lights","name":"Halloween String Lights","img":"images/items/Decor-halloween-string-lights-001.png","price":100,"cat":"Holiday"},
+{"id":"decor-halloween-wheel-barrow","name":"Halloween Wheel Barrow","img":"images/items/Decor-halloween-wheel-barrow-001.png","price":100,"cat":"Holiday"},
+{"id":"decor-halloween-witch-hat","name":"Halloween Witch Hat","img":"images/items/Decor-halloween-witch-hat-001.png","price":100,"cat":"Holiday"},
 {"id":"decor-ireland-flag","name":"Ireland Flag","img":"images/items/Decor-ireland-flag.png","price":100,"cat":"Flags"},
 {"id":"decor-italy-flag","name":"Italy Flag","img":"images/items/Decor-italy-flag.png","price":100,"cat":"Flags"},
 {"id":"decor-jamaica-flag","name":"Jamaica Flag","img":"images/items/Decor-jamaica-flag.png","price":100,"cat":"Flags"},
@@ -300,12 +300,12 @@ const catalog=[
 {"id":"pets-dino-yellow","name":"Dino Yellow","img":"images/items/Pets-dino-yellow-001.png","price":150,"cat":"Pets"},
 {"id":"pets-dodo","name":"Dodo","img":"images/items/Pets-dodo-001.png","price":150,"cat":"Pets"},
 {"id":"pets-goldfish","name":"Goldfish","img":"images/items/Pets-goldfish-001.png","price":150,"cat":"Pets"},
-{"id":"pets-halloween-ghost-dog","name":"Halloween Ghost Dog","img":"images/items/Pets-halloween-ghost-dog-001.png","price":150,"cat":"Pets"},
-{"id":"pets-halloween-happy-pumpkkin","name":"Halloween Happy Pumpkkin","img":"images/items/Pets-halloween-happy-pumpkkin-001.gif","price":150,"cat":"Pets"},
-{"id":"pets-halloween-pumpkin-turtle","name":"Halloween Pumpkin Turtle","img":"images/items/Pets-halloween-pumpkin-turtle-001.png","price":150,"cat":"Pets"},
-{"id":"pets-halloween-skeleton","name":"Halloween Skeleton","img":"images/items/Pets-halloween-skeleton-001.png","price":150,"cat":"Pets"},
-{"id":"pets-halloween-skeleton-cat","name":"Halloween Skeleton Cat","img":"images/items/Pets-halloween-skeleton-cat-001.png","price":150,"cat":"Pets"},
-{"id":"pets-halloween-tall-ghost","name":"Halloween Tall Ghost","img":"images/items/Pets-halloween-tall-ghost-001.png","price":150,"cat":"Pets"},
+{"id":"pets-halloween-ghost-dog","name":"Halloween Ghost Dog","img":"images/items/Pets-halloween-ghost-dog-001.png","price":150,"cat":"Holiday"},
+{"id":"pets-halloween-happy-pumpkkin","name":"Halloween Happy Pumpkkin","img":"images/items/Pets-halloween-happy-pumpkkin-001.gif","price":150,"cat":"Holiday"},
+{"id":"pets-halloween-pumpkin-turtle","name":"Halloween Pumpkin Turtle","img":"images/items/Pets-halloween-pumpkin-turtle-001.png","price":150,"cat":"Holiday"},
+{"id":"pets-halloween-skeleton","name":"Halloween Skeleton","img":"images/items/Pets-halloween-skeleton-001.png","price":150,"cat":"Holiday"},
+{"id":"pets-halloween-skeleton-cat","name":"Halloween Skeleton Cat","img":"images/items/Pets-halloween-skeleton-cat-001.png","price":150,"cat":"Holiday"},
+{"id":"pets-halloween-tall-ghost","name":"Halloween Tall Ghost","img":"images/items/Pets-halloween-tall-ghost-001.png","price":150,"cat":"Holiday"},
 {"id":"pets-pigeon","name":"Pigeon","img":"images/items/Pets-pigeon-001.png","price":150,"cat":"Pets"},
 {"id":"rug-basic-geometric-black","name":"Rug Basic Geometric Black","img":"images/items/Rug-basic-geometric-black-001.png","price":75,"cat":"Rugs"},
 {"id":"rug-basic-geometric-purple","name":"Rug Basic Geometric Purple","img":"images/items/Rug-basic-geometric-purple-001.png","price":75,"cat":"Rugs"},
@@ -337,20 +337,24 @@ const catalog=[
 ];
 
 const collections=[
-{name:"Basic Collection",emoji:"🛋️",items:["bed-white","chair-basic-red","chair-basic-yellow","couch-basic-brown","dresser-basic-cream","dresser-basic-dark-brown","couch-blue","couch-green","couch-red","couch-yellow","tv-basic-dark","tv-basic-light","table-basic-covered"]},
-{name:"Classic Collection",emoji:"🎻",items:["bed-classic-blue","bed-classic-pink","bed-classic-white","bed-classic-yellow","chair-classic-wooden","decor-classic-stuffed-rabbit","drums-classic-blue","floors-classic-dark-wood","floors-classic-dark-wood-002","floors-classic-darkest-wood","floors-classic-darkest-wood-002","floors-classic-light-wood","floors-classic-light-wood-002","floors-classic-medium-wood","floors-classic-medium-wood-002","harp-classic-light","piano-classic-black","walls-classic-blue","walls-classic-green","walls-classic-orange","walls-classic-pink","walls-classic-purple","walls-classic-red","walls-classic-teal","walls-classic-yellow"]},
+{name:"Basic Collection",emoji:"🛋️",items:["bed-white","chair-basic-red","chair-basic-yellow","couch-basic-brown","dresser-basic-cream","dresser-basic-dark-brown","couch-blue","couch-green","couch-red","couch-yellow","tv-basic-dark","tv-basic-light","table-basic-covered","floor-basic-teal-carpet","rug-basic-geometric-black","rug-basic-geometric-purple","rug-basic-swirl-blue","rug-basic-swirl-green","window-basic-large","window-basic-small"]},
+{name:"Classic Collection",emoji:"🎻",items:["bed-classic-blue","bed-classic-pink","bed-classic-white","bed-classic-yellow","chair-classic-wooden","decor-classic-stuffed-rabbit","drums-classic-blue","floors-classic-dark-wood","floors-classic-dark-wood-002","floors-classic-darkest-wood","floors-classic-darkest-wood-002","floors-classic-light-wood","floors-classic-light-wood-002","floors-classic-medium-wood","floors-classic-medium-wood-002","harp-classic-light","piano-classic-black","walls-classic-blue","walls-classic-green","walls-classic-orange","walls-classic-pink","walls-classic-purple","walls-classic-red","walls-classic-teal","walls-classic-yellow","walls-classic-black","walls-classic-white"]},
 {name:"Antique Collection",emoji:"🕰️",items:["couch-antique-cream","bed-antique-green","couch-antique-green","decor-antique-flowers","decor-antique-globe","decor-antique-grandfather-clock","decor-antique-painting","decor-antique-painting-002","decor-antique-phonograph","desk-antique-dark-wood","fireplace-antique-wood","fireplace-antique-wood-002","floors-antique-blue-carpet","floors-antique-brown-carpet","floors-antique-green-carpet","floors-antique-red-carpet","harp-antique-dark-wood","organ-antique-wooden","piano-antique-wooden","vanity-antique-dark-wood","viola-antique-wooden"]},
-{name:"Retro Collection",emoji:"📺",items:["bed-retro-blue","bed-retro-green","bed-retro-red","bed-retro-yellow","chair-retro-cushioned","chair-retro-light-wood","chair-retro-red","chair-retro-red-002","chair-retro-yellow","coffeetable-retro-glass","couch-retro-green","couch-retro-red","decor-retro-butterfly-painting","decor-retro-mirror","decor-retro-record-machine","decor-retro-rubber-tree-plant","decor-retro-wall-clock","endtable-retro-wooden","table-retro-glass"]},
-{name:"Cute Collection",emoji:"🎀",items:["bed-cute-pink","bookcase-cute-small","bookcase-cute-white","chair-cute-pink","chair-cute-pink-002","couch-cute-pink","couch-cute-white","decor-cute-shelves","decor-cute-stuffed-bunny","decor-cute-teddy-bear","fireplace-cute-white","table-cute-heart","walls-cute-pink","walls-cute-purple","walls-cute-yellow","window-cute-white","decor-cute-stuffed-unicorn"]},
-{name:"Cozy Collection",emoji:"🩷",items:["chair-cozy-pink","couch-cozy-pink","cozy-calendar-pink","cozy-candles","cozy-flowers-pink","dresser-cozy-pink","cozy-friend","piano-cozy-pink","table-cozy-pink","vanity-cozy-pink","bed-cozy-pink","bed-cozy-yellow","couch-cozy-orange","couch-cozy-purple"]},
-{name:"Wizard Collection",emoji:"🧙",items:["bookcase-wizard","decor-wizard-book-pile","decor-wizard-book-pile-002","decor-wizard-cauldron","decor-wizard-painting","decor-wizard-potion-table","decor-wizard-shelves","desk-wizard","decor-wizard-mushroom","moon-stars","crystal-ball"]},
+{name:"Retro Collection",emoji:"📺",items:["bed-retro-blue","bed-retro-green","bed-retro-red","bed-retro-yellow","chair-retro-cushioned","chair-retro-light-wood","chair-retro-red","chair-retro-red-002","chair-retro-yellow","coffeetable-retro-glass","couch-retro-green","couch-retro-red","decor-retro-butterfly-painting","decor-retro-mirror","decor-retro-record-machine","decor-retro-rubber-tree-plant","decor-retro-wall-clock","endtable-retro-wooden","table-retro-glass","decor-retro-lamp","rug-retro-blue","rug-retro-frame","rug-retro-gray","rug-retro-patterned"]},
+{name:"Cute Collection",emoji:"🎀",items:["bed-cute-pink","bookcase-cute-small","bookcase-cute-white","chair-cute-pink","chair-cute-pink-002","couch-cute-pink","couch-cute-white","decor-cute-shelves","decor-cute-stuffed-bunny","decor-cute-teddy-bear","fireplace-cute-white","table-cute-heart","walls-cute-pink","walls-cute-purple","walls-cute-yellow","window-cute-white","decor-cute-stuffed-unicorn","floor-cute-pink-carpet"]},
+{name:"Cozy Collection",emoji:"🩷",items:["chair-cozy-pink","couch-cozy-pink","cozy-calendar-pink","cozy-candles","cozy-flowers-pink","dresser-cozy-pink","cozy-friend","piano-cozy-pink","table-cozy-pink","vanity-cozy-pink","bed-cozy-pink","bed-cozy-yellow","couch-cozy-orange","couch-cozy-purple","decor-cute-stuffed-unicorn"]},
+{name:"Wizard Collection",emoji:"🧙",items:["bookcase-wizard","decor-wizard-book-pile","decor-wizard-book-pile-002","decor-wizard-cauldron","decor-wizard-painting","decor-wizard-potion-table","decor-wizard-shelves","desk-wizard","decor-wizard-mushroom","moon-stars","crystal-ball","bed-wizard-lavender","chair-wizard-purple","couch-wizard-blue","decor-wizard-candle","dresser-wizard-wooden","rug-wizard-blue","window-wizard-moon"]},
 {name:"Angel Collection",emoji:"☁️",items:["bed-angel-cream","chair-angel-cream","couch-angel-cream","dresser-angel-cream","table-angel-cream","floors-angel-cream-tiles","harp-angel-white","piano-angel-white","pets-chao-hero"]},
-{name:"Goth Collection",emoji:"🖤",items:["chair-goth-black","chair-goth-purple","couch-goth-purple","table-goth-purple","decor-goth-shelves","candles-sunset","gamma","pets-chao-dark"]},
-{name:"Floral Collection",emoji:"🌸",items:["floral-vines","floral-terrarium","dresser-floral-white","bookcase-floral","decor-floral-purple-box","decor-floral-yellow-box"]},
+{name:"Goth Collection",emoji:"🖤",items:["chair-goth-black","chair-goth-purple","couch-goth-purple","table-goth-purple","decor-goth-shelves","candles-sunset","gamma","pets-chao-dark","wallpaper-goth-eyes"]},
+{name:"Floral Collection",emoji:"🌸",items:["floral-vines","floral-terrarium","dresser-floral-white","bookcase-floral","decor-floral-purple-box","decor-floral-yellow-box","wallpaper-floral-black","wallpaper-floral-green"]},
 {name:"Sweets Collection",emoji:"🍓",items:["bed-sweets-strawberry","bookcase-sweets-ice-cream","couch-sweets-pink","dresser-sweets-chocolate","endtable-sweets-cream"]},
 {name:"Geode Collection",emoji:"💎",items:["chair-geode-purple","geode-purple","endtable-geode","table-geode-blue"]},
 {name:"Hello Kitty Collection",emoji:"🎀",items:["bed-hellokitty","decor-hellokitty-clock","decor-hellokitty-plant","dresser-hellokitty"]},
-{name:"Deco Collection",emoji:"✨",items:["chair-deco-green","chair-deco-red"]}
+{name:"Deco Collection",emoji:"✨",items:["chair-deco-green","chair-deco-red"]},
+{name:"Opulent Collection",emoji:"👑",items:["bed-opulent-purple-wood","bed-opulent-yellow-wood","couch-opulent-leather-couch","decor-opulent-billiards-table","decor-opulent-judge-painting","decor-opulent-map-painting","decor-opulent-moose-head","decor-opulent-ship-display","decor-opulent-suitcase-stack","desk-opulent-wooden-study","fireplace-opulent-wooden","rug-opulent-bear-skin","table-opulent-wooden","vanity-opulent-wooden"]},
+{name:"Rattan Collection",emoji:"🪴",items:["bathroom-rattan-sink","bed-rattan-blue","couch-rattan-blue","couch-rattan-white","decor-rattan-cushion-green","decor-rattan-ukelele","rug-rattan-cream-and-blue","vanity-rattan-light"]},
+{name:"Halloween Collection",emoji:"🎃",items:["decor-halloween-candles","decor-halloween-cauldron","decor-halloween-dead-tree","decor-halloween-jackolantern-002","decor-halloween-pumpkin-stack","decor-halloween-skull","decor-halloween-string-lights","decor-halloween-wheel-barrow","decor-halloween-witch-hat","pets-halloween-ghost-dog","pets-halloween-happy-pumpkkin","pets-halloween-pumpkin-turtle","pets-halloween-skeleton","pets-halloween-skeleton-cat","pets-halloween-tall-ghost"]},
+{name:"Mermaid Collection",emoji:"🧜",items:["wallpaper-mermaid-blue","wallpaper-mermaid-lavender"]}
 ];
 let s={screen:"setup",first:"",initial:"",coins:100,xp:0,streak:0,inventory:[],placed:[],wall:"plain",floor:"plain",q:null,answered:0,correct:0,loot:null,favorites:[],achievements:[],completedCollections:[],favoriteCollections:[],lifetime:{purchases:0,sales:0,mysteryBoxes:0,petsPetted:0,flips:0}};
 const app=document.querySelector("#app");
@@ -857,7 +861,7 @@ function collectionsPanel(p){
 function shopPanel(p,active=null,query=null){
  if(active!==null)shopUi.cat=active;
  if(query!==null)shopUi.query=query;
- const cats=["All","Furniture","Decor","Rugs","Flags","Pets","Pet Supplies","Windows","Walls","Floors"];
+ const cats=["All","Furniture","Decor","Rugs","Flags","Pets","Pet Supplies","Holiday","Windows","Walls","Floors"];
  const q=shopUi.query.trim().toLowerCase();
  const base=shopUi.cat==="All"?catalog:catalog.filter(x=>x.cat===shopUi.cat);
  const filtered=q?base.filter(x=>(x.name+" "+x.cat+" "+x.id).toLowerCase().includes(q)):base;
