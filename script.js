@@ -282,16 +282,16 @@ const catalog=[
 {"id":"floor-bubbles","name":"Bubbles","img":"images/items/Floor-bubbles-001.png","price":50,"cat":"Floors"},
 {"id":"floor-cute-pink-carpet","name":"Cute Pink Carpet","img":"images/items/Floor-cute-pink-carpet-001.png","price":50,"cat":"Floors"},
 {"id":"floor-space","name":"Space","img":"images/items/Floor-space-001.png","price":50,"cat":"Floors"},
-{"id":"petsupplies-cat-bowl-blue","name":"PetSupplies Cat Bowl Blue","img":"images/items/PetSupplies-cat-bowl-blue-001.png","price":100,"cat":"Furniture"},
-{"id":"petsupplies-cat-bowl-pink","name":"PetSupplies Cat Bowl Pink","img":"images/items/PetSupplies-cat-bowl-pink-001.png","price":100,"cat":"Furniture"},
-{"id":"petsupplies-cat-tree-white","name":"PetSupplies Cat Tree White","img":"images/items/PetSupplies-cat-tree-white-001.png","price":100,"cat":"Furniture"},
-{"id":"petsupplies-dog-bowl-black","name":"PetSupplies Dog Bowl Black","img":"images/items/PetSupplies-dog-bowl-black-001.png","price":100,"cat":"Furniture"},
-{"id":"petsupplies-dog-bowl-white","name":"PetSupplies Dog Bowl White","img":"images/items/PetSupplies-dog-bowl-white-001.png","price":100,"cat":"Furniture"},
-{"id":"petsupplies-doghouse-brick","name":"PetSupplies Doghouse Brick","img":"images/items/PetSupplies-doghouse-brick-001.png","price":100,"cat":"Furniture"},
-{"id":"petsupplies-long-aquarium","name":"PetSupplies Long Aquarium","img":"images/items/PetSupplies-long-aquarium-001.png","price":100,"cat":"Furniture"},
-{"id":"petsupplies-pet-bed-green","name":"PetSupplies Pet Bed Green","img":"images/items/PetSupplies-pet-bed-green-001.png","price":100,"cat":"Furniture"},
-{"id":"petsupplies-pet-bed-red","name":"PetSupplies Pet Bed Red","img":"images/items/PetSupplies-pet-bed-red-001.png","price":100,"cat":"Furniture"},
-{"id":"petsupplies-tall-aquarium","name":"PetSupplies Tall Aquarium","img":"images/items/PetSupplies-tall-aquarium-001.png","price":100,"cat":"Furniture"},
+{"id":"petsupplies-cat-bowl-blue", "name":"Cat Bowl Blue","img":"images/items/PetSupplies-cat-bowl-blue-001.png","price":100,"cat":"Pet Supplies"},
+{"id":"petsupplies-cat-bowl-pink", "name":"Cat Bowl Pink","img":"images/items/PetSupplies-cat-bowl-pink-001.png","price":100,"cat":"Pet Supplies"},
+{"id":"petsupplies-cat-tree-white", "name":"Cat Tree White","img":"images/items/PetSupplies-cat-tree-white-001.png","price":100,"cat":"Pet Supplies"},
+{"id":"petsupplies-dog-bowl-black", "name":"Dog Bowl Black","img":"images/items/PetSupplies-dog-bowl-black-001.png","price":100,"cat":"Pet Supplies"},
+{"id":"petsupplies-dog-bowl-white", "name":"Dog Bowl White","img":"images/items/PetSupplies-dog-bowl-white-001.png","price":100,"cat":"Pet Supplies"},
+{"id":"petsupplies-doghouse-brick", "name":"Doghouse Brick","img":"images/items/PetSupplies-doghouse-brick-001.png","price":100,"cat":"Pet Supplies"},
+{"id":"petsupplies-long-aquarium", "name":"Long Aquarium","img":"images/items/PetSupplies-long-aquarium-001.png","price":100,"cat":"Pet Supplies"},
+{"id":"petsupplies-pet-bed-green", "name":"Pet Bed Green","img":"images/items/PetSupplies-pet-bed-green-001.png","price":100,"cat":"Pet Supplies"},
+{"id":"petsupplies-pet-bed-red", "name":"Pet Bed Red","img":"images/items/PetSupplies-pet-bed-red-001.png","price":100,"cat":"Pet Supplies"},
+{"id":"petsupplies-tall-aquarium", "name":"Tall Aquarium","img":"images/items/PetSupplies-tall-aquarium-001.png","price":100,"cat":"Pet Supplies"},
 {"id":"pets-clownfish","name":"Clownfish","img":"images/items/Pets-clownfish-001.png","price":150,"cat":"Pets"},
 {"id":"pets-dino-blue","name":"Dino Blue","img":"images/items/Pets-dino-blue-001.png","price":150,"cat":"Pets"},
 {"id":"pets-dino-green","name":"Dino Green","img":"images/items/Pets-dino-green-001.png","price":150,"cat":"Pets"},
@@ -854,7 +854,7 @@ function collectionsPanel(p){
 function shopPanel(p,active=null,query=null){
  if(active!==null)shopUi.cat=active;
  if(query!==null)shopUi.query=query;
- const cats=["All","Furniture","Decor","Pets","Windows","Walls","Floors"];
+ const cats=["All","Furniture","Decor","Pets","Pet Supplies","Windows","Walls","Floors"];
  const q=shopUi.query.trim().toLowerCase();
  const base=shopUi.cat==="All"?catalog:catalog.filter(x=>x.cat===shopUi.cat);
  const filtered=q?base.filter(x=>(x.name+" "+x.cat+" "+x.id).toLowerCase().includes(q)):base;
