@@ -377,3 +377,9 @@ background-size:100% 100%,auto;
 .placed.pet-place.size-small .room-item-image{scale:.75}
 .placed.pet-place.size-normal .room-item-image{scale:1}
 .placed.pet-place.size-large .room-item-image{scale:1.25}
+
+/* Frog is intentionally much smaller than other pets. These values are relative to the frog's old size. */
+.placed.pet-place .room-item-image.item-pets-frog{scale:.333}
+.placed.pet-place.size-small .room-item-image.item-pets-frog{scale:.25}
+.placed.pet-place.size-normal .room-item-image.item-pets-frog{scale:.333}
+.placed.pet-place.size-large .room-item-image.item-pets-frog{scale:.416}
