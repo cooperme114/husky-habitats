@@ -300,12 +300,12 @@ const catalog=[
 {"id":"pets-dino-yellow","name":"Dino Yellow","img":"images/items/Pets-dino-yellow-001.png","price":150,"cat":"Pets"},
 {"id":"pets-dodo","name":"Dodo","img":"images/items/Pets-dodo-001.png","price":150,"cat":"Pets"},
 {"id":"pets-goldfish","name":"Goldfish","img":"images/items/Pets-goldfish-001.png","price":150,"cat":"Pets"},
-{"id":"pets-halloween-ghost-dog","name":"Halloween Ghost Dog","img":"images/items/Pets-halloween-ghost-dog-001.png","price":150,"cat":"Holiday"},
-{"id":"pets-halloween-happy-pumpkkin","name":"Halloween Happy Pumpkkin","img":"images/items/Pets-halloween-happy-pumpkkin-001.gif","price":150,"cat":"Holiday"},
-{"id":"pets-halloween-pumpkin-turtle","name":"Halloween Pumpkin Turtle","img":"images/items/Pets-halloween-pumpkin-turtle-001.png","price":150,"cat":"Holiday"},
-{"id":"pets-halloween-skeleton","name":"Halloween Skeleton","img":"images/items/Pets-halloween-skeleton-001.png","price":150,"cat":"Holiday"},
-{"id":"pets-halloween-skeleton-cat","name":"Halloween Skeleton Cat","img":"images/items/Pets-halloween-skeleton-cat-001.png","price":150,"cat":"Holiday"},
-{"id":"pets-halloween-tall-ghost","name":"Halloween Tall Ghost","img":"images/items/Pets-halloween-tall-ghost-001.png","price":150,"cat":"Holiday"},
+{"id":"pets-halloween-ghost-dog","name":"Halloween Ghost Dog","img":"images/items/Pets-halloween-ghost-dog-001.png","price":150,"cat":"Pets"},
+{"id":"pets-halloween-happy-pumpkkin","name":"Halloween Happy Pumpkkin","img":"images/items/Pets-halloween-happy-pumpkkin-001.gif","price":150,"cat":"Pets"},
+{"id":"pets-halloween-pumpkin-turtle","name":"Halloween Pumpkin Turtle","img":"images/items/Pets-halloween-pumpkin-turtle-001.png","price":150,"cat":"Pets"},
+{"id":"pets-halloween-skeleton","name":"Halloween Skeleton","img":"images/items/Pets-halloween-skeleton-001.png","price":150,"cat":"Pets"},
+{"id":"pets-halloween-skeleton-cat","name":"Halloween Skeleton Cat","img":"images/items/Pets-halloween-skeleton-cat-001.png","price":150,"cat":"Pets"},
+{"id":"pets-halloween-tall-ghost","name":"Halloween Tall Ghost","img":"images/items/Pets-halloween-tall-ghost-001.png","price":150,"cat":"Pets"},
 {"id":"pets-pigeon","name":"Pigeon","img":"images/items/Pets-pigeon-001.png","price":150,"cat":"Pets"},
 {"id":"rug-basic-geometric-black","name":"Rug Basic Geometric Black","img":"images/items/Rug-basic-geometric-black-001.png","price":75,"cat":"Rugs"},
 {"id":"rug-basic-geometric-purple","name":"Rug Basic Geometric Purple","img":"images/items/Rug-basic-geometric-purple-001.png","price":75,"cat":"Rugs"},
@@ -863,7 +863,7 @@ function shopPanel(p,active=null,query=null){
  if(query!==null)shopUi.query=query;
  const cats=["All","Furniture","Decor","Rugs","Flags","Pets","Pet Supplies","Holiday","Windows","Walls","Floors"];
  const q=shopUi.query.trim().toLowerCase();
- const base=shopUi.cat==="All"?catalog:catalog.filter(x=>x.cat===shopUi.cat);
+ const base=shopUi.cat==="All"?catalog:catalog.filter(x=>shopUi.cat==="Holiday"?/halloween/i.test(x.img||""):x.cat===shopUi.cat);
  const filtered=q?base.filter(x=>(x.name+" "+x.cat+" "+x.id).toLowerCase().includes(q)):base;
  const items=sortItems(filtered,shopUi.sort,shopUi.favoritesFirst,shopUi.ownedFirst);
  p.innerHTML='<h2>🛍️ Habitat Shop</h2><p class="tiny">Furniture, decor, pets, and windows can be bought more than once.</p>'+
