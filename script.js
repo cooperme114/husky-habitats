@@ -528,6 +528,30 @@ function showAchievement(a){
   el.innerHTML='<b>🏆 Achievement Unlocked!</b><span>'+esc(a.name)+'</span><small>'+esc(a.desc)+'</small>';
   document.body.appendChild(el);setTimeout(()=>el.remove(),4000);
 }
+const musicalItemIds=new Set(["piano-cozy-pink","decor-antique-phonograph","decor-retro-record-machine","drums-classic-blue","harp-angel-white","harp-antique-dark-wood","harp-classic-light","organ-antique-wooden","piano-angel-white","piano-antique-wooden","piano-classic-black","viola-antique-wooden"]);
+function isMusicalItem(x){return !!x&&musicalItemIds.has(x.id)}
+function hideItemControls(){const old=document.querySelector(".item-size-controls");if(old)old.remove()}
+function showItemControls(index,el){
+ hideItemControls();if(!s.placed[index])return;
+ const c=document.createElement("div");c.className="item-size-controls";c.dataset.forPlace=index;
+ const current=s.placed[index].size||"normal";
+ c.innerHTML='<button data-size="small" class="'+(current==="small"?"active":"")+'">Small</button><button data-size="normal" class="'+(current==="normal"?"active":"")+'">Normal</button><button data-size="large" class="'+(current==="large"?"active":"")+'">Large</button>';
+ document.querySelector("#room").appendChild(c);
+ const roomRect=document.querySelector("#room").getBoundingClientRect(),r=el.getBoundingClientRect();
+ let left=r.left-roomRect.left+r.width/2,top=r.top-roomRect.top-8;
+ c.style.left=left+"px";c.style.top=top+"px";
+ c.querySelectorAll("[data-size]").forEach(b=>b.onclick=e=>{e.preventDefault();e.stopPropagation();setItemSize(index,b.dataset.size)});
+}
+function setItemSize(index,size){
+ if(!s.placed[index]||!["small","normal","large"].includes(size))return;
+ s.placed[index].size=size;saveSilently();render();
+ const el=document.querySelector('.placed[data-place="'+index+'"]');if(el)showItemControls(index,el);
+}
+function musicNotes(el){
+ ["♪","♫","♪"].forEach((note,i)=>{
+   const n=document.createElement("span");n.className="music-note";n.textContent=note;n.style.setProperty("--note-x",((i-1)*18)+"px");n.style.animationDelay=(i*.12)+"s";el.appendChild(n);setTimeout(()=>n.remove(),2600);
+ });
+}
 function petHeart(el){
   s.lifetime.petsPetted++;checkAchievements();saveSilently();
   const h=document.createElement("span");h.className="pet-heart";h.textContent="♥";el.appendChild(h);setTimeout(()=>h.remove(),3000);
@@ -597,7 +621,7 @@ function showScoreBreakdown(){
 function showHelp(){
  const old=document.querySelector(".help-overlay");if(old)old.remove();
  const el=document.createElement("div");el.className="help-overlay";
- el.innerHTML='<div class="help-modal" role="dialog" aria-modal="true" aria-labelledby="helpTitle"><button class="help-close" type="button" aria-label="Close instructions">×</button><h2 id="helpTitle">❓ How to Play Husky Habitats</h2><div class="help-sections"><section><h3>Top Icons</h3><p>🪙 Coins = spend them in the shop.<br>⭐ XP = how much experience you have earned.<br>🔥 Streak = correct answers in a row.<br>🏆 Room Score = how many decorating points your room has.</p></section><section><h3>Earn Coins & Prizes</h3><p>Answer questions correctly to earn coins and XP. Every 25 correct answers in a row earns a free random item. Mystery Boxes cost 200 coins and give 3 random items. Duplicates are possible.</p></section><section><h3>Decorating</h3><p>Open Inventory to place items, then drag them where you want. Want something on top of something else? Items placed later appear in front. Remove and place an item again to bring it to the front. Double-click any placed item to flip which direction it faces.</p></section><section><h3>Pets</h3><p>Pets are worth 2 room-score points instead of 1. Click a pet in your room to pet it and make a little heart appear. ♥</p></section><section><h3>Room Score</h3><p>Most items are worth 1 point. Pets are worth 2. Different items from the same collection multiply each other: 2 matching collection items = ×2, 3 = ×3, and so on. Duplicate copies do not increase the multiplier, but they still give their normal points.</p></section><section><h3>Collections & Favorites</h3><p>The Collections tab shows what you own. Completing a collection gives a celebration. You can ★ favorite a collection you are working toward, and ★ favorite shop items so they are easier to find later.</p></section><section><h3>Saving</h3><p>Quick Save may not survive a Google Sites refresh. Use Save Code for a reliable backup. Copy the code somewhere safe, then use Load Save Code to restore your room and progress. Weekly questions are not stored in the code.</p></section></div></div>';
+ el.innerHTML='<div class="help-modal" role="dialog" aria-modal="true" aria-labelledby="helpTitle"><button class="help-close" type="button" aria-label="Close instructions">×</button><h2 id="helpTitle">❓ How to Play Husky Habitats</h2><div class="help-sections"><section><h3>Top Icons</h3><p>🪙 Coins = spend them in the shop.<br>⭐ XP = how much experience you have earned.<br>🔥 Streak = correct answers in a row.<br>🏆 Room Score = how many decorating points your room has.</p></section><section><h3>Earn Coins & Prizes</h3><p>Answer questions correctly to earn coins and XP. Every 25 correct answers in a row earns a free random item. Mystery Boxes cost 200 coins and give 3 random items. Duplicates are possible.</p></section><section><h3>Decorating</h3><p>Open Inventory to place items, then drag them where you want. Want something on top of something else? Items placed later appear in front. Remove and place an item again to bring it to the front. Click or tap a placed item for Small, Normal, or Large size controls. Double-click any placed item to flip which direction it faces.</p></section><section><h3>Pets</h3><p>Pets are worth 2 room-score points instead of 1. Click a pet in your room to pet it and make a little heart appear. ♥ Musical instruments and music players make floating music notes when clicked. ♪</p></section><section><h3>Room Score</h3><p>Most items are worth 1 point. Pets are worth 2. Different items from the same collection multiply each other: 2 matching collection items = ×2, 3 = ×3, and so on. Duplicate copies do not increase the multiplier, but they still give their normal points.</p></section><section><h3>Collections & Favorites</h3><p>The Collections tab shows what you own. Completing a collection gives a celebration. You can ★ favorite a collection you are working toward, and ★ favorite shop items so they are easier to find later.</p></section><section><h3>Saving</h3><p>Quick Save may not survive a Google Sites refresh. Use Save Code for a reliable backup. Copy the code somewhere safe, then use Load Save Code to restore your room and progress. Weekly questions are not stored in the code.</p></section></div></div>';
  document.body.appendChild(el);
  const close=()=>el.remove();
  el.querySelector(".help-close").onclick=close;
@@ -607,7 +631,7 @@ function showHelp(){
 function render(){
  if(s.screen==="setup")return setup();
  let wallItem=catalog.find(x=>x.id===s.wall),floorItem=catalog.find(x=>x.id===s.floor);
- app.innerHTML='<div class="shell"><div class="topbar"><div><b>🐾 Husky Habitats</b><div class="tiny">'+esc(s.first)+' '+esc(s.initial)+'.\'s Room</div></div><div class="stats"><span id="coinPill" class="pill" title="Coins">🪙 '+s.coins+'</span><span id="xpPill" class="pill" title="XP">⭐ '+s.xp+' XP</span><span id="streakPill" class="pill" title="Streak">🔥 '+s.streak+'</span><button id="scoreBtn" class="pill score-pill" title="See your room score">🏆 '+roomScore()+'</button><button id="helpBtn" class="save-btn">❓ How to Play</button><button id="saveBtn" class="save-btn">💾 Quick Save</button><button id="saveCodeBtn" class="save-btn">🔐 Save Code</button><span id="saveStatus" class="save-status" aria-live="polite"></span></div></div><div id="room" class="room" aria-label="Your room"><div class="wall-surface"></div><div class="floor-surface"></div><div class="baseboard"></div>'+s.placed.map((p,i)=>{let x=catalog.find(a=>a.id===p.id);let flip=p.dir==="right"?" flipped":"";return '<button class="placed turnable'+(x.cat==="Pets"?' pet-place':'')+'" data-place="'+i+'" style="left:'+p.x+'%;top:'+p.y+'%" aria-label="Move '+x.name+'. Double-click to flip.'+(x.cat==="Pets"?' Click once to pet.':'')+'">'+itemVisual(x,"room",flip,x.cat==="Pets"?i:null)+'</button>'}).join("")+'<div class="move-hint">Drag your things anywhere in the room ✨</div><div id="questionOverlay" class="question-overlay hidden"></div></div><div class="nav"><button class="primary" data-view="questions">📚 Answer Questions</button><button class="secondary" data-view="shop">🛍️ Shop</button><button class="secondary" data-view="inventory">🎒 Inventory</button><button class="secondary" data-view="collections">📖 Collections</button><button class="secondary" data-view="achievements">🏆 Achievements</button></div><div id="panel" class="card panel"></div></div>';
+ app.innerHTML='<div class="shell"><div class="topbar"><div><b>🐾 Husky Habitats</b><div class="tiny">'+esc(s.first)+' '+esc(s.initial)+'.\'s Room</div></div><div class="stats"><span id="coinPill" class="pill" title="Coins">🪙 '+s.coins+'</span><span id="xpPill" class="pill" title="XP">⭐ '+s.xp+' XP</span><span id="streakPill" class="pill" title="Streak">🔥 '+s.streak+'</span><button id="scoreBtn" class="pill score-pill" title="See your room score">🏆 '+roomScore()+'</button><button id="helpBtn" class="save-btn">❓ How to Play</button><button id="saveBtn" class="save-btn">💾 Quick Save</button><button id="saveCodeBtn" class="save-btn">🔐 Save Code</button><span id="saveStatus" class="save-status" aria-live="polite"></span></div></div><div id="room" class="room" aria-label="Your room"><div class="wall-surface"></div><div class="floor-surface"></div><div class="baseboard"></div>'+s.placed.map((p,i)=>{let x=catalog.find(a=>a.id===p.id);let flip=p.dir==="right"?" flipped":"";let musical=isMusicalItem(x);let size=p.size||"normal";return '<button class="placed turnable size-'+size+(x.cat==="Pets"?' pet-place':'')+(musical?' music-place':'')+'" data-place="'+i+'" style="left:'+p.x+'%;top:'+p.y+'%" aria-label="Move '+x.name+'. Double-click to flip. Click once for size options.'+(x.cat==="Pets"?' Click once to pet.':'')+(musical?' Click once for music notes.':'')+'">'+itemVisual(x,"room",flip,x.cat==="Pets"?i:null)+'</button>'}).join("")+'<div class="move-hint">Drag your things anywhere in the room ✨</div><div id="questionOverlay" class="question-overlay hidden"></div></div><div class="nav"><button class="primary" data-view="questions">📚 Answer Questions</button><button class="secondary" data-view="shop">🛍️ Shop</button><button class="secondary" data-view="inventory">🎒 Inventory</button><button class="secondary" data-view="collections">📖 Collections</button><button class="secondary" data-view="achievements">🏆 Achievements</button></div><div id="panel" class="card panel"></div></div>';
  document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>{if(b.dataset.view==="questions")showQuestionOverlay();else panel(b.dataset.view)});
  const scoreBtn=document.querySelector("#scoreBtn"); if(scoreBtn)scoreBtn.onclick=showScoreBreakdown;
  const helpBtn=document.querySelector("#helpBtn"); if(helpBtn)helpBtn.onclick=showHelp;
@@ -618,8 +642,18 @@ function render(){
  if(wallSurface) wallSurface.style.backgroundImage=wallItem&&wallItem.img?'url("'+wallItem.img+'")':"none";
  if(floorSurface) floorSurface.style.backgroundImage=floorItem&&floorItem.img?'url("'+floorItem.img+'")':"none";
  enableDragging();
- document.querySelectorAll(".placed").forEach(b=>b.addEventListener("dblclick",e=>{e.preventDefault();e.stopPropagation();turnItem(+b.dataset.place)}));
- document.querySelectorAll(".placed.pet-place").forEach(b=>b.addEventListener("click",e=>{if(b.classList.contains("dragging"))return;e.stopPropagation();petHeart(b)}));
+ document.querySelectorAll(".placed").forEach(b=>{
+   b.addEventListener("dblclick",e=>{e.preventDefault();e.stopPropagation();turnItem(+b.dataset.place)});
+   b.addEventListener("click",e=>{
+     if(b.classList.contains("dragging"))return;
+     e.stopPropagation();
+     const idx=+b.dataset.place;
+     showItemControls(idx,b);
+     if(b.classList.contains("pet-place"))petHeart(b);
+     if(b.classList.contains("music-place"))musicNotes(b);
+   });
+ });
+ const room=document.querySelector("#room");if(room)room.addEventListener("click",e=>{if(e.target===room||e.target.classList.contains("wall-surface")||e.target.classList.contains("floor-surface"))hideItemControls()});
  const p=document.querySelector("#panel");if(p)p.innerHTML='<p class="tiny">Choose Answer Questions, Shop, Inventory, Collections, or Achievements.</p>';
 }
 function setup(){
@@ -827,7 +861,7 @@ function sellItem(id){
  render();panel("inventory");
 }
 function useLabel(x){if(x.cat==="Walls")return s.wall===x.id?"In Use":"Use Wallpaper";if(x.cat==="Floors")return s.floor===x.id?"In Use":"Use Flooring";let available=ownedCount(x.id)-placedCount(x.id);return available>0?(placedCount(x.id)>0?"Place Another":"Place in Room"):"All Placed"}
-function useItem(id){let x=catalog.find(a=>a.id===id);if(x.cat==="Walls"){s.wall=id}else if(x.cat==="Floors"){s.floor=id}else if(placedCount(id)<ownedCount(id)){s.placed.push({id,x:42+(s.placed.length*8)%35,y:58-(s.placed.length%3)*10,dir:"left"})}checkAchievements();render();saveSilently();panel("inventory")}
+function useItem(id){let x=catalog.find(a=>a.id===id);if(x.cat==="Walls"){s.wall=id}else if(x.cat==="Floors"){s.floor=id}else if(placedCount(id)<ownedCount(id)){s.placed.push({id,x:42+(s.placed.length*8)%35,y:58-(s.placed.length%3)*10,dir:"left",size:"normal"})}checkAchievements();render();saveSilently();panel("inventory")}
 function removeOne(id){let found=s.placed.map(p=>p.id).lastIndexOf(id);if(found>=0)s.placed.splice(found,1);render();panel("inventory")}
 function turnItem(index){if(!s.placed[index])return;s.placed[index].dir=s.placed[index].dir==="right"?"left":"right";s.lifetime.flips++;checkAchievements();saveSilently();render();}
 function esc(x){return x.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
