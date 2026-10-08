@@ -346,7 +346,22 @@ const catalog=[
 {id:"rug-diwali-rangoli",name:"Diwali Rangoli",img:"images/items/Rug-diwali-rangoli-001.png",price:100,cat:"Rugs"},
 {id:"rug-diwali-rangoli-002",name:"Diwali Rangoli 002",img:"images/items/Rug-diwali-rangoli-002.png",price:100,cat:"Rugs"},
 {id:"rug-diwali-rangoli-003",name:"Diwali Rangoli 003",img:"images/items/Rug-diwali-rangoli-003.png",price:100,cat:"Rugs"},
-{id:"decor-diwali-cushions",name:"Diwali Cushions",img:"images/items/decor-diwali-cushions-001.png",price:100,cat:"Holiday"}
+{id:"decor-diwali-cushions",name:"Diwali Cushions",img:"images/items/decor-diwali-cushions-001.png",price:100,cat:"Holiday"},
+{id:"trophy-questions-bronze",name:"Bronze Questions Trophy",img:"images/items/Trophy-questions-bronze.png",price:0,cat:"Trophies"},
+{id:"trophy-questions-silver",name:"Silver Questions Trophy",img:"images/items/Trophy-questions-silver.png",price:0,cat:"Trophies"},
+{id:"trophy-questions-gold",name:"Gold Questions Trophy",img:"images/items/Trophy-questions-gold.png",price:0,cat:"Trophies"},
+{id:"trophy-streak-bronze",name:"Bronze Streak Trophy",img:"images/items/Trophy-streak-bronze.png",price:0,cat:"Trophies"},
+{id:"trophy-streak-silver",name:"Silver Streak Trophy",img:"images/items/Trophy-streak-silver.png",price:0,cat:"Trophies"},
+{id:"trophy-streak-gold",name:"Gold Streak Trophy",img:"images/items/Trophy-streak-gold.png",price:0,cat:"Trophies"},
+{id:"trophy-coin-bronze",name:"Bronze Coin Trophy",img:"images/items/Trophy-coin-bronze.png",price:0,cat:"Trophies"},
+{id:"trophy-coin-silver",name:"Silver Coin Trophy",img:"images/items/Trophy-coin-silver.png",price:0,cat:"Trophies"},
+{id:"trophy-coin-gold",name:"Gold Coin Trophy",img:"images/items/Trophy-coin-gold.png",price:0,cat:"Trophies"},
+{id:"trophy-furniture-bronze",name:"Bronze Furniture Trophy",img:"images/items/Trophy-furniture-bronze.png",price:0,cat:"Trophies"},
+{id:"trophy-furniture-silver",name:"Silver Furniture Trophy",img:"images/items/Trophy-furniture-silver.png",price:0,cat:"Trophies"},
+{id:"trophy-furniture-gold",name:"Gold Furniture Trophy",img:"images/items/Trophy-furniture-gold.png",price:0,cat:"Trophies"},
+{id:"trophy-pet-bronze",name:"Bronze Pet Trophy",img:"images/items/Trophy-pet-bronze.png",price:0,cat:"Trophies"},
+{id:"trophy-pet-silver",name:"Silver Pet Trophy",img:"images/items/Trophy-pet-silver.png",price:0,cat:"Trophies"},
+{id:"trophy-pet-gold",name:"Gold Pet Trophy",img:"images/items/Trophy-pet-gold.png",price:0,cat:"Trophies"}
 ];
 
 const collections=[
@@ -394,6 +409,7 @@ function loadGame(){
     if(!Array.isArray(s.completedCollections))s.completedCollections=[];
     if(!Array.isArray(s.favoriteCollections))s.favoriteCollections=[];
     if(typeof s.correct!=="number")s.correct=Math.floor((s.xp||0)/10);
+    syncTrophies();
     if(!s.lifetime||typeof s.lifetime!=="object")s.lifetime={purchases:0,sales:0,mysteryBoxes:0,petsPetted:0,flips:0};
     for(const k of ["purchases","sales","mysteryBoxes","petsPetted","flips"])if(typeof s.lifetime[k]!=="number")s.lifetime[k]=0;
     render();
@@ -466,6 +482,7 @@ function applySaveCode(code){
     if(!Array.isArray(s.completedCollections))s.completedCollections=[];
     if(!Array.isArray(s.favoriteCollections))s.favoriteCollections=[];
     if(typeof s.correct!=="number")s.correct=Math.floor((s.xp||0)/10);
+    syncTrophies();
     if(!s.lifetime||typeof s.lifetime!=="object")s.lifetime={purchases:0,sales:0,mysteryBoxes:0,petsPetted:0,flips:0};
     for(const k of ["purchases","sales","mysteryBoxes","petsPetted","flips"])if(typeof s.lifetime[k]!=="number")s.lifetime[k]=0;
     saveSilently();
@@ -641,9 +658,12 @@ const achievementDefs=[
  {id:"gamma-25",name:"Gamma Gamma Gamma",desc:"Own 25 Gammas.",test:()=>ownedCount("gamma")>=25},
  {id:"frog-25",name:"Frog Situation",desc:"Place 25 frogs in your room.",test:()=>s.placed.filter(p=>p.id==="pets-frog").length>=25}
 ]
+const trophyAwards={"correct-100":"trophy-questions-bronze","correct-300":"trophy-questions-silver","correct-500":"trophy-questions-gold","streak-25":"trophy-streak-bronze","streak-50":"trophy-streak-silver","streak-100":"trophy-streak-gold","buy-10":"trophy-coin-bronze","buy-25":"trophy-coin-silver","buy-50":"trophy-coin-gold","placed-10":"trophy-furniture-bronze","placed-25":"trophy-furniture-silver","placed-50":"trophy-furniture-gold","pets-10":"trophy-pet-bronze","pets-unique-20":"trophy-pet-silver","pets-unique-30":"trophy-pet-gold"};
+function syncTrophies(){if(!Array.isArray(s.inventory))s.inventory=[];for(const [achievement,id] of Object.entries(trophyAwards)){if(s.achievements.includes(achievement)&&!s.inventory.includes(id))s.inventory.push(id)}}
 function checkAchievements(){
   const newly=[];
   achievementDefs.forEach(a=>{if(a.test()&&!s.achievements.includes(a.id)){s.achievements.push(a.id);newly.push(a)}});
+  syncTrophies();
   if(newly.length)showAchievement(newly[0]);
 }
 function showAchievement(a){
@@ -850,7 +870,7 @@ function panel(v){
    '<div class="sort-controls"><label>Sort by <select id="inventorySort" class="sort-select"><option value="az">A–Z</option><option value="za">Z–A</option><option value="newest">Newest First</option><option value="oldest">Oldest First</option><option value="price-low">Price: Low to High</option><option value="price-high">Price: High to Low</option></select></label><label class="sort-check"><input id="inventoryFavFirst" type="checkbox" '+(inventoryUi.favoritesFirst?'checked':'')+'> ★ Favorites first</label></div>'+
    (owned.length?'<div class="shop-grid">'+owned.map(x=>{
      const useDisabled=((!["Walls","Floors"].includes(x.cat)&&placedCount(x.id)>=ownedCount(x.id))||(x.cat==="Walls"&&s.wall===x.id)||(x.cat==="Floors"&&s.floor===x.id));
-     return '<div class="shop-item"><button class="favorite-btn '+(s.favorites.includes(x.id)?'favorited':'')+'" data-fav="'+x.id+'" title="Favorite">'+(s.favorites.includes(x.id)?'★':'☆')+'</button><button class="item-art preview-trigger" data-preview="'+x.id+'" title="Preview '+esc(x.name)+'">'+itemVisual(x,"shop")+'</button><b>'+x.name+'</b><div class="tiny">'+x.cat+' • Owned: '+ownedCount(x.id)+'</div><div class="inventory-actions"><button class="secondary" data-use="'+x.id+'" '+(useDisabled?"disabled":"")+'>'+useLabel(x)+'</button>'+((!["Walls","Floors"].includes(x.cat)&&placedCount(x.id)>0)?'<button class="secondary" data-remove="'+x.id+'">Remove One</button>':"")+'<button class="secondary sell-btn" data-sell="'+x.id+'">Sell 🪙 '+Math.floor(x.price*.5)+'</button></div></div>';
+     return '<div class="shop-item"><button class="favorite-btn '+(s.favorites.includes(x.id)?'favorited':'')+'" data-fav="'+x.id+'" title="Favorite">'+(s.favorites.includes(x.id)?'★':'☆')+'</button><button class="item-art preview-trigger" data-preview="'+x.id+'" title="Preview '+esc(x.name)+'">'+itemVisual(x,"shop")+'</button><b>'+x.name+'</b><div class="tiny">'+x.cat+' • Owned: '+ownedCount(x.id)+'</div><div class="inventory-actions"><button class="secondary" data-use="'+x.id+'" '+(useDisabled?"disabled":"")+'>'+useLabel(x)+'</button>'+((!["Walls","Floors"].includes(x.cat)&&placedCount(x.id)>0)?'<button class="secondary" data-remove="'+x.id+'">Remove One</button>':"")+(x.cat==="Trophies"?'':'<button class="secondary sell-btn" data-sell="'+x.id+'">Sell 🪙 '+Math.floor(x.price*.5)+'</button>')+'</div></div>';
    }).join("")+'</div>':'<p>Your inventory is empty. Answer questions and visit the shop!</p>');
    const invSort=p.querySelector("#inventorySort");if(invSort){invSort.value=inventoryUi.sort;invSort.onchange=()=>{inventoryUi.sort=invSort.value;panel("inventory")}}
    const invFav=p.querySelector("#inventoryFavFirst");if(invFav)invFav.onchange=()=>{inventoryUi.favoritesFirst=invFav.checked;panel("inventory")};
@@ -877,7 +897,8 @@ function shopPanel(p,active=null,query=null){
  if(query!==null)shopUi.query=query;
  const cats=["All","Furniture","Decor","Rugs","Flags","Pets","Pet Supplies","Holiday","Windows","Walls","Floors"];
  const q=shopUi.query.trim().toLowerCase();
- const base=shopUi.cat==="All"?catalog:catalog.filter(x=>shopUi.cat==="Holiday"?/halloween|diwali/i.test(x.img||""):x.cat===shopUi.cat);
+ const purchasable=catalog.filter(x=>x.cat!=="Trophies");
+ const base=shopUi.cat==="All"?purchasable:purchasable.filter(x=>shopUi.cat==="Holiday"?(x.cat==="Holiday"||/halloween|diwali/i.test(x.img||"")):x.cat===shopUi.cat);
  const filtered=q?base.filter(x=>(x.name+" "+x.cat+" "+x.id).toLowerCase().includes(q)):base;
  const items=sortItems(filtered,shopUi.sort,shopUi.favoritesFirst,shopUi.ownedFirst);
  p.innerHTML='<h2>🛍️ Habitat Shop</h2><p class="tiny">Furniture, decor, pets, and windows can be bought more than once.</p>'+
@@ -974,12 +995,12 @@ function answer(a){
    setTimeout(()=>{newQ();showQuestionOverlay()},1400);
  }
 }
-function buy(id){let x=catalog.find(a=>a.id===id);if(s.coins<x.price){alert("You need "+(x.price-s.coins)+" more coins.");return}s.coins-=x.price;s.inventory.push(id);s.lifetime.purchases++;render();checkCollectionComplete();checkAchievements();saveSilently();const p=document.querySelector("#panel");if(p)shopPanel(p)}
+function buy(id){let x=catalog.find(a=>a.id===id);if(!x||x.cat==="Trophies")return;if(s.coins<x.price){alert("You need "+(x.price-s.coins)+" more coins.");return}s.coins-=x.price;s.inventory.push(id);s.lifetime.purchases++;render();checkCollectionComplete();checkAchievements();saveSilently();const p=document.querySelector("#panel");if(p)shopPanel(p)}
 function buyMysteryBox(){
  if(s.coins<200){alert("You need "+(200-s.coins)+" more coins.");return}
  s.coins-=200;
  s.lifetime.mysteryBoxes++;
- const pool=catalog.filter(x=>!["Walls","Floors"].includes(x.cat));
+ const pool=catalog.filter(x=>!["Walls","Floors","Trophies"].includes(x.cat));
  const won=[0,1,2].map(()=>pool[Math.floor(Math.random()*pool.length)]);
  won.forEach(x=>s.inventory.push(x.id));
  render();checkCollectionComplete();checkAchievements();saveSilently();
@@ -987,7 +1008,7 @@ function buyMysteryBox(){
  p.innerHTML='<h2>🎁 Mystery Box!</h2><p>You got:</p><div class="mystery-reveal">'+won.map((x,i)=>'<div class="mystery-prize" style="animation-delay:'+(i*.35)+'s">'+itemVisual(x,"shop")+'<b>'+x.name+'</b></div>').join("")+'</div><button class="primary" id="backShop">Back to Shop</button>';
  document.querySelector("#backShop").onclick=()=>shopPanel(p);
 }
-function sellableCount(id){return ownedCount(id)}
+function sellableCount(id){const x=catalog.find(a=>a.id===id);return x&&x.cat==="Trophies"?0:ownedCount(id)}
 function sellItem(id){
  const x=catalog.find(a=>a.id===id);if(!x||sellableCount(id)<=0)return;
  // Do not sell a copy currently placed if every remaining sellable copy would be needed for placement.
