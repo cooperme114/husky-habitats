@@ -396,3 +396,27 @@ background-size:100% 100%,auto;
 .preview-image .item-image{max-width:100%;max-height:285px;width:auto;height:auto;object-fit:contain;image-rendering:pixelated}
 .item-locked{cursor:default}
 .item-size-controls .edit-row{flex-wrap:wrap;justify-content:center;max-width:116px}
+
+/* Stardew-style forward-facing expandable house */
+.house-hint{font-size:.85rem;color:#667782;margin:6px 0 9px}
+.room.house{height:650px;overflow:hidden;background:#e9f0f5;padding:8px;border:5px solid #fff}
+.house-grid{height:100%;display:grid;grid-template-columns:1fr 1.25fr 1fr;grid-template-rows:1fr 1.3fr 1fr;gap:7px;grid-template-areas:". north ." "west center east" ". south ."}
+.house-slot{position:relative;min-width:0;min-height:0}
+.house-slot.north{grid-area:north}.house-slot.west{grid-area:west}.house-slot.center{grid-area:center}.house-slot.east{grid-area:east}.house-slot.south{grid-area:south}
+.house-room{position:relative;width:100%;height:100%;overflow:hidden;border:4px solid #7c687e;border-radius:4px;background:#f4e8d7;box-shadow:inset 0 0 0 2px #fff5}
+.house-room.selected{outline:3px solid #f5b942;outline-offset:1px}
+.house-room .wall-surface{position:absolute;inset:0 0 31% 0;background-color:#d9e9f3;background-size:80px 80px;pointer-events:none}
+.house-room .floor-surface{position:absolute;inset:69% 0 0 0;background-color:#bca282;background-size:70px 70px;pointer-events:none}
+.house-room .baseboard{top:68%;height:5px}
+.house-room .placed{z-index:6}
+.house-room .room-item-image{transform:scale(1.35)}
+.house-room .room-item-image.flipped{transform:scale(-1.35,1.35)}
+.house-room .pet-animated{animation:none;transform:scale(2)}
+.house-room .pet-animated.flipped{transform:scale(-2,2)}
+.house-room .room-label{position:absolute;top:4px;left:5px;z-index:12;font-size:11px;border:1px solid #ddd0a5;border-radius:7px;background:#fff9d9eb;padding:3px 5px;font-weight:800}
+.house-locked{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;background:#e4e9ef;border:2px dashed #b6c2ce;border-radius:8px;color:#788794;font-size:23px;font-weight:900}
+.house-locked span{font-size:11px;letter-spacing:1px}
+.expansion-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:12px;margin-top:16px}
+.expansion-card{display:flex;flex-direction:column;gap:9px;border:2px solid #d8e3eb;border-radius:15px;padding:14px}
+.expansion-card .secondary{margin-top:auto}
+@media(max-width:600px){.room.house{height:470px}.house-grid{gap:4px}.house-room .room-label{font-size:9px}.house-room .room-item-image{transform:scale(1)}.house-room .pet-animated{transform:scale(1.5)}}
