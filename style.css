@@ -429,8 +429,8 @@ background-size:100% 100%,auto;
 .house-room .placed:not(.pet-place).size-normal .room-item-image.flipped{transform:scale(-1.35,1.35)}
 .house-room .placed:not(.pet-place).size-large .room-item-image.flipped{transform:scale(-1.7,1.7)}
 
-.house-room .wall-surface{background-size:auto 96px!important;background-repeat:repeat;background-position:left top}
-.house-room .floor-surface{background-size:70px auto!important;background-repeat:repeat;background-position:left top}
+.house-room .wall-surface{background-size:64px auto!important;background-repeat:repeat;background-position:left top;image-rendering:pixelated}
+.house-room .floor-surface{background-size:64px auto!important;background-repeat:repeat;background-position:left top;image-rendering:pixelated}
 .house-room .item-size-controls{z-index:90}
 .house-room .room-label{max-width:calc(100% - 10px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
