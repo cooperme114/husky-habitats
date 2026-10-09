@@ -361,29 +361,481 @@ const catalog=[
 {id:"trophy-furniture-gold",name:"Gold Furniture Trophy",img:"images/items/Trophy-furniture-gold.png",price:0,cat:"Trophies"},
 {id:"trophy-pet-bronze",name:"Bronze Pet Trophy",img:"images/items/Trophy-pet-bronze.png",price:0,cat:"Trophies"},
 {id:"trophy-pet-silver",name:"Silver Pet Trophy",img:"images/items/Trophy-pet-silver.png",price:0,cat:"Trophies"},
-{id:"trophy-pet-gold",name:"Gold Pet Trophy",img:"images/items/Trophy-pet-gold.png",price:0,cat:"Trophies"}
+{id:"trophy-pet-gold",name:"Gold Pet Trophy",img:"images/items/Trophy-pet-gold.png",price:0,cat:"Trophies"},
+{"id":"bed-galaxy-black-001","name":"Bed Galaxy Black","img":"images/items/Bed-galaxy-black-001.png","price":100,"cat":"Furniture"},
+{"id":"bed-space-chrome-001","name":"Bed Space Chrome","img":"images/items/Bed-space-chrome-001.png","price":100,"cat":"Furniture"},
+{"id":"bed-steampunk-cogs-001","name":"Bed Steampunk Cogs","img":"images/items/Bed-steampunk-cogs-001.png","price":100,"cat":"Furniture"},
+{"id":"bed-wizard-stars-blue-001","name":"Bed Wizard Stars Blue","img":"images/items/Bed-wizard-stars-blue-001.png","price":100,"cat":"Furniture"},
+{"id":"bookcase-galaxy-black-001","name":"Bookcase Galaxy Black","img":"images/items/Bookcase-galaxy-black-001.png","price":100,"cat":"Furniture"},
+{"id":"bookcase-space-chrome-001","name":"Bookcase Space Chrome","img":"images/items/Bookcase-space-chrome-001.png","price":100,"cat":"Furniture"},
+{"id":"bookcase-steampunk-cogs-001","name":"Bookcase Steampunk Cogs","img":"images/items/Bookcase-steampunk-cogs-001.png","price":100,"cat":"Furniture"},
+{"id":"bookcase-wizard-stars-blue-001","name":"Bookcase Wizard Stars Blue","img":"images/items/Bookcase-wizard-stars-blue-001.png","price":100,"cat":"Furniture"},
+{"id":"chair-galaxy-black-001","name":"Chair Galaxy Black","img":"images/items/Chair-galaxy-black-001.png","price":100,"cat":"Furniture","turnable":true},
+{"id":"chair-space-chrome-001","name":"Chair Space Chrome","img":"images/items/Chair-space-chrome-001.png","price":100,"cat":"Furniture","turnable":true},
+{"id":"chair-steampunk-cogs-001","name":"Chair Steampunk Cogs","img":"images/items/Chair-steampunk-cogs-001.png","price":100,"cat":"Furniture","turnable":true},
+{"id":"chair-steampunk-cogs-red-001","name":"Chair Steampunk Cogs Red","img":"images/items/Chair-steampunk-cogs-red-001.png","price":100,"cat":"Furniture","turnable":true},
+{"id":"chair-wizard-stars-blue-001","name":"Chair Wizard Stars Blue","img":"images/items/Chair-wizard-stars-blue-001.png","price":100,"cat":"Furniture","turnable":true},
+{"id":"decor-galaxy-alien-plush-001","name":"Decor Galaxy Alien Plush","img":"images/items/Decor-galaxy-alien-plush-001.png","price":100,"cat":"Furniture"},
+{"id":"decor-galaxy-painting-black-001","name":"Decor Galaxy Painting Black","img":"images/items/Decor-galaxy-painting-black-001.png","price":100,"cat":"Furniture"},
+{"id":"decor-galaxy-plant-black-001","name":"Decor Galaxy Plant Black","img":"images/items/Decor-galaxy-plant-black-001.png","price":100,"cat":"Furniture"},
+{"id":"decor-space-lamp-chrome-001","name":"Decor Space Lamp Chrome","img":"images/items/Decor-space-lamp-chrome-001.png","price":100,"cat":"Furniture"},
+{"id":"decor-space-light-chrome-001","name":"Decor Space Light Chrome","img":"images/items/Decor-space-light-chrome-001.png","price":100,"cat":"Furniture"},
+{"id":"decor-space-shelf-chrome-001","name":"Decor Space Shelf Chrome","img":"images/items/Decor-space-shelf-chrome-001.png","price":100,"cat":"Furniture"},
+{"id":"decor-steampunk-cogs-001","name":"Decor Steampunk Cogs","img":"images/items/Decor-steampunk-cogs-001.png","price":100,"cat":"Furniture"},
+{"id":"decor-steampunk-lamp-cogs-001","name":"Decor Steampunk Lamp Cogs","img":"images/items/Decor-steampunk-lamp-cogs-001.png","price":100,"cat":"Furniture"},
+{"id":"decor-steampunk-painting-airship-001","name":"Decor Steampunk Painting Airship","img":"images/items/Decor-steampunk-painting-airship-001.png","price":100,"cat":"Furniture"},
+{"id":"decor-wizard-crystal-ball-stars-blue-001","name":"Decor Wizard Crystal Ball Stars Blue","img":"images/items/Decor-wizard-crystal-ball-stars-blue-001.png","price":100,"cat":"Furniture"},
+{"id":"decor-wizard-painting-stars-blue-001","name":"Decor Wizard Painting Stars Blue","img":"images/items/Decor-wizard-painting-stars-blue-001.png","price":100,"cat":"Furniture"},
+{"id":"decor-wizard-plant-stars-blue-001","name":"Decor Wizard Plant Stars Blue","img":"images/items/Decor-wizard-plant-stars-blue-001.png","price":100,"cat":"Furniture"},
+{"id":"desk-galaxy-black-001","name":"Desk Galaxy Black","img":"images/items/Desk-galaxy-black-001.png","price":100,"cat":"Furniture"},
+{"id":"desk-steampunk-cogs-001","name":"Desk Steampunk Cogs","img":"images/items/Desk-steampunk-cogs-001.png","price":100,"cat":"Furniture"},
+{"id":"desk-wizard-stars-blue-001","name":"Desk Wizard Stars Blue","img":"images/items/Desk-wizard-stars-blue-001.png","price":100,"cat":"Furniture"},
+{"id":"deskk-space-chrome-001","name":"Deskk Space Chrome","img":"images/items/Deskk-space-chrome-001.png","price":100,"cat":"Furniture"},
+{"id":"dresser-galaxy-black-001","name":"Dresser Galaxy Black","img":"images/items/Dresser-galaxy-black-001.png","price":100,"cat":"Furniture"},
+{"id":"dresser-space-chrome-001","name":"Dresser Space Chrome","img":"images/items/Dresser-space-chrome-001.png","price":100,"cat":"Furniture"},
+{"id":"dresser-steampunk-cogs-001","name":"Dresser Steampunk Cogs","img":"images/items/Dresser-steampunk-cogs-001.png","price":100,"cat":"Furniture"},
+{"id":"dresser-wizard-stars-blue-001","name":"Dresser Wizard Stars Blue","img":"images/items/Dresser-wizard-stars-blue-001.png","price":100,"cat":"Furniture"},
+{"id":"fireplace-galaxy-black-001","name":"Fireplace Galaxy Black","img":"images/items/Fireplace-galaxy-black-001.png","price":100,"cat":"Furniture"},
+{"id":"fireplace-space-chrome-001","name":"Fireplace Space Chrome","img":"images/items/Fireplace-space-chrome-001.png","price":100,"cat":"Furniture"},
+{"id":"fireplace-steampunk-cogs-001","name":"Fireplace Steampunk Cogs","img":"images/items/Fireplace-steampunk-cogs-001.png","price":100,"cat":"Furniture"},
+{"id":"fireplace-wizard-stars-blue-001","name":"Fireplace Wizard Stars Blue","img":"images/items/Fireplace-wizard-stars-blue-001.png","price":100,"cat":"Furniture"},
+{"id":"pet-galaxy-robot-black-001","name":"Pet Galaxy Robot Black","img":"images/items/Pet-galaxy-robot-black-001.png","price":150,"cat":"Pets"},
+{"id":"pets-clockworth","name":"Clockworth","img":"images/items/Pets-Clockworth.png","price":150,"cat":"Pets"},
+{"id":"pets-space-dex","name":"Space Dex","img":"images/items/Pets-space-Dex.png","price":150,"cat":"Pets"},
+{"id":"rug-galaxy-black-001","name":"Rug Galaxy Black","img":"images/items/Rug-galaxy-black-001.png","price":100,"cat":"Furniture"},
+{"id":"rug-steampunk-cogs-001","name":"Rug Steampunk Cogs","img":"images/items/Rug-steampunk-cogs-001.png","price":100,"cat":"Furniture"},
+{"id":"rug-wizard-stars-blue-001","name":"Rug Wizard Stars Blue","img":"images/items/Rug-wizard-stars-blue-001.png","price":100,"cat":"Furniture"},
+{"id":"table-galaxy-black-001","name":"Table Galaxy Black","img":"images/items/Table-galaxy-black-001.png","price":100,"cat":"Furniture"},
+{"id":"table-space-chrome-001","name":"Table Space Chrome","img":"images/items/Table-space-chrome-001.png","price":100,"cat":"Furniture"},
+{"id":"table-steampunk-cogs-001","name":"Table Steampunk Cogs","img":"images/items/Table-steampunk-cogs-001.png","price":100,"cat":"Furniture"},
+{"id":"table-wizard-stars-blue-001","name":"Table Wizard Stars Blue","img":"images/items/Table-wizard-stars-blue-001.png","price":100,"cat":"Furniture"},
+{"id":"vanity-galaxy-black-001","name":"Vanity Galaxy Black","img":"images/items/Vanity-galaxy-black-001.png","price":100,"cat":"Furniture"},
+{"id":"vanity-space-chrome-001","name":"Vanity Space Chrome","img":"images/items/Vanity-space-chrome-001.png","price":100,"cat":"Furniture"},
+{"id":"vanity-steampunk-cogs-001","name":"Vanity Steampunk Cogs","img":"images/items/Vanity-steampunk-cogs-001.png","price":100,"cat":"Furniture"},
+{"id":"vanity-wizard-stars-blue-001","name":"Vanity Wizard Stars Blue","img":"images/items/Vanity-wizard-stars-blue-001.png","price":100,"cat":"Furniture"}
 ];
 
 const collections=[
-{name:"Classic Collection",emoji:"🎻",items:["bed-classic-blue","bed-classic-pink","bed-classic-white","bed-classic-yellow","chair-classic-wooden","decor-classic-stuffed-rabbit","drums-classic-blue","floors-classic-dark-wood","floors-classic-dark-wood-002","floors-classic-darkest-wood","floors-classic-darkest-wood-002","floors-classic-light-wood","floors-classic-light-wood-002","floors-classic-medium-wood","floors-classic-medium-wood-002","harp-classic-light","piano-classic-black","walls-classic-blue","walls-classic-green","walls-classic-orange","walls-classic-pink","walls-classic-purple","walls-classic-red","walls-classic-teal","walls-classic-yellow","walls-classic-black","walls-classic-white"]},
-{name:"Retro Collection",emoji:"📺",items:["bed-retro-blue","bed-retro-green","bed-retro-red","bed-retro-yellow","chair-retro-cushioned","chair-retro-light-wood","chair-retro-red","chair-retro-red-002","chair-retro-yellow","coffeetable-retro-glass","couch-retro-green","couch-retro-red","decor-retro-butterfly-painting","decor-retro-mirror","decor-retro-record-machine","decor-retro-rubber-tree-plant","decor-retro-wall-clock","endtable-retro-wooden","table-retro-glass","decor-retro-lamp","rug-retro-blue","rug-retro-frame","rug-retro-gray","rug-retro-patterned"]},
-{name:"Antique Collection",emoji:"🕰️",items:["couch-antique-cream","bed-antique-green","couch-antique-green","decor-antique-flowers","decor-antique-globe","decor-antique-grandfather-clock","decor-antique-painting","decor-antique-painting-002","decor-antique-phonograph","desk-antique-dark-wood","fireplace-antique-wood","fireplace-antique-wood-002","floors-antique-blue-carpet","floors-antique-brown-carpet","floors-antique-green-carpet","floors-antique-red-carpet","harp-antique-dark-wood","organ-antique-wooden","piano-antique-wooden","vanity-antique-dark-wood","viola-antique-wooden"]},
-{name:"Basic Collection",emoji:"🛋️",items:["bed-white","chair-basic-red","chair-basic-yellow","couch-basic-brown","dresser-basic-cream","dresser-basic-dark-brown","couch-blue","couch-green","couch-red","couch-yellow","tv-basic-dark","tv-basic-light","table-basic-covered","floor-basic-teal-carpet","rug-basic-geometric-black","rug-basic-geometric-purple","rug-basic-swirl-blue","rug-basic-swirl-green","window-basic-large","window-basic-small"]},
-{name:"Cute Collection",emoji:"🎀",items:["bed-cute-pink","bookcase-cute-small","bookcase-cute-white","chair-cute-pink","chair-cute-pink-002","couch-cute-pink","couch-cute-white","decor-cute-shelves","decor-cute-stuffed-bunny","decor-cute-teddy-bear","fireplace-cute-white","table-cute-heart","walls-cute-pink","walls-cute-purple","walls-cute-yellow","window-cute-white","decor-cute-stuffed-unicorn","floor-cute-pink-carpet"]},
-{name:"Wizard Collection",emoji:"🧙",items:["bookcase-wizard","decor-wizard-book-pile","decor-wizard-book-pile-002","decor-wizard-cauldron","decor-wizard-painting","decor-wizard-potion-table","decor-wizard-shelves","desk-wizard","decor-wizard-mushroom","moon-stars","crystal-ball","bed-wizard-lavender","chair-wizard-purple","couch-wizard-blue","decor-wizard-candle","dresser-wizard-wooden","rug-wizard-blue","window-wizard-moon"]},
-{name:"Halloween Collection",emoji:"🎃",items:["jackolantern","decor-halloween-candles","decor-halloween-cauldron","decor-halloween-dead-tree","decor-halloween-jackolantern-002","decor-halloween-pumpkin-stack","decor-halloween-skull","decor-halloween-string-lights","decor-halloween-wheel-barrow","decor-halloween-witch-hat","pets-halloween-ghost-dog","pets-halloween-happy-pumpkkin","pets-halloween-pumpkin-turtle","pets-halloween-skeleton","pets-halloween-skeleton-cat","pets-halloween-tall-ghost"]},
-{name:"Cozy Collection",emoji:"🩷",items:["chair-cozy-pink","couch-cozy-pink","cozy-calendar-pink","cozy-candles","cozy-flowers-pink","dresser-cozy-pink","cozy-friend","piano-cozy-pink","table-cozy-pink","vanity-cozy-pink","bed-cozy-pink","bed-cozy-yellow","couch-cozy-orange","couch-cozy-purple","decor-cute-stuffed-unicorn"]},
-{name:"Opulent Collection",emoji:"👑",items:["bed-opulent-purple-wood","bed-opulent-yellow-wood","couch-opulent-leather-couch","decor-opulent-billiards-table","decor-opulent-judge-painting","decor-opulent-map-painting","decor-opulent-moose-head","decor-opulent-ship-display","decor-opulent-suitcase-stack","desk-opulent-wooden-study","fireplace-opulent-wooden","rug-opulent-bear-skin","table-opulent-wooden","vanity-opulent-wooden"]},
-{name:"Diwali Collection",emoji:"🪔",items:["decor-diwali-diya-row","decor-diwali-elephant-statue","decor-diwali-floating-flowers","decor-diwali-kandil-lantern","decor-diwali-lanterns","decor-diwali-marigold-strand","decor-diwali-peacock-statue","decor-diwali-string-lights","decor-diwali-toran","rug-diwali-rangoli","rug-diwali-rangoli-002","rug-diwali-rangoli-003","decor-diwali-cushions"]},
-{name:"Angel Collection",emoji:"☁️",items:["bed-angel-cream","chair-angel-cream","couch-angel-cream","dresser-angel-cream","table-angel-cream","floors-angel-cream-tiles","harp-angel-white","piano-angel-white","pets-chao-hero"]},
-{name:"Goth Collection",emoji:"🖤",items:["chair-goth-black","chair-goth-purple","couch-goth-purple","table-goth-purple","decor-goth-shelves","candles-sunset","gamma","pets-chao-dark","wallpaper-goth-eyes"]},
-{name:"Floral Collection",emoji:"🌸",items:["floral-vines","floral-terrarium","dresser-floral-white","bookcase-floral","decor-floral-purple-box","decor-floral-yellow-box","wallpaper-floral-black","wallpaper-floral-green"]},
-{name:"Rattan Collection",emoji:"🪴",items:["bathroom-rattan-sink","bed-rattan-blue","couch-rattan-blue","couch-rattan-white","decor-rattan-cushion-green","decor-rattan-ukelele","rug-rattan-cream-and-blue","vanity-rattan-light"]},
-{name:"Sweets Collection",emoji:"🍓",items:["bed-sweets-strawberry","bookcase-sweets-ice-cream","couch-sweets-pink","dresser-sweets-chocolate","endtable-sweets-cream"]},
-{name:"Geode Collection",emoji:"💎",items:["chair-geode-purple","geode-purple","endtable-geode","table-geode-blue"]},
-{name:"Hello Kitty Collection",emoji:"🎀",items:["bed-hellokitty","decor-hellokitty-clock","decor-hellokitty-plant","dresser-hellokitty"]},
-{name:"Deco Collection",emoji:"✨",items:["chair-deco-green","chair-deco-red"]},
-{name:"Mermaid Collection",emoji:"🧜",items:["wallpaper-mermaid-blue","wallpaper-mermaid-lavender"]}
+ {
+  "name": "Basic Collection",
+  "emoji": "🛋️",
+  "items": [
+   "bed-white",
+   "chair-basic-red",
+   "chair-basic-yellow",
+   "couch-basic-brown",
+   "dresser-basic-cream",
+   "dresser-basic-dark-brown",
+   "couch-blue",
+   "couch-green",
+   "couch-red",
+   "couch-yellow",
+   "tv-basic-dark",
+   "tv-basic-light",
+   "table-basic-covered",
+   "floor-basic-teal-carpet",
+   "rug-basic-geometric-black",
+   "rug-basic-geometric-purple",
+   "rug-basic-swirl-blue",
+   "rug-basic-swirl-green",
+   "window-basic-large",
+   "window-basic-small"
+  ]
+ },
+ {
+  "name": "Classic Collection",
+  "emoji": "🎻",
+  "items": [
+   "bed-classic-blue",
+   "bed-classic-pink",
+   "bed-classic-white",
+   "bed-classic-yellow",
+   "chair-classic-wooden",
+   "decor-classic-stuffed-rabbit",
+   "drums-classic-blue",
+   "floors-classic-dark-wood",
+   "floors-classic-dark-wood-002",
+   "floors-classic-darkest-wood",
+   "floors-classic-darkest-wood-002",
+   "floors-classic-light-wood",
+   "floors-classic-light-wood-002",
+   "floors-classic-medium-wood",
+   "floors-classic-medium-wood-002",
+   "harp-classic-light",
+   "piano-classic-black",
+   "walls-classic-blue",
+   "walls-classic-green",
+   "walls-classic-orange",
+   "walls-classic-pink",
+   "walls-classic-purple",
+   "walls-classic-red",
+   "walls-classic-teal",
+   "walls-classic-yellow",
+   "walls-classic-black",
+   "walls-classic-white"
+  ]
+ },
+ {
+  "name": "Wizard Collection",
+  "emoji": "🧙",
+  "items": [
+   "bookcase-wizard",
+   "decor-wizard-book-pile",
+   "decor-wizard-book-pile-002",
+   "decor-wizard-cauldron",
+   "decor-wizard-painting",
+   "decor-wizard-potion-table",
+   "decor-wizard-shelves",
+   "desk-wizard",
+   "decor-wizard-mushroom",
+   "moon-stars",
+   "crystal-ball",
+   "bed-wizard-lavender",
+   "chair-wizard-purple",
+   "couch-wizard-blue",
+   "decor-wizard-candle",
+   "dresser-wizard-wooden",
+   "rug-wizard-blue",
+   "window-wizard-moon",
+   "bed-wizard-stars-blue-001",
+   "bookcase-wizard-stars-blue-001",
+   "chair-wizard-stars-blue-001",
+   "decor-wizard-crystal-ball-stars-blue-001",
+   "decor-wizard-painting-stars-blue-001",
+   "decor-wizard-plant-stars-blue-001",
+   "desk-wizard-stars-blue-001",
+   "dresser-wizard-stars-blue-001",
+   "fireplace-wizard-stars-blue-001",
+   "rug-wizard-stars-blue-001",
+   "table-wizard-stars-blue-001",
+   "vanity-wizard-stars-blue-001"
+  ]
+ },
+ {
+  "name": "Retro Collection",
+  "emoji": "📺",
+  "items": [
+   "bed-retro-blue",
+   "bed-retro-green",
+   "bed-retro-red",
+   "bed-retro-yellow",
+   "chair-retro-cushioned",
+   "chair-retro-light-wood",
+   "chair-retro-red",
+   "chair-retro-red-002",
+   "chair-retro-yellow",
+   "coffeetable-retro-glass",
+   "couch-retro-green",
+   "couch-retro-red",
+   "decor-retro-butterfly-painting",
+   "decor-retro-mirror",
+   "decor-retro-record-machine",
+   "decor-retro-rubber-tree-plant",
+   "decor-retro-wall-clock",
+   "endtable-retro-wooden",
+   "table-retro-glass",
+   "decor-retro-lamp",
+   "rug-retro-blue",
+   "rug-retro-frame",
+   "rug-retro-gray",
+   "rug-retro-patterned"
+  ]
+ },
+ {
+  "name": "Antique Collection",
+  "emoji": "🕰️",
+  "items": [
+   "couch-antique-cream",
+   "bed-antique-green",
+   "couch-antique-green",
+   "decor-antique-flowers",
+   "decor-antique-globe",
+   "decor-antique-grandfather-clock",
+   "decor-antique-painting",
+   "decor-antique-painting-002",
+   "decor-antique-phonograph",
+   "desk-antique-dark-wood",
+   "fireplace-antique-wood",
+   "fireplace-antique-wood-002",
+   "floors-antique-blue-carpet",
+   "floors-antique-brown-carpet",
+   "floors-antique-green-carpet",
+   "floors-antique-red-carpet",
+   "harp-antique-dark-wood",
+   "organ-antique-wooden",
+   "piano-antique-wooden",
+   "vanity-antique-dark-wood",
+   "viola-antique-wooden"
+  ]
+ },
+ {
+  "name": "Cute Collection",
+  "emoji": "🎀",
+  "items": [
+   "bed-cute-pink",
+   "bookcase-cute-small",
+   "bookcase-cute-white",
+   "chair-cute-pink",
+   "chair-cute-pink-002",
+   "couch-cute-pink",
+   "couch-cute-white",
+   "decor-cute-shelves",
+   "decor-cute-stuffed-bunny",
+   "decor-cute-teddy-bear",
+   "fireplace-cute-white",
+   "table-cute-heart",
+   "walls-cute-pink",
+   "walls-cute-purple",
+   "walls-cute-yellow",
+   "window-cute-white",
+   "decor-cute-stuffed-unicorn",
+   "floor-cute-pink-carpet"
+  ]
+ },
+ {
+  "name": "Halloween Collection",
+  "emoji": "🎃",
+  "items": [
+   "jackolantern",
+   "decor-halloween-candles",
+   "decor-halloween-cauldron",
+   "decor-halloween-dead-tree",
+   "decor-halloween-jackolantern-002",
+   "decor-halloween-pumpkin-stack",
+   "decor-halloween-skull",
+   "decor-halloween-string-lights",
+   "decor-halloween-wheel-barrow",
+   "decor-halloween-witch-hat",
+   "pets-halloween-ghost-dog",
+   "pets-halloween-happy-pumpkkin",
+   "pets-halloween-pumpkin-turtle",
+   "pets-halloween-skeleton",
+   "pets-halloween-skeleton-cat",
+   "pets-halloween-tall-ghost"
+  ]
+ },
+ {
+  "name": "Cozy Collection",
+  "emoji": "🩷",
+  "items": [
+   "chair-cozy-pink",
+   "couch-cozy-pink",
+   "cozy-calendar-pink",
+   "cozy-candles",
+   "cozy-flowers-pink",
+   "dresser-cozy-pink",
+   "cozy-friend",
+   "piano-cozy-pink",
+   "table-cozy-pink",
+   "vanity-cozy-pink",
+   "bed-cozy-pink",
+   "bed-cozy-yellow",
+   "couch-cozy-orange",
+   "couch-cozy-purple",
+   "decor-cute-stuffed-unicorn"
+  ]
+ },
+ {
+  "name": "Opulent Collection",
+  "emoji": "👑",
+  "items": [
+   "bed-opulent-purple-wood",
+   "bed-opulent-yellow-wood",
+   "couch-opulent-leather-couch",
+   "decor-opulent-billiards-table",
+   "decor-opulent-judge-painting",
+   "decor-opulent-map-painting",
+   "decor-opulent-moose-head",
+   "decor-opulent-ship-display",
+   "decor-opulent-suitcase-stack",
+   "desk-opulent-wooden-study",
+   "fireplace-opulent-wooden",
+   "rug-opulent-bear-skin",
+   "table-opulent-wooden",
+   "vanity-opulent-wooden"
+  ]
+ },
+ {
+  "name": "Steampunk Collection",
+  "emoji": "⚙️",
+  "items": [
+   "bed-steampunk-cogs-001",
+   "bookcase-steampunk-cogs-001",
+   "chair-steampunk-cogs-001",
+   "chair-steampunk-cogs-red-001",
+   "decor-steampunk-cogs-001",
+   "decor-steampunk-lamp-cogs-001",
+   "decor-steampunk-painting-airship-001",
+   "desk-steampunk-cogs-001",
+   "dresser-steampunk-cogs-001",
+   "fireplace-steampunk-cogs-001",
+   "pets-clockworth",
+   "rug-steampunk-cogs-001",
+   "table-steampunk-cogs-001",
+   "vanity-steampunk-cogs-001"
+  ]
+ },
+ {
+  "name": "Diwali Collection",
+  "emoji": "🪔",
+  "items": [
+   "decor-diwali-diya-row",
+   "decor-diwali-elephant-statue",
+   "decor-diwali-floating-flowers",
+   "decor-diwali-kandil-lantern",
+   "decor-diwali-lanterns",
+   "decor-diwali-marigold-strand",
+   "decor-diwali-peacock-statue",
+   "decor-diwali-string-lights",
+   "decor-diwali-toran",
+   "rug-diwali-rangoli",
+   "rug-diwali-rangoli-002",
+   "rug-diwali-rangoli-003",
+   "decor-diwali-cushions"
+  ]
+ },
+ {
+  "name": "Galaxy Collection",
+  "emoji": "🌌",
+  "items": [
+   "bed-galaxy-black-001",
+   "bookcase-galaxy-black-001",
+   "chair-galaxy-black-001",
+   "decor-galaxy-alien-plush-001",
+   "decor-galaxy-painting-black-001",
+   "decor-galaxy-plant-black-001",
+   "desk-galaxy-black-001",
+   "dresser-galaxy-black-001",
+   "fireplace-galaxy-black-001",
+   "pet-galaxy-robot-black-001",
+   "rug-galaxy-black-001",
+   "table-galaxy-black-001",
+   "vanity-galaxy-black-001"
+  ]
+ },
+ {
+  "name": "Space Collection",
+  "emoji": "🚀",
+  "items": [
+   "bed-space-chrome-001",
+   "bookcase-space-chrome-001",
+   "chair-space-chrome-001",
+   "decor-space-lamp-chrome-001",
+   "decor-space-light-chrome-001",
+   "decor-space-shelf-chrome-001",
+   "deskk-space-chrome-001",
+   "dresser-space-chrome-001",
+   "fireplace-space-chrome-001",
+   "pets-space-dex",
+   "table-space-chrome-001",
+   "vanity-space-chrome-001"
+  ]
+ },
+ {
+  "name": "Angel Collection",
+  "emoji": "☁️",
+  "items": [
+   "bed-angel-cream",
+   "chair-angel-cream",
+   "couch-angel-cream",
+   "dresser-angel-cream",
+   "table-angel-cream",
+   "floors-angel-cream-tiles",
+   "harp-angel-white",
+   "piano-angel-white",
+   "pets-chao-hero"
+  ]
+ },
+ {
+  "name": "Goth Collection",
+  "emoji": "🖤",
+  "items": [
+   "chair-goth-black",
+   "chair-goth-purple",
+   "couch-goth-purple",
+   "table-goth-purple",
+   "decor-goth-shelves",
+   "candles-sunset",
+   "gamma",
+   "pets-chao-dark",
+   "wallpaper-goth-eyes"
+  ]
+ },
+ {
+  "name": "Floral Collection",
+  "emoji": "🌸",
+  "items": [
+   "floral-vines",
+   "floral-terrarium",
+   "dresser-floral-white",
+   "bookcase-floral",
+   "decor-floral-purple-box",
+   "decor-floral-yellow-box",
+   "wallpaper-floral-black",
+   "wallpaper-floral-green"
+  ]
+ },
+ {
+  "name": "Rattan Collection",
+  "emoji": "🪴",
+  "items": [
+   "bathroom-rattan-sink",
+   "bed-rattan-blue",
+   "couch-rattan-blue",
+   "couch-rattan-white",
+   "decor-rattan-cushion-green",
+   "decor-rattan-ukelele",
+   "rug-rattan-cream-and-blue",
+   "vanity-rattan-light"
+  ]
+ },
+ {
+  "name": "Sweets Collection",
+  "emoji": "🍓",
+  "items": [
+   "bed-sweets-strawberry",
+   "bookcase-sweets-ice-cream",
+   "couch-sweets-pink",
+   "dresser-sweets-chocolate",
+   "endtable-sweets-cream"
+  ]
+ },
+ {
+  "name": "Geode Collection",
+  "emoji": "💎",
+  "items": [
+   "chair-geode-purple",
+   "geode-purple",
+   "endtable-geode",
+   "table-geode-blue"
+  ]
+ },
+ {
+  "name": "Hello Kitty Collection",
+  "emoji": "🎀",
+  "items": [
+   "bed-hellokitty",
+   "decor-hellokitty-clock",
+   "decor-hellokitty-plant",
+   "dresser-hellokitty"
+  ]
+ },
+ {
+  "name": "Deco Collection",
+  "emoji": "✨",
+  "items": [
+   "chair-deco-green",
+   "chair-deco-red"
+  ]
+ },
+ {
+  "name": "Mermaid Collection",
+  "emoji": "🧜",
+  "items": [
+   "wallpaper-mermaid-blue",
+   "wallpaper-mermaid-lavender"
+  ]
+ }
 ];
 let s={screen:"setup",first:"",initial:"",coins:100,xp:0,streak:0,inventory:[],placed:[],wall:"plain",floor:"plain",q:null,answered:0,correct:0,loot:null,favorites:[],achievements:[],completedCollections:[],favoriteCollections:[],lifetime:{purchases:0,sales:0,mysteryBoxes:0,petsPetted:0,flips:0}};
 const app=document.querySelector("#app");
@@ -498,7 +950,7 @@ function roomScore(){
     const mult=Math.max(1,unique.length);
     unique.forEach(id=>{
       const x=catalog.find(a=>a.id===id);
-      const base=x&&x.cat==="Pets"?2:1;
+      const base=(x&&x.cat==="Pets")||(collectionForItem(id)?.name==="Opulent Collection")?2:1;
       total+=base*mult;
       used.add(id);
       if(counts[id]>1)total+=base*(counts[id]-1);
@@ -507,7 +959,7 @@ function roomScore(){
   Object.entries(counts).forEach(([id,count])=>{
     if(used.has(id))return;
     const x=catalog.find(a=>a.id===id);
-    const base=x&&x.cat==="Pets"?2:1;
+    const base=(x&&x.cat==="Pets")||(collectionForItem(id)?.name==="Opulent Collection")?2:1;
     total+=base*count;
   });
   return total;
@@ -783,7 +1235,7 @@ function roomScoreBreakdown(){
 
     unique.forEach(id=>{
       const x=catalog.find(a=>a.id===id);
-      const base=x&&x.cat==="Pets"?2:1;
+      const base=(x&&x.cat==="Pets")||(collectionForItem(id)?.name==="Opulent Collection")?2:1;
       const points=base*mult;
       subtotal+=points;
       items.push({name:x?x.name:id,base,mult,points,duplicate:false});
@@ -804,7 +1256,7 @@ function roomScoreBreakdown(){
   Object.entries(counts).forEach(([id,count])=>{
     if(used.has(id))return;
     const x=catalog.find(a=>a.id===id);
-    const base=x&&x.cat==="Pets"?2:1;
+    const base=(x&&x.cat==="Pets")||(collectionForItem(id)?.name==="Opulent Collection")?2:1;
     for(let i=0;i<count;i++){
       others.push({name:x?x.name:id,base,mult:1,points:base,duplicate:false});
       otherSubtotal+=base;
