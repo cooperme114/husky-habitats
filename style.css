@@ -439,3 +439,13 @@ background-size:100% 100%,auto;
 .house-room .room-heading .room-label{position:static;min-width:0;flex:0 1 auto;max-width:calc(100% - 28px)}
 .house-room .room-rename{font-size:12px;font-weight:800;border:1px solid #ddd0a5;border-radius:7px;background:#fff9d9eb;padding:3px 5px;cursor:pointer;flex:0 0 auto}
 .house-room .room-heading button:hover{background:#fff0ae}
+
+/* Pet sizes now follow furniture proportions in the smaller house rooms. */
+.house-room .placed.pet-place.size-small .room-item-image{transform:scale(1)!important;scale:1}
+.house-room .placed.pet-place.size-normal .room-item-image{transform:scale(1.35)!important;scale:1}
+.house-room .placed.pet-place.size-large .room-item-image{transform:scale(1.7)!important;scale:1}
+.house-room .placed.pet-place.size-small .room-item-image.flipped{transform:scale(-1,1)!important}
+.house-room .placed.pet-place.size-normal .room-item-image.flipped{transform:scale(-1.35,1.35)!important}
+.house-room .placed.pet-place.size-large .room-item-image.flipped{transform:scale(-1.7,1.7)!important}
+/* Preserve the intentionally tiny frog at each size. */
+.house-room .placed.pet-place .room-item-image.item-pets-frog{scale:.333}
