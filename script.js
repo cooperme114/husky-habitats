@@ -421,6 +421,22 @@ function roomDisplayName(id){return (s.rooms[id]&&s.rooms[id].name)||(id==="cent
 function renameRoom(id){if(!s.rooms[id])return;const name=prompt("Name this room (up to 22 characters):",roomDisplayName(id));if(name===null)return;const clean=name.trim().slice(0,22);if(!clean){alert("Please enter a room name.");return}s.rooms[id].name=clean;saveSilently();render()}
 
 function setActiveRoom(id){if(!s.rooms[id])return;activeRoom=id;render();panel("inventory")}
+/* Keyboard navigation follows the plus-shaped house layout. */
+const ROOM_COORDS={center:[0,0],north:[0,-1],south:[0,1],west:[-1,0],east:[1,0]};
+document.addEventListener("keydown",e=>{
+ if(s.screen!=="game"||e.altKey||e.ctrlKey||e.metaKey||e.repeat)return;
+ const target=e.target;
+ if(target&&(target.isContentEditable||["INPUT","TEXTAREA","SELECT"].includes(target.tagName)))return;
+ if(document.querySelector(".savecode-overlay,.preview-overlay,.question-overlay:not(.hidden),[role=dialog]"))return;
+ const moves={ArrowUp:[0,-1],w:[0,-1],ArrowDown:[0,1],s:[0,1],ArrowLeft:[-1,0],a:[-1,0],ArrowRight:[1,0],d:[1,0]};
+ const delta=moves[e.key]||moves[e.key.toLowerCase()];
+ if(!delta)return;
+ const here=ROOM_COORDS[activeRoom]||ROOM_COORDS.center;
+ const next=Object.keys(ROOM_COORDS).find(id=>ROOM_COORDS[id][0]===here[0]+delta[0]&&ROOM_COORDS[id][1]===here[1]+delta[1]);
+ if(!next||!s.rooms||!s.rooms[next])return;
+ e.preventDefault();
+ setActiveRoom(next);
+});
 function expansionsPanel(p){
  ensureRooms();
  p.innerHTML='<h2>🏠 Expand Your Habitat</h2><p class="tiny">Your starter room stays in the center. Unlock a North, South, East, or West room. Each room can have its own wallpaper and flooring.</p><p><b>Highest house score:</b> '+s.highScore+' · <b>Free expansions ready:</b> '+Math.max(0,expansionCredits())+'</p><p class="tiny">Score milestones: 25, 50, 75, 100. Otherwise buy a room early for 🪙 '+EXPANSION_COST+'. Unlocked rooms stay forever.</p><div class="expansion-grid">'+EXPANSIONS.map(d=>'<div class="expansion-card"><b>'+d[0].toUpperCase()+d.slice(1)+' Room</b><div class="tiny">'+(s.rooms[d]?'✓ Unlocked':expansionCredits()>0?'🎉 Free expansion available':'🪙 '+EXPANSION_COST+' or reach the next milestone')+'</div><button class="secondary" data-expand="'+d+'" '+(s.rooms[d]||(!expansionCredits()&&s.coins<EXPANSION_COST)?'disabled':'')+'>'+(s.rooms[d]?'Owned':expansionCredits()>0?'Unlock Free':'Buy Room')+'</button></div>').join("")+'</div>';
