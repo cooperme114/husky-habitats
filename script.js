@@ -417,6 +417,9 @@ function unlockRoom(direction,paid=false){
  activeRoom=direction;saveSilently();render();panel("expansions");
 }
 function roomDecor(id){return s.rooms[id]||s.rooms.center}
+function roomDisplayName(id){return (s.rooms[id]&&s.rooms[id].name)||(id==="center"?"Starter":id[0].toUpperCase()+id.slice(1))}
+function renameRoom(id){if(!s.rooms[id])return;const name=prompt("Name this room (up to 22 characters):",roomDisplayName(id));if(name===null)return;const clean=name.trim().slice(0,22);if(!clean){alert("Please enter a room name.");return}s.rooms[id].name=clean;saveSilently();render()}
+
 function setActiveRoom(id){if(!s.rooms[id])return;activeRoom=id;render();panel("inventory")}
 function expansionsPanel(p){
  ensureRooms();
@@ -711,7 +714,7 @@ function showAchievement(a){
 }
 const musicalItemIds=new Set(["piano-cozy-pink","decor-antique-phonograph","decor-retro-record-machine","drums-classic-blue","harp-angel-white","harp-antique-dark-wood","harp-classic-light","organ-antique-wooden","piano-angel-white","piano-antique-wooden","piano-classic-black","viola-antique-wooden"]);
 function isMusicalItem(x){return !!x&&musicalItemIds.has(x.id)}
-function hideItemControls(){const old=document.querySelector(".item-size-controls");if(old)old.remove()}
+function hideItemControls(){document.querySelectorAll(".item-size-controls").forEach(old=>old.remove())}
 function showItemControls(index,el){
  hideItemControls();if(!s.placed[index])return;
  const c=document.createElement("div");c.className="item-size-controls";c.dataset.forPlace=index;
@@ -828,7 +831,7 @@ function render(){
  const r=roomDecor(id),wallItem=catalog.find(x=>x.id===r.wall),floorItem=catalog.find(x=>x.id===r.floor);
  const unlocked=!!s.rooms[id];
  if(!unlocked)return '<button class="house-locked" data-locked-room="'+id+'" title="Unlock '+id+' room">🔒<span>'+id.toUpperCase()+'</span></button>';
- return '<div class="house-room '+(activeRoom===id?'selected':'')+'" data-room="'+id+'"><div class="wall-surface" style="background-image:'+(wallItem&&wallItem.img?'url(&quot;'+wallItem.img+'&quot;)':'none')+'"></div><div class="floor-surface" style="background-image:'+(floorItem&&floorItem.img?'url(&quot;'+floorItem.img+'&quot;)':'none')+'"></div><div class="baseboard"></div><button class="room-label" data-select-room="'+id+'">'+(id==="center"?'Starter':id[0].toUpperCase()+id.slice(1))+' ✎</button>'+s.placed.map((p,i)=>{if((p.room||"center")!==id)return "";const x=catalog.find(a=>a.id===p.id);if(!x)return "";const flip=p.dir==="right"?" flipped":"";const musical=isMusicalItem(x);const size=p.size||"normal";return '<button class="placed turnable size-'+size+(x.cat==="Pets"?' pet-place':'')+(musical?' music-place':'')+(p.locked?' item-locked':'')+'" data-place="'+i+'" style="left:'+p.x+'%;top:'+p.y+'%" aria-label="Move '+esc(x.name)+'">'+itemVisual(x,"room",flip,x.cat==="Pets"?i:null)+'</button>'}).join("")+'</div>';
+ return '<div class="house-room '+(activeRoom===id?'selected':'')+'" data-room="'+id+'"><div class="wall-surface" style="background-image:'+(wallItem&&wallItem.img?'url(&quot;'+wallItem.img+'&quot;)':'none')+'"></div><div class="floor-surface" style="background-image:'+(floorItem&&floorItem.img?'url(&quot;'+floorItem.img+'&quot;)':'none')+'"></div><div class="baseboard"></div><button class="room-label" data-select-room="'+id+'">'+esc(roomDisplayName(id))+' ✎</button>'+s.placed.map((p,i)=>{if((p.room||"center")!==id)return "";const x=catalog.find(a=>a.id===p.id);if(!x)return "";const flip=p.dir==="right"?" flipped":"";const musical=isMusicalItem(x);const size=p.size||"normal";return '<button class="placed turnable size-'+size+(x.cat==="Pets"?' pet-place':'')+(musical?' music-place':'')+(p.locked?' item-locked':'')+'" data-place="'+i+'" style="left:'+p.x+'%;top:'+p.y+'%" aria-label="Move '+esc(x.name)+'">'+itemVisual(x,"room",flip,x.cat==="Pets"?i:null)+'</button>'}).join("")+'</div>';
  };
  app.innerHTML='<div class="shell"><div class="topbar"><div><b>🐾 Husky Habitats</b><div class="tiny">'+esc(s.first)+' '+esc(s.initial)+'.\'s House</div></div><div class="stats"><span id="coinPill" class="pill" title="Coins">🪙 '+s.coins+'</span><span id="xpPill" class="pill" title="XP">⭐ '+s.xp+' XP</span><span id="streakPill" class="pill" title="Streak">🔥 '+s.streak+'</span><button id="scoreBtn" class="pill score-pill" title="See your house score">🏆 '+roomScore()+'</button><button id="helpBtn" class="save-btn">❓ How to Play</button><button id="saveBtn" class="save-btn">💾 Quick Save</button><button id="saveCodeBtn" class="save-btn">🔐 Save Code</button><span id="saveStatus" class="save-status" aria-live="polite"></span></div></div><div class="house-hint">🏠 Decorating: <b>'+activeRoom[0].toUpperCase()+activeRoom.slice(1)+'</b> room · Click a room name to switch · Drag items between rooms</div><div id="room" class="room house"><div class="house-grid"><div class="house-slot north">'+roomMarkup("north")+'</div><div class="house-slot west">'+roomMarkup("west")+'</div><div class="house-slot center">'+roomMarkup("center")+'</div><div class="house-slot east">'+roomMarkup("east")+'</div><div class="house-slot south">'+roomMarkup("south")+'</div></div><div id="questionOverlay" class="question-overlay hidden"></div></div><div class="nav"><button class="primary" data-view="questions">📚 Answer Questions</button><button class="secondary" data-view="shop">🛍️ Shop</button><button class="secondary" data-view="inventory">🎒 Inventory</button><button class="secondary" data-view="expansions">🏠 Expand House</button><button class="secondary" data-view="collections">📖 Collections</button><button class="secondary" data-view="achievements">🏆 Achievements</button><button class="secondary" id="clearRoomBtn">🧹 Clear Selected Room</button></div><div id="panel" class="card panel"></div></div>';
  document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>{if(b.dataset.view==="questions")showQuestionOverlay();else panel(b.dataset.view)});
@@ -837,7 +840,7 @@ function render(){
  const helpBtn=document.querySelector("#helpBtn"); if(helpBtn)helpBtn.onclick=showHelp;
  const saveBtn=document.querySelector("#saveBtn"); if(saveBtn)saveBtn.onclick=saveGame;
  const saveCodeBtn=document.querySelector("#saveCodeBtn"); if(saveCodeBtn)saveCodeBtn.onclick=showSaveCode;
- document.querySelectorAll("[data-select-room]").forEach(b=>b.onclick=()=>setActiveRoom(b.dataset.selectRoom));
+ document.querySelectorAll("[data-select-room]").forEach(b=>b.onclick=e=>{e.stopPropagation();renameRoom(b.dataset.selectRoom)});
  document.querySelectorAll("[data-locked-room]").forEach(b=>b.onclick=()=>panel("expansions"));
  enableDragging();
  document.querySelectorAll(".placed").forEach(b=>{
@@ -845,12 +848,12 @@ function render(){
      if(b.classList.contains("dragging"))return;
      e.stopPropagation();
      const idx=+b.dataset.place;
-     showItemControls(idx,b);
+     const controls=document.querySelector(".item-size-controls");if(controls&&controls.dataset.forPlace===String(idx)){hideItemControls();return}showItemControls(idx,b);
      if(b.classList.contains("pet-place"))petHeart(b);
      if(b.classList.contains("music-place"))musicNotes(b);
    });
  });
- const room=document.querySelector("#room");if(room)room.addEventListener("click",e=>{if(e.target===room||e.target.classList.contains("wall-surface")||e.target.classList.contains("floor-surface"))hideItemControls()});
+ const room=document.querySelector("#room");if(room)room.addEventListener("click",e=>{if(!e.target.closest(".placed,.item-size-controls,.room-label"))hideItemControls()});
  const p=document.querySelector("#panel");if(p)p.innerHTML='<p class="tiny">Choose Answer Questions, Shop, Inventory, Collections, or Achievements.</p>';
 }
 function setup(){
@@ -962,11 +965,11 @@ function shopPanel(p,active=null,query=null){
  const filtered=q?base.filter(x=>(x.name+" "+x.cat+" "+x.id).toLowerCase().includes(q)):base;
  const items=sortItems(filtered,shopUi.sort,shopUi.favoritesFirst,shopUi.ownedFirst);
  p.innerHTML='<h2>🛍️ Habitat Shop</h2><p class="tiny">Furniture, decor, pets, and windows can be bought more than once.</p>'+
- '<div class="mystery-shop-banner" style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:14px;margin:12px 0;background:#fff4dc;border:2px solid #efcf86;border-radius:15px"><div><b>🎁 Mystery Box — 🪙 200</b><div class="tiny">Get 3 surprise items! Duplicates are possible.</div></div><button class="primary" id="buyMysteryBoxBtn" '+(s.coins<200?'disabled':'')+'>'+(s.coins<200?'Need 🪙 '+(200-s.coins):'Open Mystery Box')+'</button></div><div class="shop-search-wrap"><span class="shop-search-icon">🔎</span><input id="shopSearch" class="shop-search" type="search" placeholder="Search the shop..." value="'+esc(shopUi.query)+'" autocomplete="off"></div>'+
+ '<div class="mystery-shop-banner" style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:14px;margin:12px 0;background:#fff4dc;border:2px solid #efcf86;border-radius:15px"><div><b>🎁 Mystery Box — 🪙 200</b><div class="tiny">Get 3 surprise items! Duplicates are possible.</div></div><button class="primary" id="buyMysteryBoxBtn" '+''+'>'+(s.coins<200?'Need 🪙 '+(200-s.coins):'Open Mystery Box')+'</button></div><div class="shop-search-wrap"><span class="shop-search-icon">🔎</span><input id="shopSearch" class="shop-search" type="search" placeholder="Search the shop..." value="'+esc(shopUi.query)+'" autocomplete="off"></div>'+
  '<div class="sort-controls"><label>Sort by <select id="shopSort" class="sort-select"><option value="az">A–Z</option><option value="za">Z–A</option><option value="newest">Newest First</option><option value="oldest">Oldest First</option><option value="price-low">Price: Low to High</option><option value="price-high">Price: High to Low</option></select></label><label class="sort-check"><input id="shopFavFirst" type="checkbox" '+(shopUi.favoritesFirst?'checked':'')+'> ★ Favorites first</label><label class="sort-check"><input id="shopOwnedFirst" type="checkbox" '+(shopUi.ownedFirst?'checked':'')+'> Owned first</label></div>'+
  '<div class="shop-tabs">'+cats.map(c=>'<button class="shop-tab '+(c===shopUi.cat?'active':'')+'" data-cat="'+c+'">'+c+'</button>').join("")+'</div>'+
  '<div id="shopResults" class="shop-grid">'+(items.length?items.map(x=>{let count=ownedCount(x.id),oneOnly=["Walls","Floors"].includes(x.cat);return '<div class="shop-item"><button class="favorite-btn '+(s.favorites.includes(x.id)?'favorited':'')+'" data-shopfav="'+x.id+'" title="Favorite">'+(s.favorites.includes(x.id)?'★':'☆')+'</button><div class="item-art">'+itemVisual(x,"shop")+'</div><b>'+x.name+'</b><div class="tiny">'+x.cat+(count?' • Owned: '+count:'')+'</div><div class="price">🪙 '+x.price+'</div><button class="secondary buy-btn '+(s.coins<x.price?'cant-afford':'')+'" data-buy="'+x.id+'" '+((oneOnly&&count)||s.coins<x.price?"disabled":"")+'>'+(oneOnly&&count?"Owned":s.coins<x.price?"Need 🪙 "+(x.price-s.coins):count?"Buy Another":"Buy")+'</button></div>'}).join(""):'<div class="shop-empty">No items match “'+esc(shopUi.query)+'”.</div>')+'</div>';
- const mysteryButton=p.querySelector("#buyMysteryBoxBtn");if(mysteryButton)mysteryButton.onclick=buyMysteryBox;
+ const mysteryButton=p.querySelector("#buyMysteryBoxBtn");if(mysteryButton)mysteryButton.onclick=e=>{e.preventDefault();buyMysteryBox()};
  const input=p.querySelector("#shopSearch");
  if(input){
    input.focus();input.setSelectionRange(input.value.length,input.value.length);
@@ -993,7 +996,7 @@ function enableDragging(){
  const room=document.querySelector("#room"); if(!room)return;
  room.querySelectorAll(".placed").forEach(el=>{
    el.addEventListener("pointerdown",e=>{
-     e.preventDefault(); const idx=+el.dataset.place; if(s.placed[idx]?.locked)return; el.setPointerCapture(e.pointerId); el.classList.add("dragging");
+     e.preventDefault(); const idx=+el.dataset.place; if(s.placed[idx]?.locked)return; el.setPointerCapture(e.pointerId); hideItemControls(); el.classList.add("dragging");
      const move=ev=>{
        const target=ev.target.closest(".house-room")||document.elementFromPoint(ev.clientX,ev.clientY)?.closest(".house-room");
        const destination=document.elementFromPoint(ev.clientX,ev.clientY)?.closest(".house-room");
@@ -1061,7 +1064,7 @@ function answer(a){
 }
 function buy(id){let x=catalog.find(a=>a.id===id);if(!x||x.cat==="Trophies")return;if(s.coins<x.price){alert("You need "+(x.price-s.coins)+" more coins.");return}s.coins-=x.price;s.inventory.push(id);s.lifetime.purchases++;render();checkCollectionComplete();checkAchievements();saveSilently();const p=document.querySelector("#panel");if(p)shopPanel(p)}
 function buyMysteryBox(){
- if(s.coins<200){alert("You need "+(200-s.coins)+" more coins.");return}
+ if(s.coins<200){alert("Mystery Boxes cost 200 coins. You need "+(200-s.coins)+" more coins.");return}
  s.coins-=200;
  s.lifetime.mysteryBoxes++;
  const pool=catalog.filter(x=>!["Walls","Floors","Trophies"].includes(x.cat));
