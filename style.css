@@ -420,3 +420,11 @@ background-size:100% 100%,auto;
 .expansion-card{display:flex;flex-direction:column;gap:9px;border:2px solid #d8e3eb;border-radius:15px;padding:14px}
 .expansion-card .secondary{margin-top:auto}
 @media(max-width:600px){.room.house{height:470px}.house-grid{gap:4px}.house-room .room-label{font-size:9px}.house-room .room-item-image{transform:scale(1)}.house-room .pet-animated{transform:scale(1.5)}}
+
+/* New furniture starts at Small; preserve pet sizing and explicit size controls. */
+.house-room .placed:not(.pet-place).size-small .room-item-image{transform:scale(1)}
+.house-room .placed:not(.pet-place).size-normal .room-item-image{transform:scale(1.35)}
+.house-room .placed:not(.pet-place).size-large .room-item-image{transform:scale(1.7)}
+.house-room .placed:not(.pet-place).size-small .room-item-image.flipped{transform:scale(-1,1)}
+.house-room .placed:not(.pet-place).size-normal .room-item-image.flipped{transform:scale(-1.35,1.35)}
+.house-room .placed:not(.pet-place).size-large .room-item-image.flipped{transform:scale(-1.7,1.7)}
