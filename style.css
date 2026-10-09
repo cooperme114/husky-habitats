@@ -433,3 +433,9 @@ background-size:100% 100%,auto;
 .house-room .floor-surface{background-size:70px auto!important;background-repeat:repeat;background-position:left top}
 .house-room .item-size-controls{z-index:90}
 .house-room .room-label{max-width:calc(100% - 10px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* Distinct select and rename actions for each unlocked room. */
+.house-room .room-heading{position:absolute;top:4px;left:5px;right:5px;z-index:13;display:flex;align-items:center;gap:3px;max-width:calc(100% - 10px)}
+.house-room .room-heading .room-label{position:static;min-width:0;flex:0 1 auto;max-width:calc(100% - 28px)}
+.house-room .room-rename{font-size:12px;font-weight:800;border:1px solid #ddd0a5;border-radius:7px;background:#fff9d9eb;padding:3px 5px;cursor:pointer;flex:0 0 auto}
+.house-room .room-heading button:hover{background:#fff0ae}
