@@ -453,3 +453,6 @@ background-size:100% 100%,auto;
 
 /* Gold active-tab ring for navigation headings. */
 .nav [data-view].nav-active{outline:3px solid #e5b53d;outline-offset:2px;box-shadow:0 0 0 2px #fff3c1,0 0 13px 3px #f0c94d88;border-radius:999px}
+
+/* Starry Night needs a larger sky motif than repeating patterned wallpapers. */
+.house-room .wall-surface.wall-starry-night{background-size:64px auto!important}
