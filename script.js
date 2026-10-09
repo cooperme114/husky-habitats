@@ -388,10 +388,46 @@ const collections=[
 let s={screen:"setup",first:"",initial:"",coins:100,xp:0,streak:0,inventory:[],placed:[],wall:"plain",floor:"plain",q:null,answered:0,correct:0,loot:null,favorites:[],achievements:[],completedCollections:[],favoriteCollections:[],lifetime:{purchases:0,sales:0,mysteryBoxes:0,petsPetted:0,flips:0}};
 const app=document.querySelector("#app");
 const SAVE_KEY="huskyHabitatsSaveV1";
+const EXPANSIONS=["north","south","east","west"];
+const EXPANSION_COST=400;
+let activeRoom="center";
+function ensureRooms(){
+ if(!s.rooms||typeof s.rooms!=="object")s.rooms={};
+ if(!s.rooms.center)s.rooms.center={wall:s.wall||"plain",floor:s.floor||"plain"};
+ for(const d of EXPANSIONS)if(s.rooms[d]&&!s.rooms[d].wall)s.rooms[d].wall="plain";
+ for(const d of EXPANSIONS)if(s.rooms[d]&&!s.rooms[d].floor)s.rooms[d].floor="plain";
+ if(!Array.isArray(s.placed))s.placed=[];
+ s.placed.forEach(p=>{if(!p.room||(!s.rooms[p.room]&&p.room!=="center"))p.room="center"});
+ if(typeof s.highScore!=="number")s.highScore=roomScore();
+ s.highScore=Math.max(s.highScore,roomScore());
+ if(!s.expansionClaims||typeof s.expansionClaims!=="object")s.expansionClaims={};
+ if(!s.expansionPurchases||typeof s.expansionPurchases!=="number")s.expansionPurchases=0;
+ if(!s.rooms[activeRoom])activeRoom="center";
+}
+function expansionCredits(){return [25,50,75,100].filter(n=>s.highScore>=n).length-Object.keys(s.expansionClaims).length}
+function unlockRoom(direction,paid=false){
+ ensureRooms();
+ if(!EXPANSIONS.includes(direction)||s.rooms[direction])return;
+ const free=expansionCredits()>0;
+ if(!free&&!paid){alert("Earn a house-score milestone or buy this room for "+EXPANSION_COST+" coins.");return}
+ if(!free&&s.coins<EXPANSION_COST){alert("You need "+(EXPANSION_COST-s.coins)+" more coins.");return}
+ if(free)s.expansionClaims[direction]=true;
+ else{s.coins-=EXPANSION_COST;s.expansionPurchases++}
+ s.rooms[direction]={wall:"plain",floor:"plain"};
+ activeRoom=direction;saveSilently();render();panel("expansions");
+}
+function roomDecor(id){return s.rooms[id]||s.rooms.center}
+function setActiveRoom(id){if(!s.rooms[id])return;activeRoom=id;render();panel("inventory")}
+function expansionsPanel(p){
+ ensureRooms();
+ p.innerHTML='<h2>🏠 Expand Your Habitat</h2><p class="tiny">Your starter room stays in the center. Unlock a North, South, East, or West room. Each room can have its own wallpaper and flooring.</p><p><b>Highest house score:</b> '+s.highScore+' · <b>Free expansions ready:</b> '+Math.max(0,expansionCredits())+'</p><p class="tiny">Score milestones: 25, 50, 75, 100. Otherwise buy a room early for 🪙 '+EXPANSION_COST+'. Unlocked rooms stay forever.</p><div class="expansion-grid">'+EXPANSIONS.map(d=>'<div class="expansion-card"><b>'+d[0].toUpperCase()+d.slice(1)+' Room</b><div class="tiny">'+(s.rooms[d]?'✓ Unlocked':expansionCredits()>0?'🎉 Free expansion available':'🪙 '+EXPANSION_COST+' or reach the next milestone')+'</div><button class="secondary" data-expand="'+d+'" '+(s.rooms[d]||(!expansionCredits()&&s.coins<EXPANSION_COST)?'disabled':'')+'>'+(s.rooms[d]?'Owned':expansionCredits()>0?'Unlock Free':'Buy Room')+'</button></div>').join("")+'</div>';
+ p.querySelectorAll("[data-expand]").forEach(b=>b.onclick=()=>unlockRoom(b.dataset.expand,true));
+}
+
 let shopUi={cat:"All",query:"",sort:"az",favoritesFirst:false,ownedFirst:false};
 let inventoryUi={sort:"az",favoritesFirst:true};
 function saveGame(){
-  try{
+  try{if(s.screen==="game"){s.highScore=Math.max(s.highScore||0,roomScore())}
     localStorage.setItem(SAVE_KEY,JSON.stringify(s));
     showSaveStatus("Saved! 💾");
   }catch(e){
@@ -409,6 +445,7 @@ function loadGame(){
     if(!Array.isArray(s.completedCollections))s.completedCollections=[];
     if(!Array.isArray(s.favoriteCollections))s.favoriteCollections=[];
     if(typeof s.correct!=="number")s.correct=Math.floor((s.xp||0)/10);
+    ensureRooms();
     syncTrophies();
     if(!s.lifetime||typeof s.lifetime!=="object")s.lifetime={purchases:0,sales:0,mysteryBoxes:0,petsPetted:0,flips:0};
     for(const k of ["purchases","sales","mysteryBoxes","petsPetted","flips"])if(typeof s.lifetime[k]!=="number")s.lifetime[k]=0;
@@ -428,8 +465,9 @@ function showSaveStatus(msg){
 function collectionForItem(id){return collections.find(c=>c.items.includes(id))||null}
 function roomItemIds(){
   const ids=s.placed.map(p=>p.id);
-  if(catalog.some(x=>x.id===s.wall))ids.push(s.wall);
-  if(catalog.some(x=>x.id===s.floor))ids.push(s.floor);
+  const rooms=s.rooms&&Object.keys(s.rooms).length?Object.values(s.rooms):[{wall:s.wall,floor:s.floor}];
+  rooms.forEach(r=>{if(catalog.some(x=>x.id===r.wall))ids.push(r.wall);if(catalog.some(x=>x.id===r.floor))ids.push(r.floor)});
+
   return ids;
 }
 function roomScore(){
@@ -465,7 +503,7 @@ function toggleCollectionFavorite(name){
   if(i>=0)s.favoriteCollections.splice(i,1);else s.favoriteCollections.push(name);
   saveSilently();
 }
-function saveSilently(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(s))}catch(e){}}
+function saveSilently(){try{if(s.screen==="game"){s.highScore=Math.max(s.highScore||0,roomScore())}localStorage.setItem(SAVE_KEY,JSON.stringify(s))}catch(e){}}
 function makeSaveCode(){
   const payload={...s,screen:"game",q:null,loot:null,questionLocked:false,saveVersion:1};
   delete payload.saveVersion;
@@ -680,8 +718,8 @@ function showItemControls(index,el){
  const item=catalog.find(a=>a.id===s.placed[index].id);if(item&&item.cat==="Pets")c.dataset.pet="true";
  const current=s.placed[index].size||"normal";
  c.innerHTML='<div class="size-row"><button data-size="small" class="'+(current==="small"?"active":"")+'" title="Small" aria-label="Small">−</button><button data-size="normal" class="'+(current==="normal"?"active":"")+'" title="Normal" aria-label="Normal">○</button><button data-size="large" class="'+(current==="large"?"active":"")+'" title="Large" aria-label="Large">+</button></div><div class="edit-row"><button data-lock="1" title="Lock or unlock position" aria-label="Lock or unlock position">'+(s.placed[index].locked?'🔒':'🔓')+'</button><button data-flip="1" title="Flip" aria-label="Flip">↔</button><button data-layer="-1" title="Move backward one layer" aria-label="Move backward one layer">↓</button><button data-layer="1" title="Move forward one layer" aria-label="Move forward one layer">↑</button></div>';
- document.querySelector("#room").appendChild(c);
- const roomRect=document.querySelector("#room").getBoundingClientRect(),r=el.getBoundingClientRect();
+ el.closest(".house-room").appendChild(c);
+ const roomRect=el.closest(".house-room").getBoundingClientRect(),r=el.getBoundingClientRect();
  let left=r.left-roomRect.left+r.width/2,top=r.bottom-roomRect.top+8;
  c.style.left=left+"px";c.style.top=top+"px";
  const lockBtn=c.querySelector("[data-lock]");if(lockBtn)lockBtn.onclick=e=>{e.preventDefault();e.stopPropagation();s.placed[index].locked=!s.placed[index].locked;saveSilently();render();const el=document.querySelector('.placed[data-place="'+index+'"]');if(el)showItemControls(index,el)};
@@ -785,18 +823,22 @@ function showHelp(){
 }
 function render(){
  if(s.screen==="setup")return setup();
- let wallItem=catalog.find(x=>x.id===s.wall),floorItem=catalog.find(x=>x.id===s.floor);
- app.innerHTML='<div class="shell"><div class="topbar"><div><b>🐾 Husky Habitats</b><div class="tiny">'+esc(s.first)+' '+esc(s.initial)+'.\'s Room</div></div><div class="stats"><span id="coinPill" class="pill" title="Coins">🪙 '+s.coins+'</span><span id="xpPill" class="pill" title="XP">⭐ '+s.xp+' XP</span><span id="streakPill" class="pill" title="Streak">🔥 '+s.streak+'</span><button id="scoreBtn" class="pill score-pill" title="See your room score">🏆 '+roomScore()+'</button><button id="helpBtn" class="save-btn">❓ How to Play</button><button id="saveBtn" class="save-btn">💾 Quick Save</button><button id="saveCodeBtn" class="save-btn">🔐 Save Code</button><span id="saveStatus" class="save-status" aria-live="polite"></span></div></div><div id="room" class="room" aria-label="Your room"><div class="wall-surface"></div><div class="floor-surface"></div><div class="baseboard"></div>'+s.placed.map((p,i)=>{let x=catalog.find(a=>a.id===p.id);let flip=p.dir==="right"?" flipped":"";let musical=isMusicalItem(x);let size=p.size||"normal";return '<button class="placed turnable size-'+size+(x.cat==="Pets"?' pet-place':'')+(musical?' music-place':'')+(p.locked?' item-locked':'')+'" data-place="'+i+'" style="left:'+p.x+'%;top:'+p.y+'%" aria-label="Move '+x.name+'. Click once for size and flip options.'+(x.cat==="Pets"?' Click once to pet.':'')+(musical?' Click once for music notes.':'')+'">'+itemVisual(x,"room",flip,x.cat==="Pets"?i:null)+'</button>'}).join("")+'<div class="move-hint">Drag your things anywhere in the room ✨</div><div id="questionOverlay" class="question-overlay hidden"></div></div><div class="nav"><button class="primary" data-view="questions">📚 Answer Questions</button><button class="secondary" data-view="shop">🛍️ Shop</button><button class="secondary" data-view="inventory">🎒 Inventory</button><button class="secondary" data-view="collections">📖 Collections</button><button class="secondary" data-view="achievements">🏆 Achievements</button><button class="secondary" id="clearRoomBtn">🧹 Clear Room</button></div><div id="panel" class="card panel"></div></div>';
+ ensureRooms();
+ const roomMarkup=id=>{
+ const r=roomDecor(id),wallItem=catalog.find(x=>x.id===r.wall),floorItem=catalog.find(x=>x.id===r.floor);
+ const unlocked=!!s.rooms[id];
+ if(!unlocked)return '<button class="house-locked" data-locked-room="'+id+'" title="Unlock '+id+' room">🔒<span>'+id.toUpperCase()+'</span></button>';
+ return '<div class="house-room '+(activeRoom===id?'selected':'')+'" data-room="'+id+'"><div class="wall-surface" style="background-image:'+(wallItem&&wallItem.img?'url(&quot;'+wallItem.img+'&quot;)':'none')+'"></div><div class="floor-surface" style="background-image:'+(floorItem&&floorItem.img?'url(&quot;'+floorItem.img+'&quot;)':'none')+'"></div><div class="baseboard"></div><button class="room-label" data-select-room="'+id+'">'+(id==="center"?'Starter':id[0].toUpperCase()+id.slice(1))+' ✎</button>'+s.placed.map((p,i)=>{if((p.room||"center")!==id)return "";const x=catalog.find(a=>a.id===p.id);if(!x)return "";const flip=p.dir==="right"?" flipped":"";const musical=isMusicalItem(x);const size=p.size||"normal";return '<button class="placed turnable size-'+size+(x.cat==="Pets"?' pet-place':'')+(musical?' music-place':'')+(p.locked?' item-locked':'')+'" data-place="'+i+'" style="left:'+p.x+'%;top:'+p.y+'%" aria-label="Move '+esc(x.name)+'">'+itemVisual(x,"room",flip,x.cat==="Pets"?i:null)+'</button>'}).join("")+'</div>';
+ };
+ app.innerHTML='<div class="shell"><div class="topbar"><div><b>🐾 Husky Habitats</b><div class="tiny">'+esc(s.first)+' '+esc(s.initial)+'.\'s House</div></div><div class="stats"><span id="coinPill" class="pill" title="Coins">🪙 '+s.coins+'</span><span id="xpPill" class="pill" title="XP">⭐ '+s.xp+' XP</span><span id="streakPill" class="pill" title="Streak">🔥 '+s.streak+'</span><button id="scoreBtn" class="pill score-pill" title="See your house score">🏆 '+roomScore()+'</button><button id="helpBtn" class="save-btn">❓ How to Play</button><button id="saveBtn" class="save-btn">💾 Quick Save</button><button id="saveCodeBtn" class="save-btn">🔐 Save Code</button><span id="saveStatus" class="save-status" aria-live="polite"></span></div></div><div class="house-hint">🏠 Decorating: <b>'+activeRoom[0].toUpperCase()+activeRoom.slice(1)+'</b> room · Click a room name to switch · Drag items between rooms</div><div id="room" class="room house"><div class="house-grid"><div class="house-slot north">'+roomMarkup("north")+'</div><div class="house-slot west">'+roomMarkup("west")+'</div><div class="house-slot center">'+roomMarkup("center")+'</div><div class="house-slot east">'+roomMarkup("east")+'</div><div class="house-slot south">'+roomMarkup("south")+'</div></div><div id="questionOverlay" class="question-overlay hidden"></div></div><div class="nav"><button class="primary" data-view="questions">📚 Answer Questions</button><button class="secondary" data-view="shop">🛍️ Shop</button><button class="secondary" data-view="inventory">🎒 Inventory</button><button class="secondary" data-view="expansions">🏠 Expand House</button><button class="secondary" data-view="collections">📖 Collections</button><button class="secondary" data-view="achievements">🏆 Achievements</button><button class="secondary" id="clearRoomBtn">🧹 Clear Selected Room</button></div><div id="panel" class="card panel"></div></div>';
  document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>{if(b.dataset.view==="questions")showQuestionOverlay();else panel(b.dataset.view)});
- const clearRoomBtn=document.querySelector("#clearRoomBtn");if(clearRoomBtn)clearRoomBtn.onclick=()=>{if(!s.placed.length)return;if(confirm("Remove all placed items from your room? You will keep everything you own, your coins, and your progress.")){s.placed=[];saveSilently();render();}};
+ const clearRoomBtn=document.querySelector("#clearRoomBtn");if(clearRoomBtn)clearRoomBtn.onclick=()=>{if(!s.placed.some(x=>(x.room||"center")===activeRoom))return;if(confirm("Remove all placed items from this room? You will keep everything you own, your coins, and your progress.")){s.placed=s.placed.filter(x=>(x.room||"center")!==activeRoom);saveSilently();render();}};
  const scoreBtn=document.querySelector("#scoreBtn"); if(scoreBtn)scoreBtn.onclick=showScoreBreakdown;
  const helpBtn=document.querySelector("#helpBtn"); if(helpBtn)helpBtn.onclick=showHelp;
  const saveBtn=document.querySelector("#saveBtn"); if(saveBtn)saveBtn.onclick=saveGame;
  const saveCodeBtn=document.querySelector("#saveCodeBtn"); if(saveCodeBtn)saveCodeBtn.onclick=showSaveCode;
- const wallSurface=document.querySelector(".wall-surface");
- const floorSurface=document.querySelector(".floor-surface");
- if(wallSurface) wallSurface.style.backgroundImage=wallItem&&wallItem.img?'url("'+wallItem.img+'")':"none";
- if(floorSurface) floorSurface.style.backgroundImage=floorItem&&floorItem.img?'url("'+floorItem.img+'")':"none";
+ document.querySelectorAll("[data-select-room]").forEach(b=>b.onclick=()=>setActiveRoom(b.dataset.selectRoom));
+ document.querySelectorAll("[data-locked-room]").forEach(b=>b.onclick=()=>panel("expansions"));
  enableDragging();
  document.querySelectorAll(".placed").forEach(b=>{
    b.addEventListener("click",e=>{
@@ -842,7 +884,7 @@ function ownedCount(id){return s.inventory.filter(x=>x===id).length}
 function placedCount(id){return s.placed.filter(x=>x.id===id).length}
 function updateTopStats(){
  const c=document.querySelector("#coinPill"),x=document.querySelector("#xpPill"),st=document.querySelector("#streakPill"),sc=document.querySelector("#scoreBtn");
- if(c)c.textContent="🪙 "+s.coins;
+ if(s.screen==="game"){s.highScore=Math.max(s.highScore||0,roomScore())}if(c)c.textContent="🪙 "+s.coins;
  if(x)x.textContent="⭐ "+s.xp+" XP";
  if(st)st.textContent="🔥 "+s.streak;
  if(sc)sc.textContent="🏆 "+roomScore();
@@ -860,6 +902,7 @@ function hideQuestionOverlay(){
 }
 function panel(v){
  const p=document.querySelector("#panel");
+ if(v==="expansions"){expansionsPanel(p)}
  if(v==="shop"){shopPanel(p);}
  if(v==="collections"){collectionsPanel(p);}
  if(v==="achievements"){achievementsPanel(p);}
@@ -869,7 +912,7 @@ function panel(v){
    p.innerHTML='<h2>🎒 Inventory</h2><p class="tiny">Place as many copies as you own, then drag them where you want them.</p>'+
    '<div class="sort-controls"><label>Sort by <select id="inventorySort" class="sort-select"><option value="az">A–Z</option><option value="za">Z–A</option><option value="newest">Newest First</option><option value="oldest">Oldest First</option><option value="price-low">Price: Low to High</option><option value="price-high">Price: High to Low</option></select></label><label class="sort-check"><input id="inventoryFavFirst" type="checkbox" '+(inventoryUi.favoritesFirst?'checked':'')+'> ★ Favorites first</label></div>'+
    (owned.length?'<div class="shop-grid">'+owned.map(x=>{
-     const useDisabled=((!["Walls","Floors","Trophies"].includes(x.cat)&&placedCount(x.id)>=ownedCount(x.id))||(x.cat==="Walls"&&s.wall===x.id)||(x.cat==="Floors"&&s.floor===x.id));
+     const useDisabled=((!["Walls","Floors","Trophies"].includes(x.cat)&&placedCount(x.id)>=ownedCount(x.id))||(x.cat==="Walls"&&roomDecor(activeRoom).wall===x.id)||(x.cat==="Floors"&&roomDecor(activeRoom).floor===x.id));
      return '<div class="shop-item"><button class="favorite-btn '+(s.favorites.includes(x.id)?'favorited':'')+'" data-fav="'+x.id+'" title="Favorite">'+(s.favorites.includes(x.id)?'★':'☆')+'</button><button class="item-art preview-trigger" data-preview="'+x.id+'" title="Preview '+esc(x.name)+'">'+itemVisual(x,"shop")+'</button><b>'+x.name+'</b><div class="tiny">'+x.cat+' • Owned: '+ownedCount(x.id)+'</div><div class="inventory-actions"><button class="secondary" data-use="'+x.id+'" '+(useDisabled?"disabled":"")+'>'+useLabel(x)+'</button>'+((!["Walls","Floors"].includes(x.cat)&&placedCount(x.id)>0)?'<button class="secondary" data-remove="'+x.id+'">Remove One</button>':"")+(x.cat==="Trophies"?'':'<button class="secondary sell-btn" data-sell="'+x.id+'">Sell 🪙 '+Math.floor(x.price*.5)+'</button>')+'</div></div>';
    }).join("")+'</div>':'<p>Your inventory is empty. Answer questions and visit the shop!</p>');
    const invSort=p.querySelector("#inventorySort");if(invSort){invSort.value=inventoryUi.sort;invSort.onchange=()=>{inventoryUi.sort=invSort.value;panel("inventory")}}
@@ -952,7 +995,9 @@ function enableDragging(){
    el.addEventListener("pointerdown",e=>{
      e.preventDefault(); const idx=+el.dataset.place; if(s.placed[idx]?.locked)return; el.setPointerCapture(e.pointerId); el.classList.add("dragging");
      const move=ev=>{
-       const r=room.getBoundingClientRect();
+       const target=ev.target.closest(".house-room")||document.elementFromPoint(ev.clientX,ev.clientY)?.closest(".house-room");
+       const destination=document.elementFromPoint(ev.clientX,ev.clientY)?.closest(".house-room");
+       const r=(destination||el.closest(".house-room")).getBoundingClientRect();
        const visual=el.querySelector(".room-item-image")||el;
        const vr=visual.getBoundingClientRect();
        const halfW=Math.min(r.width/2,vr.width/2);
@@ -961,9 +1006,10 @@ function enableDragging(){
        px=Math.max(halfW,Math.min(r.width-halfW,px));
        py=Math.max(halfH,Math.min(r.height-halfH,py));
        let x=(px/r.width)*100,y=(py/r.height)*100;
+       if(destination&&destination!==el.parentElement){s.placed[idx].room=destination.dataset.room;destination.appendChild(el)}
        s.placed[idx].x=x;s.placed[idx].y=y;el.style.left=x+"%";el.style.top=y+"%";
      };
-     const up=()=>{el.classList.remove("dragging");el.removeEventListener("pointermove",move);el.removeEventListener("pointerup",up);el.removeEventListener("pointercancel",up);};
+     const up=()=>{el.classList.remove("dragging");el.removeEventListener("pointermove",move);el.removeEventListener("pointerup",up);el.removeEventListener("pointercancel",up);s.highScore=Math.max(s.highScore||0,roomScore());saveSilently();};
      el.addEventListener("pointermove",move);el.addEventListener("pointerup",up);el.addEventListener("pointercancel",up);
    });
  });
@@ -1044,9 +1090,9 @@ function sellItem(id){
  checkCollectionComplete();checkAchievements();saveSilently();
  render();panel("inventory");
 }
-function useLabel(x){if(x.cat==="Walls")return s.wall===x.id?"In Use":"Use Wallpaper";if(x.cat==="Floors")return s.floor===x.id?"In Use":"Use Flooring";let available=ownedCount(x.id)-placedCount(x.id);return available>0?(placedCount(x.id)>0?"Place Another":"Place in Room"):"All Placed"}
-function useItem(id){let x=catalog.find(a=>a.id===id);if(x.cat==="Walls"){s.wall=id}else if(x.cat==="Floors"){s.floor=id}else if(placedCount(id)<ownedCount(id)){{const obj={id,x:42+(s.placed.length*8)%35,y:58-(s.placed.length%3)*10,dir:"left",size:"normal"};if(x.cat==="Rugs")s.placed.unshift(obj);else s.placed.push(obj)}}checkAchievements();render();saveSilently();panel("inventory")}
-function removeOne(id){let found=s.placed.map(p=>p.id).lastIndexOf(id);if(found>=0)s.placed.splice(found,1);render();panel("inventory")}
+function useLabel(x){if(x.cat==="Walls")return roomDecor(activeRoom).wall===x.id?"In Use":"Use Wallpaper";if(x.cat==="Floors")return roomDecor(activeRoom).floor===x.id?"In Use":"Use Flooring";let available=ownedCount(x.id)-placedCount(x.id);return available>0?(placedCount(x.id)>0?"Place Another":"Place in Room"):"All Placed"}
+function useItem(id){let x=catalog.find(a=>a.id===id);if(x.cat==="Walls"){roomDecor(activeRoom).wall=id;if(activeRoom==="center")s.wall=id}else if(x.cat==="Floors"){roomDecor(activeRoom).floor=id;if(activeRoom==="center")s.floor=id}else if(placedCount(id)<ownedCount(id)){{const obj={id,room:activeRoom,x:42+(s.placed.length*8)%35,y:58-(s.placed.length%3)*10,dir:"left",size:"normal"};if(x.cat==="Rugs")s.placed.unshift(obj);else s.placed.push(obj)}}checkAchievements();render();saveSilently();panel("inventory")}
+function removeOne(id){let found=s.placed.map(p=>(p.room||"center")===activeRoom?p.id:null).lastIndexOf(id);if(found>=0)s.placed.splice(found,1);render();panel("inventory")}
 function turnItem(index){if(!s.placed[index])return;s.placed[index].dir=s.placed[index].dir==="right"?"left":"right";s.lifetime.flips++;checkAchievements();saveSilently();render();}
 function esc(x){return x.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 render();
