@@ -1260,13 +1260,26 @@ function toggleRoomZoom(id){
 }
 function applyRoomZoom(){
  const grid=document.querySelector("#room .house-grid");if(!grid)return;
- grid.classList.toggle("room-zoomed",!!zoomedRoom);
+ // Measure the room in the normal grid before enlarging it, so zoom never
+ // changes its aspect ratio or distorts saved percentage-based positions.
+ grid.classList.remove("room-zoomed");
+ grid.querySelectorAll(".house-slot").forEach(slot=>{slot.classList.remove("zoom-target");slot.style.removeProperty("width");slot.style.removeProperty("height")});
+ const target=zoomedRoom?grid.querySelector('.house-room[data-room="'+zoomedRoom+'"]'):null;
+ const ratio=target?target.getBoundingClientRect().width/Math.max(1,target.getBoundingClientRect().height):1;
+ const bounds=grid.getBoundingClientRect();
+ const maxW=bounds.width*.75,maxH=bounds.height*.75;
+ const width=Math.min(maxW,maxH*ratio),height=width/ratio;
+ grid.classList.toggle("room-zoomed",!!target);
  grid.querySelectorAll(".house-slot").forEach(slot=>{
   const room=slot.querySelector(".house-room");
-  const active=!!room&&room.dataset.room===zoomedRoom;
+  const active=room===target;
   slot.classList.toggle("zoom-target",active);
   const old=room?.querySelector(".room-zoom-close");if(old)old.remove();
-  if(active){const close=document.createElement("button");close.type="button";close.className="room-zoom-close";close.textContent="×";close.title="Close enlarged room";close.setAttribute("aria-label","Close enlarged room");close.addEventListener("click",e=>{e.preventDefault();e.stopPropagation();zoomedRoom=null;applyRoomZoom()});room.appendChild(close)}
+  if(active){
+   slot.style.width=width+"px";slot.style.height=height+"px";
+   const close=document.createElement("button");close.type="button";close.className="room-zoom-close";close.textContent="×";close.title="Close enlarged room";close.setAttribute("aria-label","Close enlarged room");
+   close.addEventListener("click",e=>{e.preventDefault();e.stopPropagation();zoomedRoom=null;applyRoomZoom()});room.appendChild(close);
+  }
  });
 }
 
