@@ -463,7 +463,7 @@ background-size:100% 100%,auto;
 .house-grid.room-zoomed .house-slot.zoom-target{position:absolute;inset:12.5%;z-index:35;grid-area:auto;min-width:0;min-height:0}
 /* Miniature rooms show miniature furniture; zoom restores a comfortable editing size.
    This changes only display size, never the student's saved item size. */
-.house-grid:not(.room-zoomed) .house-room .placed{scale:.55}
+.house-grid:not(.room-zoomed) .house-room .placed{scale:.82}
 .house-grid.room-zoomed .house-slot.zoom-target .placed{scale:1.25}
 .house-grid.room-zoomed .house-slot.zoom-target .house-room{box-shadow:0 6px 24px #0004,inset 0 0 0 2px #fff5}
 .room-zoom-close{position:absolute;top:6px;right:7px;z-index:110;border:2px solid #776781;border-radius:9px;background:#fffaf0;color:#40334b;font-size:25px;font-weight:900;line-height:1;width:36px;height:36px;cursor:pointer}
