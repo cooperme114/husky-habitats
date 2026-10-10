@@ -478,3 +478,8 @@ background-size:100% 100%,auto;
 .house-room .pet-animated.pet-hop{animation-name:pet-hop}
 .house-room .pet-animated.pet-wiggle{animation-name:pet-wiggle}
 @media(prefers-reduced-motion:reduce){.house-room .pet-animated{animation:none!important}}
+
+/* Inverse-scale editing UI so zoom enlarges the room, not its buttons. */
+.house-grid.room-zoomed .house-slot.zoom-target .room-zoom-close{transform:scale(var(--zoom-ui-inverse, .5));transform-origin:top right}
+.house-grid.room-zoomed .house-slot.zoom-target .room-heading{transform:scale(var(--zoom-ui-inverse, .5));transform-origin:top left}
+.house-grid.room-zoomed .house-slot.zoom-target .item-size-controls{transform:translate(-50%,0) scale(var(--zoom-ui-inverse, .5));transform-origin:top center}
