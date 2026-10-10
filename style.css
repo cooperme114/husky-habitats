@@ -411,7 +411,7 @@ background-size:100% 100%,auto;
 .house-room .placed{z-index:6}
 .house-room .room-item-image{transform:scale(1.35)}
 .house-room .room-item-image.flipped{transform:scale(-1.35,1.35)}
-.house-room .pet-animated{animation:none;transform:scale(2)}
+.house-room .pet-animated{transform-origin:center bottom}
 .house-room .pet-animated.flipped{transform:scale(-2,2)}
 .house-room .room-label{position:absolute;top:4px;left:5px;z-index:12;font-size:11px;border:1px solid #ddd0a5;border-radius:7px;background:#fff9d9eb;padding:3px 5px;font-weight:800}
 .house-locked{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;background:#e4e9ef;border:2px dashed #b6c2ce;border-radius:8px;color:#788794;font-size:23px;font-weight:900}
@@ -469,3 +469,12 @@ background-size:100% 100%,auto;
 .room-zoom-close{position:absolute;top:6px;right:7px;z-index:110;border:2px solid #776781;border-radius:9px;background:#fffaf0;color:#40334b;font-size:25px;font-weight:900;line-height:1;width:36px;height:36px;cursor:pointer}
 .room-zoom-close:hover{background:#ffe2e2}
 \n/* Preserve crisp nearest-neighbor pixel art at all furniture sizes. */\n.house-room .room-item-image,.house-room .pet-animated,.house-room .placed img{image-rendering:pixelated;image-rendering:crisp-edges;image-rendering:pixelated}\n
+/* Keep zoom controls usable without scaling them into oversized buttons. */
+.house-grid.room-zoomed .room-zoom-close{transform:scale(.6);transform-origin:top right}
+.house-grid.room-zoomed .room-heading{transform:scale(.65);transform-origin:top left}
+/* Restore pet motion: older house styles had disabled every pet animation. */
+.house-room .pet-animated.pet-bob{animation-name:pet-bob}
+.house-room .pet-animated.pet-squish{animation-name:pet-squish}
+.house-room .pet-animated.pet-hop{animation-name:pet-hop}
+.house-room .pet-animated.pet-wiggle{animation-name:pet-wiggle}
+@media(prefers-reduced-motion:reduce){.house-room .pet-animated{animation:none!important}}
