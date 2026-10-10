@@ -507,3 +507,7 @@ background-size:100% 100%,auto;
 @keyframes habitat-pet-wiggle{0%,64%,100%{rotate:0deg}74%{rotate:-5deg}84%{rotate:5deg}93%{rotate:-2deg}}
 @media(prefers-reduced-motion:reduce){.house-room .placed.pet-place .pet-animated{animation:none!important}}
 
+
+/* One-item steampunk clarity test: size the source before the room transform,
+   rather than layering another fractional scale over the pixel art. */
+.house-room .room-item-image.item-chair-steampunk-cogs-001{width:18px;height:auto;image-rendering:pixelated}
