@@ -507,17 +507,3 @@ background-size:100% 100%,auto;
 @keyframes habitat-pet-wiggle{0%,64%,100%{rotate:0deg}74%{rotate:-5deg}84%{rotate:5deg}93%{rotate:-2deg}}
 @media(prefers-reduced-motion:reduce){.house-room .placed.pet-place .pet-animated{animation:none!important}}
 
-/* Steampunk furniture: slightly smaller at every user-selected size. */
-.house-room .room-item-image.item-bed-steampunk-cogs-001,
-.house-room .room-item-image.item-bookcase-steampunk-cogs-001,
-.house-room .room-item-image.item-chair-steampunk-cogs-001,
-.house-room .room-item-image.item-chair-steampunk-cogs-red-001,
-.house-room .room-item-image.item-decor-steampunk-cogs-001,
-.house-room .room-item-image.item-decor-steampunk-lamp-cogs-001,
-.house-room .room-item-image.item-decor-steampunk-painting-airship-001,
-.house-room .room-item-image.item-desk-steampunk-cogs-001,
-.house-room .room-item-image.item-dresser-steampunk-cogs-001,
-.house-room .room-item-image.item-fireplace-steampunk-cogs-001,
-.house-room .room-item-image.item-rug-steampunk-cogs-001,
-.house-room .room-item-image.item-table-steampunk-cogs-001,
-.house-room .room-item-image.item-vanity-steampunk-cogs-001{scale:.9;image-rendering:pixelated}
