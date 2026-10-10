@@ -483,3 +483,10 @@ background-size:100% 100%,auto;
 .house-grid.room-zoomed .house-slot.zoom-target .room-zoom-close{transform:scale(var(--zoom-ui-inverse, .5));transform-origin:top right}
 .house-grid.room-zoomed .house-slot.zoom-target .room-heading{transform:scale(var(--zoom-ui-inverse, .5));transform-origin:top left}
 .house-grid.room-zoomed .house-slot.zoom-target .item-size-controls{transform:translate(-50%,0) scale(var(--zoom-ui-inverse, .5));transform-origin:top center}
+
+/* Compact editing controls at ordinary size, regardless of host page styles. */
+.house-room .item-size-controls{width:max-content;max-width:116px;padding:3px;gap:2px;font-size:12px;line-height:1;box-sizing:border-box}
+.house-room .item-size-controls .size-row,.house-room .item-size-controls .edit-row{display:flex;gap:2px}
+.house-room .item-size-controls button{box-sizing:border-box;flex:0 0 27px;width:27px;min-width:27px;max-width:27px;height:25px;min-height:25px;max-height:25px;padding:0;font-size:14px;line-height:23px}
+.house-room .room-zoom-close{box-sizing:border-box;width:32px;min-width:32px;max-width:32px;height:32px;min-height:32px;max-height:32px;padding:0;font-size:22px;line-height:28px}
+.house-room .room-heading button{line-height:1.2}
