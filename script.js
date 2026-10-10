@@ -1,4 +1,4 @@
-const stems={hyper:"over",hypo:"under",phobia:"fear",pan:"all",mega:"big",pyro:"fire",circum:"around",cred:"believe",ject:"throw",med:"middle"};
+const stems={contra:"opposite",sen:"feel",mort:"death",vita:"life",sol:"comfort",mis:"wrong",gon:"angle",scope:"see",vac:"empty",struct:"build"};
 const catalog=[
 {id:"bed-white",name:"Basic White Bed",img:"images/items/Bed-basic-white-001.png",price:75,cat:"Furniture"},
 {id:"bed-angel-cream",name:"Angel Cream Bed",img:"images/items/Bed-angel-cream-001.png",price:100,cat:"Furniture"},
