@@ -1950,7 +1950,7 @@ function itemVisual(x,where,extra="",petIndex=null){
  if(x.img){
    const cls=where==="room"?"room-item-image":"item-image";
    let petClass="",petStyle="";
-   if(where==="room"&&x.cat==="Pets"){
+   if(where==="room"&&x.cat==="Pets"&&x.id!=="pets-clockworth"){
      const variants=["pet-bob","pet-squish","pet-hop","pet-wiggle"];
      const idx=petIndex==null?0:petIndex;
      petClass=" pet-animated "+variants[idx%variants.length];
