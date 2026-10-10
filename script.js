@@ -1252,6 +1252,24 @@ const SAVE_KEY="huskyHabitatsSaveV1";
 const EXPANSIONS=["north","south","east","west"];
 const EXPANSION_COST=400;
 let activeRoom="center";
+let zoomedRoom=null;
+function toggleRoomZoom(id){
+ if(id&&(!s.rooms||!s.rooms[id]))return;
+ zoomedRoom=zoomedRoom===id?null:id;
+ applyRoomZoom();
+}
+function applyRoomZoom(){
+ const grid=document.querySelector("#room .house-grid");if(!grid)return;
+ grid.classList.toggle("room-zoomed",!!zoomedRoom);
+ grid.querySelectorAll(".house-slot").forEach(slot=>{
+  const room=slot.querySelector(".house-room");
+  const active=!!room&&room.dataset.room===zoomedRoom;
+  slot.classList.toggle("zoom-target",active);
+  const old=room?.querySelector(".room-zoom-close");if(old)old.remove();
+  if(active){const close=document.createElement("button");close.type="button";close.className="room-zoom-close";close.textContent="×";close.title="Close enlarged room";close.setAttribute("aria-label","Close enlarged room");close.addEventListener("click",e=>{e.preventDefault();e.stopPropagation();zoomedRoom=null;applyRoomZoom()});room.appendChild(close)}
+ });
+}
+
 function ensureRooms(){
  if(!s.rooms||typeof s.rooms!=="object")s.rooms={};
  if(!s.rooms.center)s.rooms.center={wall:s.wall||"plain",floor:s.floor||"plain"};
@@ -1694,7 +1712,14 @@ function showScoreBreakdown(){
 function showHelp(){
  const old=document.querySelector(".help-overlay");if(old)old.remove();
  const el=document.createElement("div");el.className="help-overlay";
- el.innerHTML='<div class="help-modal" role="dialog" aria-modal="true" aria-labelledby="helpTitle"><button class="help-close" type="button" aria-label="Close instructions">×</button><h2 id="helpTitle">❓ How to Play Husky Habitats</h2><div class="help-sections"><section><h3>Top Icons</h3><p>🪙 Coins = spend them in the shop.<br>⭐ XP = how much experience you have earned.<br>🔥 Streak = correct answers in a row.<br>🏆 Room Score = how many decorating points your room has.</p></section><section><h3>Earn Coins & Prizes</h3><p>Answer questions correctly to earn coins and XP. Every 25 correct answers in a row earns a free random item. Mystery Boxes cost 200 coins and give 3 random items. Duplicates are possible.</p></section><section><h3>Decorating</h3><p>Open Inventory to place items, then drag them where you want. Want something on top of something else? Items placed later appear in front. Remove and place an item again to bring it to the front. Click or tap any placed item for editing controls, including 🔓 to lock its position (🔒 means locked). Rugs automatically sit behind other items. Use Clear Room to remove all placed items without losing anything you own. Tap an item image in the shop to see a larger preview. Use − for small, ○ for normal, + for large, ↔ to flip it, ↓ to move it one layer behind, and ↑ to move it one layer in front.</p></section><section><h3>Pets</h3><p>Pets are worth 2 room-score points instead of 1. Click a pet in your room to pet it and make a little heart appear. ♥ Musical instruments and music players make floating music notes when clicked. ♪</p></section><section><h3>Room Score</h3><p>Most items are worth 1 point. Pets are worth 2. Different items from the same collection multiply each other: 2 matching collection items = ×2, 3 = ×3, and so on. Duplicate copies do not increase the multiplier, but they still give their normal points.</p></section><section><h3>Collections & Favorites</h3><p>The Collections tab shows what you own. Completing a collection gives a celebration. You can ★ favorite a collection you are working toward, and ★ favorite shop items so they are easier to find later.</p></section><section><h3>Saving</h3><p>Quick Save may not survive a Google Sites refresh. Use Save Code for a reliable backup. Copy the code somewhere safe, then use Load Save Code to restore your room and progress. Weekly questions are not stored in the code.</p></section></div></div>';
+ el.innerHTML='<div class="help-modal" role="dialog" aria-modal="true" aria-labelledby="helpTitle"><button class="help-close" type="button" aria-label="Close instructions">×</button><h2 id="helpTitle">❓ How to Play Husky Habitats</h2><div class="help-sections">'+
+ '<section><h3>Getting Started &amp; Earning</h3><p>Enter your first name and last initial. Choose <b>Answer Questions</b> to practice this week\'s Greek and Latin roots. Correct answers earn coins and XP; consecutive correct answers build your streak. Every 25 correct answers in a row earns a free item. Mystery Boxes cost 200 coins and contain three random items (including possible duplicates).</p></section>'+
+ '<section><h3>Shop &amp; Inventory</h3><p>Spend coins in the Shop on furniture, decor, pets, rugs, flags, wallpaper, flooring and more. Search, sort, preview images, or star favorites. Open Inventory to place purchased items; you can buy multiple copies of most items. Wallpaper and flooring apply to the selected room.</p></section>'+
+ '<section><h3>Rooms &amp; Zoom</h3><p>Click a room name to select it; use <b>Expand House</b> to unlock additional rooms. Rename rooms with the pencil button. <b>Double-click an empty part of an unlocked room</b> to enlarge that room within the house area. Its X button returns to the whole-house view. The shop, stats and navigation stay visible. You can keep decorating while zoomed in.</p></section>'+
+ '<section><h3>Decorating Controls</h3><p>Drag furniture and pets to position them, including between unlocked rooms. Click a placed item for controls: − Small, ○ Normal, + Large, ↔ Flip, ↓ Send Backward, ↑ Bring Forward, and 🔓/🔒 Lock or unlock its position. New items start at Normal size. Rugs appear underneath furniture. Clear Room removes placed items from that room without deleting them from Inventory.</p></section>'+
+ '<section><h3>Pets &amp; Special Items</h3><p>Click a pet to show a heart. Pets earn 2 base room-score points; Opulent Collection items also earn 2. Musical instruments and music players can show music notes when clicked.</p></section>'+
+ '<section><h3>Room Score, Collections &amp; Achievements</h3><p>Most placed items earn 1 base point. Different items from the same collection multiply their scores: 2 unique items = ×2, 3 = ×3, and so on. Extra copies earn base points but do not increase the multiplier. Tap the trophy score to see details. The Collections tab tracks ownership and lets you favorite collections. Achievements reward progress, and higher house scores can help unlock extra rooms.</p></section>'+
+ '<section><h3>Saving Your Work</h3><p>Quick Save uses this browser and may not survive changing devices or a Google Sites refresh. Use <b>Save Code</b> to copy a backup somewhere safe; use <b>Load Save Code</b> to restore your progress. Your teacher may also ask for a screenshot of your room.</p></section></div></div>';
  document.body.appendChild(el);
  const close=()=>el.remove();
  el.querySelector(".help-close").onclick=close;
@@ -1719,6 +1744,8 @@ function render(){
  document.querySelectorAll("[data-select-room]").forEach(b=>b.onclick=e=>{e.stopPropagation();setActiveRoom(b.dataset.selectRoom)});
  document.querySelectorAll("[data-rename-room]").forEach(b=>b.onclick=e=>{e.stopPropagation();renameRoom(b.dataset.renameRoom)});
  document.querySelectorAll(".house-room").forEach(el=>el.addEventListener("click",e=>{if(e.target.closest(".placed,.item-size-controls,.room-heading"))return;if(activeRoom!==el.dataset.room)setActiveRoom(el.dataset.room);else hideItemControls()}));
+ document.querySelectorAll(".house-room").forEach(el=>el.addEventListener("dblclick",e=>{if(e.target.closest(".placed,.item-size-controls,.room-heading,.room-zoom-close"))return;e.preventDefault();e.stopPropagation();zoomedRoom=el.dataset.room;activeRoom=el.dataset.room;applyRoomZoom();hideItemControls()}));
+ applyRoomZoom();
  document.querySelectorAll("[data-locked-room]").forEach(b=>b.onclick=()=>panel("expansions"));
  enableDragging();
  document.querySelectorAll(".placed").forEach(b=>{
