@@ -508,6 +508,4 @@ background-size:100% 100%,auto;
 @media(prefers-reduced-motion:reduce){.house-room .placed.pet-place .pet-animated{animation:none!important}}
 
 
-/* One-item steampunk clarity test: size the source before the room transform,
-   rather than layering another fractional scale over the pixel art. */
-.house-room .room-item-image.item-chair-steampunk-cogs-001{width:18px;height:auto;image-rendering:pixelated}
+/* Steampunk sprite widths are set proportionally from each image\u2019s natural width. */
