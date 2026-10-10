@@ -490,3 +490,7 @@ background-size:100% 100%,auto;
 .house-room .item-size-controls button{box-sizing:border-box;flex:0 0 27px;width:27px;min-width:27px;max-width:27px;height:25px;min-height:25px;max-height:25px;padding:0;font-size:14px;line-height:23px}
 .house-room .room-zoom-close{box-sizing:border-box;width:32px;min-width:32px;max-width:32px;height:32px;min-height:32px;max-height:32px;padding:0;font-size:22px;line-height:28px}
 .house-room .room-heading button{line-height:1.2}
+
+/* Fit all shop categories on one row in the desktop Google Sites embed. */
+.shop-tabs{display:flex;flex-wrap:nowrap;gap:4px;overflow-x:auto;scrollbar-width:thin;padding-bottom:3px}
+.shop-tabs .shop-tab{flex:0 0 auto;white-space:nowrap;padding:6px 8px;font-size:clamp(10px,1.15vw,12px);line-height:1.15;border-width:1px}
