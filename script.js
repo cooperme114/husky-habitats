@@ -1268,6 +1268,7 @@ function applyRoomZoom(){
   slot.style.removeProperty("transform");
   slot.style.removeProperty("width");
   slot.style.removeProperty("height");
+  slot.style.removeProperty("--zoom-ui-inverse");
  });
  const target=zoomedRoom?grid.querySelector('.house-room[data-room="'+zoomedRoom+'"]'):null;
  const activeSlot=target?.closest(".house-slot");
@@ -1279,6 +1280,7 @@ function applyRoomZoom(){
   grid.classList.add("room-zoomed");
   activeSlot.classList.add("zoom-target");
   activeSlot.style.transform="translate("+dx+"px,"+dy+"px) scale("+factor+")";
+  activeSlot.style.setProperty("--zoom-ui-inverse",String(1/factor));
  }
  grid.querySelectorAll(".house-room").forEach(room=>{
   const old=room.querySelector(".room-zoom-close");if(old)old.remove();
