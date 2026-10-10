@@ -1260,23 +1260,29 @@ function toggleRoomZoom(id){
 }
 function applyRoomZoom(){
  const grid=document.querySelector("#room .house-grid");if(!grid)return;
- // Measure the room in the normal grid before enlarging it, so zoom never
- // changes its aspect ratio or distorts saved percentage-based positions.
+ // Keep every slot in the CSS grid. Removing the active slot from layout
+ // causes the grid rows to collapse in some Google Sites embeds.
  grid.classList.remove("room-zoomed");
- grid.querySelectorAll(".house-slot").forEach(slot=>{slot.classList.remove("zoom-target");slot.style.removeProperty("width");slot.style.removeProperty("height")});
- const target=zoomedRoom?grid.querySelector('.house-room[data-room="'+zoomedRoom+'"]'):null;
- const ratio=target?target.getBoundingClientRect().width/Math.max(1,target.getBoundingClientRect().height):1;
- const bounds=grid.getBoundingClientRect();
- const maxW=bounds.width*.75,maxH=bounds.height*.75;
- const width=Math.min(maxW,maxH*ratio),height=width/ratio;
- grid.classList.toggle("room-zoomed",!!target);
  grid.querySelectorAll(".house-slot").forEach(slot=>{
-  const room=slot.querySelector(".house-room");
-  const active=room===target;
-  slot.classList.toggle("zoom-target",active);
-  const old=room?.querySelector(".room-zoom-close");if(old)old.remove();
-  if(active){
-   slot.style.width=width+"px";slot.style.height=height+"px";
+  slot.classList.remove("zoom-target");
+  slot.style.removeProperty("transform");
+  slot.style.removeProperty("width");
+  slot.style.removeProperty("height");
+ });
+ const target=zoomedRoom?grid.querySelector('.house-room[data-room="'+zoomedRoom+'"]'):null;
+ const activeSlot=target?.closest(".house-slot");
+ if(activeSlot){
+  const bounds=grid.getBoundingClientRect(),r=activeSlot.getBoundingClientRect();
+  const factor=Math.min(bounds.width*.75/Math.max(1,r.width),bounds.height*.75/Math.max(1,r.height));
+  const dx=bounds.left+bounds.width/2-(r.left+r.width/2);
+  const dy=bounds.top+bounds.height/2-(r.top+r.height/2);
+  grid.classList.add("room-zoomed");
+  activeSlot.classList.add("zoom-target");
+  activeSlot.style.transform="translate("+dx+"px,"+dy+"px) scale("+factor+")";
+ }
+ grid.querySelectorAll(".house-room").forEach(room=>{
+  const old=room.querySelector(".room-zoom-close");if(old)old.remove();
+  if(room===target){
    const close=document.createElement("button");close.type="button";close.className="room-zoom-close";close.textContent="×";close.title="Close enlarged room";close.setAttribute("aria-label","Close enlarged room");
    close.addEventListener("click",e=>{e.preventDefault();e.stopPropagation();zoomedRoom=null;applyRoomZoom()});room.appendChild(close);
   }
