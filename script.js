@@ -1958,7 +1958,8 @@ function itemVisual(x,where,extra="",petIndex=null){
      const duration=2.6+(idx%4)*0.35;
      petStyle=' style="animation-delay:'+delay+'s;animation-duration:'+duration+'s"';
    }
-   return '<img class="'+cls+' item-'+x.id+petClass+extra+'" src="'+x.img+'" alt=""'+petStyle+'>';
+   const steampunkSize=(where==="room"&&x.cat==="Furniture"&&x.id.includes("steampunk"))?' onload="this.style.width=Math.max(1,Math.round(this.naturalWidth*.9))+\'px\'"':"";
+   return '<img class="'+cls+' item-'+x.id+petClass+extra+'" src="'+x.img+'" alt=""'+petStyle+steampunkSize+'>';
  }
  return '<span class="fallback-icon">'+(x.icon||"")+'</span>';
 }
