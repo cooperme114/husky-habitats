@@ -456,3 +456,12 @@ background-size:100% 100%,auto;
 
 /* Starry Night needs a larger sky motif than repeating patterned wallpapers. */
 .house-room .wall-surface.wall-starry-night{background-size:64px auto!important}
+
+/* Room zoom stays inside the house area; controls and panels remain in place. */
+.house-grid.room-zoomed{position:relative;isolation:isolate}
+.house-grid.room-zoomed .house-slot:not(.zoom-target){opacity:.25;pointer-events:none}
+.house-grid.room-zoomed .house-slot.zoom-target{position:absolute;inset:12.5%;z-index:35;grid-area:auto;min-width:0;min-height:0}
+.house-grid.room-zoomed .house-slot.zoom-target .placed{scale:1.5}
+.house-grid.room-zoomed .house-slot.zoom-target .house-room{box-shadow:0 6px 24px #0004,inset 0 0 0 2px #fff5}
+.room-zoom-close{position:absolute;top:6px;right:7px;z-index:110;border:2px solid #776781;border-radius:9px;background:#fffaf0;color:#40334b;font-size:25px;font-weight:900;line-height:1;width:36px;height:36px;cursor:pointer}
+.room-zoom-close:hover{background:#ffe2e2}
