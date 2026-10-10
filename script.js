@@ -1273,7 +1273,7 @@ function applyRoomZoom(){
  const activeSlot=target?.closest(".house-slot");
  if(activeSlot){
   const bounds=grid.getBoundingClientRect(),r=activeSlot.getBoundingClientRect();
-  const factor=Math.min(bounds.width*.75/Math.max(1,r.width),bounds.height*.75/Math.max(1,r.height));
+  const factor=Math.min(2,bounds.width*.75/Math.max(1,r.width),bounds.height*.75/Math.max(1,r.height));
   const dx=bounds.left+bounds.width/2-(r.left+r.width/2);
   const dy=bounds.top+bounds.height/2-(r.top+r.height/2);
   grid.classList.add("room-zoomed");
@@ -1636,8 +1636,9 @@ function showItemControls(index,el){
  const current=s.placed[index].size||"normal";
  c.innerHTML='<div class="size-row"><button data-size="small" class="'+(current==="small"?"active":"")+'" title="Small" aria-label="Small">−</button><button data-size="normal" class="'+(current==="normal"?"active":"")+'" title="Normal" aria-label="Normal">○</button><button data-size="large" class="'+(current==="large"?"active":"")+'" title="Large" aria-label="Large">+</button></div><div class="edit-row"><button data-lock="1" title="Lock or unlock position" aria-label="Lock or unlock position">'+(s.placed[index].locked?'🔒':'🔓')+'</button><button data-flip="1" title="Flip" aria-label="Flip">↔</button><button data-layer="-1" title="Move backward one layer" aria-label="Move backward one layer">↓</button><button data-layer="1" title="Move forward one layer" aria-label="Move forward one layer">↑</button></div>';
  el.closest(".house-room").appendChild(c);
- const roomRect=el.closest(".house-room").getBoundingClientRect(),r=el.getBoundingClientRect();
- let left=r.left-roomRect.left+r.width/2,top=r.bottom-roomRect.top+8;
+ const host=el.closest(".house-room"),roomRect=host.getBoundingClientRect(),r=el.getBoundingClientRect();
+ const zoomScale=roomRect.width/Math.max(1,host.offsetWidth);
+ let left=(r.left-roomRect.left+r.width/2)/zoomScale,top=(r.bottom-roomRect.top+8)/zoomScale;
  c.style.left=left+"px";c.style.top=top+"px";
  const lockBtn=c.querySelector("[data-lock]");if(lockBtn)lockBtn.onclick=e=>{e.preventDefault();e.stopPropagation();s.placed[index].locked=!s.placed[index].locked;saveSilently();render();const el=document.querySelector('.placed[data-place="'+index+'"]');if(el)showItemControls(index,el)};
  const flipBtn=c.querySelector("[data-flip]");if(flipBtn)flipBtn.onclick=e=>{e.preventDefault();e.stopPropagation();turnItem(index)};
@@ -1922,7 +1923,7 @@ function enableDragging(){
  const room=document.querySelector("#room"); if(!room)return;
  room.querySelectorAll(".placed").forEach(el=>{
    el.addEventListener("pointerdown",e=>{
-     e.preventDefault(); const idx=+el.dataset.place; if(s.placed[idx]?.locked)return; el.setPointerCapture(e.pointerId); hideItemControls(); el.classList.add("dragging");
+     if(e.button!==0)return; const idx=+el.dataset.place; if(s.placed[idx]?.locked)return; el.setPointerCapture(e.pointerId); hideItemControls(); el.classList.add("dragging");
      const move=ev=>{
        const target=ev.target.closest(".house-room")||document.elementFromPoint(ev.clientX,ev.clientY)?.closest(".house-room");
        const destination=document.elementFromPoint(ev.clientX,ev.clientY)?.closest(".house-room");
