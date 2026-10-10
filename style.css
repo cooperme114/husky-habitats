@@ -460,11 +460,12 @@ background-size:100% 100%,auto;
 /* Room zoom stays inside the house area; controls and panels remain in place. */
 .house-grid.room-zoomed{position:relative;isolation:isolate}
 .house-grid.room-zoomed .house-slot:not(.zoom-target){opacity:.25;pointer-events:none}
-.house-grid.room-zoomed .house-slot.zoom-target{position:absolute;inset:12.5%;z-index:35;grid-area:auto;min-width:0;min-height:0}
+.house-grid.room-zoomed .house-slot.zoom-target{position:absolute;inset:auto;left:50%;top:50%;transform:translate(-50%,-50%);z-index:35;grid-area:auto;min-width:0;min-height:0}
 /* Miniature rooms show miniature furniture; zoom restores a comfortable editing size.
    This changes only display size, never the student's saved item size. */
-.house-grid:not(.room-zoomed) .house-room .placed{scale:.82}
-.house-grid.room-zoomed .house-slot.zoom-target .placed{scale:1.25}
+.house-grid:not(.room-zoomed) .house-room .placed{scale:1}
+.house-grid.room-zoomed .house-slot.zoom-target .placed{scale:1.5}
 .house-grid.room-zoomed .house-slot.zoom-target .house-room{box-shadow:0 6px 24px #0004,inset 0 0 0 2px #fff5}
 .room-zoom-close{position:absolute;top:6px;right:7px;z-index:110;border:2px solid #776781;border-radius:9px;background:#fffaf0;color:#40334b;font-size:25px;font-weight:900;line-height:1;width:36px;height:36px;cursor:pointer}
 .room-zoom-close:hover{background:#ffe2e2}
+\n/* Preserve crisp nearest-neighbor pixel art at all furniture sizes. */\n.house-room .room-item-image,.house-room .pet-animated,.house-room .placed img{image-rendering:pixelated;image-rendering:crisp-edges;image-rendering:pixelated}\n
