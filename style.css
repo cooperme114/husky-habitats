@@ -421,13 +421,13 @@ background-size:100% 100%,auto;
 .expansion-card .secondary{margin-top:auto}
 @media(max-width:600px){.room.house{height:470px}.house-grid{gap:4px}.house-room .room-label{font-size:9px}.house-room .room-item-image{transform:scale(1)}.house-room .pet-animated{transform:scale(1.5)}}
 
-/* New furniture starts at Small; preserve pet sizing and explicit size controls. */
-.house-room .placed:not(.pet-place).size-small .room-item-image{transform:scale(1)}
-.house-room .placed:not(.pet-place).size-normal .room-item-image{transform:scale(1.35)}
-.house-room .placed:not(.pet-place).size-large .room-item-image{transform:scale(1.7)}
-.house-room .placed:not(.pet-place).size-small .room-item-image.flipped{transform:scale(-1,1)}
-.house-room .placed:not(.pet-place).size-normal .room-item-image.flipped{transform:scale(-1.35,1.35)}
-.house-room .placed:not(.pet-place).size-large .room-item-image.flipped{transform:scale(-1.7,1.7)}
+/* The former Small appearance is now Normal. Smaller and Larger bracket it. */
+.house-room .placed:not(.pet-place).size-small .room-item-image{transform:scale(.75)}
+.house-room .placed:not(.pet-place).size-normal .room-item-image{transform:scale(1)}
+.house-room .placed:not(.pet-place).size-large .room-item-image{transform:scale(1.3)}
+.house-room .placed:not(.pet-place).size-small .room-item-image.flipped{transform:scale(-.75,.75)}
+.house-room .placed:not(.pet-place).size-normal .room-item-image.flipped{transform:scale(-1,1)}
+.house-room .placed:not(.pet-place).size-large .room-item-image.flipped{transform:scale(-1.3,1.3)}
 
 /* Tile wallpapers at a fixed, smaller scale in every room without distorting image proportions. */
 .house-room .wall-surface{background-size:24px auto!important;background-repeat:repeat!important;background-position:left top;image-rendering:pixelated}
@@ -441,13 +441,13 @@ background-size:100% 100%,auto;
 .house-room .room-rename{font-size:12px;font-weight:800;border:1px solid #ddd0a5;border-radius:7px;background:#fff9d9eb;padding:3px 5px;cursor:pointer;flex:0 0 auto}
 .house-room .room-heading button:hover{background:#fff0ae}
 
-/* Pet sizes now follow furniture proportions in the smaller house rooms. */
-.house-room .placed.pet-place.size-small .room-item-image{transform:scale(1)!important;scale:1}
-.house-room .placed.pet-place.size-normal .room-item-image{transform:scale(1.35)!important;scale:1}
-.house-room .placed.pet-place.size-large .room-item-image{transform:scale(1.7)!important;scale:1}
-.house-room .placed.pet-place.size-small .room-item-image.flipped{transform:scale(-1,1)!important}
-.house-room .placed.pet-place.size-normal .room-item-image.flipped{transform:scale(-1.35,1.35)!important}
-.house-room .placed.pet-place.size-large .room-item-image.flipped{transform:scale(-1.7,1.7)!important}
+/* Apply the same three relative sizes to pets. */
+.house-room .placed.pet-place.size-small .room-item-image{transform:scale(.75)!important;scale:1}
+.house-room .placed.pet-place.size-normal .room-item-image{transform:scale(1)!important;scale:1}
+.house-room .placed.pet-place.size-large .room-item-image{transform:scale(1.3)!important;scale:1}
+.house-room .placed.pet-place.size-small .room-item-image.flipped{transform:scale(-.75,.75)!important}
+.house-room .placed.pet-place.size-normal .room-item-image.flipped{transform:scale(-1,1)!important}
+.house-room .placed.pet-place.size-large .room-item-image.flipped{transform:scale(-1.3,1.3)!important}
 /* Preserve the intentionally tiny frog at each size. */
 .house-room .placed.pet-place .room-item-image.item-pets-frog{scale:.333}
 
