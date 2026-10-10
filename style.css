@@ -501,8 +501,8 @@ background-size:100% 100%,auto;
 .house-room .placed.pet-place .pet-animated.pet-squish{animation:habitat-pet-squish 2.9s ease-in-out infinite!important}
 .house-room .placed.pet-place .pet-animated.pet-hop{animation:habitat-pet-hop 2.3s ease-in-out infinite!important}
 .house-room .placed.pet-place .pet-animated.pet-wiggle{animation:habitat-pet-wiggle 3.1s ease-in-out infinite!important}
-@keyframes habitat-pet-bob{0%,65%,100%{translate:0 0}77%{translate:0 -3px}88%{translate:0 -1px}}
+@keyframes habitat-pet-bob{0%,65%,100%{translate:0 0}77%{translate:0 -7px}88%{translate:0 -2px}}
 @keyframes habitat-pet-squish{0%,65%,100%{translate:0 0}78%{translate:0 5px}87%{translate:0 -4px}}
-@keyframes habitat-pet-hop{0%,62%,100%{translate:0 0}76%{translate:0 -12px}87%{translate:0 -2px}}
+@keyframes habitat-pet-hop{0%,62%,100%{translate:0 0}76%{translate:0 -5px}87%{translate:0 -1px}}
 @keyframes habitat-pet-wiggle{0%,64%,100%{rotate:0deg}74%{rotate:-5deg}84%{rotate:5deg}93%{rotate:-2deg}}
 @media(prefers-reduced-motion:reduce){.house-room .placed.pet-place .pet-animated{animation:none!important}}
