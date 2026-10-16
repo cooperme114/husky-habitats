@@ -821,7 +821,7 @@ const catalog=[
 {"id":"greek-ares-bookcase-006","name":"Ares Bookcase","img":"images/items/Bookcase-ares-red-006.png","price":100,"cat":"Furniture"},
 {"id":"greek-ares-fireplace-007","name":"Ares Fireplace","img":"images/items/Fireplace-ares-red-007.png","price":100,"cat":"Furniture"},
 {"id":"greek-ares-banner-008","name":"Ares Banner","img":"images/items/Banner-ares-red-008.png","price":100,"cat":"Decor"},
-{"id":"greek-ares-stool-009","name":"Ares Stool","img":"images/items/Stool-ares-red-009.png","price":100,"cat":"Furniture"},
+
 {"id":"greek-ares-plant-010","name":"Ares Plant","img":"images/items/Plant-ares-red-010.png","price":100,"cat":"Furniture"},
 {"id":"greek-aphrodite-bed-001","name":"Aphrodite Bed","img":"images/items/Bed-aphrodite-pink-001.png","price":100,"cat":"Furniture"},
 {"id":"greek-aphrodite-chair-002","name":"Aphrodite Chair","img":"images/items/Chair-aphrodite-pink-002.png","price":100,"cat":"Furniture","turnable":true},
@@ -831,7 +831,7 @@ const catalog=[
 {"id":"greek-aphrodite-bookcase-006","name":"Aphrodite Bookcase","img":"images/items/Bookcase-aphrodite-pink-006.png","price":100,"cat":"Furniture"},
 {"id":"greek-aphrodite-vanity-007","name":"Aphrodite Vanity","img":"images/items/Vanity-aphrodite-pink-007.png","price":100,"cat":"Furniture"},
 {"id":"greek-aphrodite-banner-008","name":"Aphrodite Banner","img":"images/items/Banner-aphrodite-pink-008.png","price":100,"cat":"Decor"},
-{"id":"greek-aphrodite-stool-009","name":"Aphrodite Stool","img":"images/items/Stool-aphrodite-pink-009.png","price":100,"cat":"Furniture"},
+
 {"id":"greek-aphrodite-plant-010","name":"Aphrodite Plant","img":"images/items/Plant-aphrodite-pink-010.png","price":100,"cat":"Furniture"},
 {"id":"greek-athena-bed-001","name":"Athena Bed","img":"images/items/Bed-athena-blue-001.png","price":100,"cat":"Furniture"},
 {"id":"greek-athena-chair-002","name":"Athena Chair","img":"images/items/Chair-athena-blue-002.png","price":100,"cat":"Furniture","turnable":true},
@@ -841,7 +841,7 @@ const catalog=[
 {"id":"greek-athena-bookcase-006","name":"Athena Bookcase","img":"images/items/Bookcase-athena-blue-006.png","price":100,"cat":"Furniture"},
 {"id":"greek-athena-desk-007","name":"Athena Desk","img":"images/items/Desk-athena-blue-007.png","price":100,"cat":"Furniture"},
 {"id":"greek-athena-banner-008","name":"Athena Banner","img":"images/items/Banner-athena-blue-008.png","price":100,"cat":"Decor"},
-{"id":"greek-athena-stool-009","name":"Athena Stool","img":"images/items/Stool-athena-blue-009.png","price":100,"cat":"Furniture"},
+
 {"id":"greek-athena-plant-010","name":"Athena Plant","img":"images/items/Plant-athena-blue-010.png","price":100,"cat":"Furniture"},
 {"id":"greek-hermes-bed-001","name":"Hermes Bed","img":"images/items/Bed-hermes-teal-001.png","price":100,"cat":"Furniture"},
 {"id":"greek-hermes-chair-002","name":"Hermes Chair","img":"images/items/Chair-hermes-teal-002.png","price":100,"cat":"Furniture","turnable":true},
@@ -851,8 +851,7 @@ const catalog=[
 {"id":"greek-hermes-bookcase-006","name":"Hermes Bookcase","img":"images/items/Bookcase-hermes-teal-006.png","price":100,"cat":"Furniture"},
 {"id":"greek-hermes-desk-007","name":"Hermes Desk","img":"images/items/Desk-hermes-teal-007.png","price":100,"cat":"Furniture"},
 {"id":"greek-hermes-banner-008","name":"Hermes Banner","img":"images/items/Banner-hermes-teal-008.png","price":100,"cat":"Decor"},
-{"id":"greek-hermes-stool-009","name":"Hermes Stool","img":"images/items/Stool-hermes-teal-009.png","price":100,"cat":"Furniture"},
-{"id":"greek-hermes-plant-010","name":"Hermes Plant","img":"images/items/Plant-hermes-teal-010.png","price":100,"cat":"Furniture"},
+
 {"id":"greek-apollo-bed-001","name":"Apollo Bed","img":"images/items/Bed-apollo-gold-001.png","price":100,"cat":"Furniture"},
 {"id":"greek-apollo-chair-002","name":"Apollo Chair","img":"images/items/Chair-apollo-gold-002.png","price":100,"cat":"Furniture","turnable":true},
 {"id":"greek-apollo-couch-003","name":"Apollo Couch","img":"images/items/Couch-apollo-gold-003.png","price":100,"cat":"Furniture"},
@@ -861,7 +860,7 @@ const catalog=[
 {"id":"greek-apollo-bookcase-006","name":"Apollo Bookcase","img":"images/items/Bookcase-apollo-gold-006.png","price":100,"cat":"Furniture"},
 {"id":"greek-apollo-vanity-007","name":"Apollo Vanity","img":"images/items/Vanity-apollo-gold-007.png","price":100,"cat":"Furniture"},
 {"id":"greek-apollo-banner-008","name":"Apollo Banner","img":"images/items/Banner-apollo-gold-008.png","price":100,"cat":"Decor"},
-{"id":"greek-apollo-stool-009","name":"Apollo Stool","img":"images/items/Stool-apollo-gold-009.png","price":100,"cat":"Furniture"},
+
 {"id":"greek-apollo-plant-010","name":"Apollo Plant","img":"images/items/Plant-apollo-gold-010.png","price":100,"cat":"Furniture"},
 {"id":"greek-artemis-bed-001","name":"Artemis Bed","img":"images/items/Bed-artemis-navy-001.png","price":100,"cat":"Furniture"},
 {"id":"greek-artemis-chair-002","name":"Artemis Chair","img":"images/items/Chair-artemis-navy-002.png","price":100,"cat":"Furniture","turnable":true},
@@ -871,17 +870,17 @@ const catalog=[
 {"id":"greek-artemis-bookcase-006","name":"Artemis Bookcase","img":"images/items/Bookcase-artemis-navy-006.png","price":100,"cat":"Furniture"},
 {"id":"greek-artemis-vanity-007","name":"Artemis Vanity","img":"images/items/Vanity-artemis-navy-007.png","price":100,"cat":"Furniture"},
 {"id":"greek-artemis-banner-008","name":"Artemis Banner","img":"images/items/Banner-artemis-navy-008.png","price":100,"cat":"Decor"},
-{"id":"greek-artemis-stool-009","name":"Artemis Stool","img":"images/items/Stool-artemis-navy-009.png","price":100,"cat":"Furniture"},
+
 {"id":"greek-artemis-plant-010","name":"Artemis Plant","img":"images/items/Plant-artemis-navy-010.png","price":100,"cat":"Furniture"}
 ];
 
 const collections=[
- {"name":"Ares Collection","emoji":"⚔️","items":["greek-ares-bed-001","greek-ares-chair-002","greek-ares-couch-003","greek-ares-table-004","greek-ares-dresser-005","greek-ares-bookcase-006","greek-ares-fireplace-007","greek-ares-banner-008","greek-ares-stool-009","greek-ares-plant-010"]},
- {"name":"Aphrodite Collection","emoji":"💗","items":["greek-aphrodite-bed-001","greek-aphrodite-chair-002","greek-aphrodite-couch-003","greek-aphrodite-table-004","greek-aphrodite-dresser-005","greek-aphrodite-bookcase-006","greek-aphrodite-vanity-007","greek-aphrodite-banner-008","greek-aphrodite-stool-009","greek-aphrodite-plant-010"]},
- {"name":"Athena Collection","emoji":"🦉","items":["greek-athena-bed-001","greek-athena-chair-002","greek-athena-couch-003","greek-athena-table-004","greek-athena-dresser-005","greek-athena-bookcase-006","greek-athena-desk-007","greek-athena-banner-008","greek-athena-stool-009","greek-athena-plant-010"]},
- {"name":"Hermes Collection","emoji":"🪽","items":["greek-hermes-bed-001","greek-hermes-chair-002","greek-hermes-couch-003","greek-hermes-table-004","greek-hermes-dresser-005","greek-hermes-bookcase-006","greek-hermes-desk-007","greek-hermes-banner-008","greek-hermes-stool-009","greek-hermes-plant-010"]},
- {"name":"Apollo Collection","emoji":"☀️","items":["greek-apollo-bed-001","greek-apollo-chair-002","greek-apollo-couch-003","greek-apollo-table-004","greek-apollo-dresser-005","greek-apollo-bookcase-006","greek-apollo-vanity-007","greek-apollo-banner-008","greek-apollo-stool-009","greek-apollo-plant-010"]},
- {"name":"Artemis Collection","emoji":"🌙","items":["greek-artemis-bed-001","greek-artemis-chair-002","greek-artemis-couch-003","greek-artemis-table-004","greek-artemis-dresser-005","greek-artemis-bookcase-006","greek-artemis-vanity-007","greek-artemis-banner-008","greek-artemis-stool-009","greek-artemis-plant-010"]},
+ {"name":"Ares Collection","emoji":"⚔️","items":["greek-ares-bed-001","greek-ares-chair-002","greek-ares-couch-003","greek-ares-table-004","greek-ares-dresser-005","greek-ares-bookcase-006","greek-ares-fireplace-007","greek-ares-banner-008","greek-ares-plant-010"]},
+ {"name":"Aphrodite Collection","emoji":"💗","items":["greek-aphrodite-bed-001","greek-aphrodite-chair-002","greek-aphrodite-couch-003","greek-aphrodite-table-004","greek-aphrodite-dresser-005","greek-aphrodite-bookcase-006","greek-aphrodite-vanity-007","greek-aphrodite-banner-008","greek-aphrodite-plant-010"]},
+ {"name":"Athena Collection","emoji":"🦉","items":["greek-athena-bed-001","greek-athena-chair-002","greek-athena-couch-003","greek-athena-table-004","greek-athena-dresser-005","greek-athena-bookcase-006","greek-athena-desk-007","greek-athena-banner-008","greek-athena-plant-010"]},
+ {"name":"Hermes Collection","emoji":"🪽","items":["greek-hermes-bed-001","greek-hermes-chair-002","greek-hermes-couch-003","greek-hermes-table-004","greek-hermes-dresser-005","greek-hermes-bookcase-006","greek-hermes-desk-007","greek-hermes-banner-008"]},
+ {"name":"Apollo Collection","emoji":"☀️","items":["greek-apollo-bed-001","greek-apollo-chair-002","greek-apollo-couch-003","greek-apollo-table-004","greek-apollo-dresser-005","greek-apollo-bookcase-006","greek-apollo-vanity-007","greek-apollo-banner-008","greek-apollo-plant-010"]},
+ {"name":"Artemis Collection","emoji":"🌙","items":["greek-artemis-bed-001","greek-artemis-chair-002","greek-artemis-couch-003","greek-artemis-table-004","greek-artemis-dresser-005","greek-artemis-bookcase-006","greek-artemis-vanity-007","greek-artemis-banner-008","greek-artemis-plant-010"]},
  {
   "name": "Basic Collection",
   "emoji": "🛋️",
