@@ -1832,6 +1832,7 @@ function render(){
  document.querySelectorAll("[data-rename-room]").forEach(b=>b.onclick=e=>{e.stopPropagation();renameRoom(b.dataset.renameRoom)});
  document.querySelectorAll(".house-room").forEach(el=>el.addEventListener("click",e=>{if(e.target.closest(".placed,.item-size-controls,.room-heading"))return;if(activeRoom!==el.dataset.room)setActiveRoom(el.dataset.room);else hideItemControls()}));
  document.querySelectorAll(".house-room").forEach(el=>el.addEventListener("dblclick",e=>{if(e.target.closest(".placed,.item-size-controls,.room-heading,.room-zoom-close"))return;e.preventDefault();e.stopPropagation();zoomedRoom=el.dataset.room;activeRoom=el.dataset.room;applyRoomZoom();hideItemControls()}));
+ resizeGreekSprites();
  applyRoomZoom();
  document.querySelectorAll("[data-locked-room]").forEach(b=>b.onclick=()=>panel("expansions"));
  enableDragging();
@@ -2011,6 +2012,14 @@ function enableDragging(){
    });
  });
 }
+const greekFurnitureDimensions={"Bed":[36,55],"Chair":[22,34],"Couch":[48,33],"Table":[28,26],"Dresser":[30,37],"Bookcase":[31,49],"Fireplace":[36,36],"Banner":[19,38],"Plant":[27,37],"Vanity":[38,44],"Desk":[40,34]};
+function resizeGreekSprites(){
+ document.querySelectorAll('.house-room img[data-greek-type]').forEach(img=>{
+  const target=greekFurnitureDimensions[img.dataset.greekType];if(!target)return;
+  const resize=()=>{if(!img.naturalWidth||!img.naturalHeight)return;const ratio=Math.min(target[0]/img.naturalWidth,target[1]/img.naturalHeight);img.style.width=Math.max(1,Math.round(img.naturalWidth*ratio))+'px';img.style.height=Math.max(1,Math.round(img.naturalHeight*ratio))+'px';img.style.imageRendering='pixelated';};
+  if(img.complete)resize();else img.addEventListener('load',resize,{once:true});
+ });
+}
 function itemVisual(x,where,extra="",petIndex=null){
  if(x.img){
    const cls=where==="room"?"room-item-image":"item-image";
@@ -2024,9 +2033,11 @@ function itemVisual(x,where,extra="",petIndex=null){
      petStyle=' style="animation-delay:'+delay+'s;animation-duration:'+duration+'s"';
    }
    const steampunkSize=(where==="room"&&x.cat==="Furniture"&&x.id.includes("steampunk"))?' onload="this.style.width=Math.max(1,Math.round(this.naturalWidth*.9))+\'px\'"':"";
+   // Set Greek sprites to the actual display dimensions of existing furniture.
+   // Use a load listener instead of inline onload: the Google Sites embed sanitizer
+   // may strip inline event attributes, leaving the huge source images unscaled.
    const greekType=x.id.startsWith("greek-")?x.name.split(" ").pop():null;
-   const greekSizes={"Bed":[36,55],"Chair":[22,34],"Couch":[48,33],"Table":[28,26],"Dresser":[30,37],"Bookcase":[31,49],"Fireplace":[36,36],"Banner":[19,38],"Stool":[20,20],"Plant":[27,37],"Vanity":[38,44],"Desk":[40,34]};
-   const greekSize=(where==="room"&&greekType&&greekSizes[greekType])?' onload="var w='+JSON.stringify(greekSizes)+'[\''+greekType+'\'][0],h='+JSON.stringify(greekSizes)+'[\''+greekType+'\'][1];this.style.width=Math.round(Math.min(w/this.naturalWidth,h/this.naturalHeight)*this.naturalWidth)+\'px\';this.style.height=\'auto\';"':"";
+   const greekSize=where==="room"&&greekType?' data-greek-type="'+greekType+'"':"";
    return '<img class="'+cls+' item-'+x.id+petClass+extra+'" src="'+x.img+'" alt=""'+petStyle+steampunkSize+greekSize+'>';
  }
  return '<span class="fallback-icon">'+(x.icon||"")+'</span>';
