@@ -812,7 +812,7 @@ const catalog=[
 {"id":"new-wallpaper-bengara-koushi-001","name":"Wallpaper Bengara Koushi","img":"images/items/Wallpaper-bengara-koushi-001.png","price":50,"cat":"Walls"},
 {"id":"new-wallpaper-stars-001","name":"Wallpaper Stars","img":"images/items/Wallpaper-stars-001.png","price":50,"cat":"Walls"},
 {"id":"new-western-armchair-001","name":"Western Armchair","img":"images/items/Western-armchair-001.png","price":100,"cat":"Furniture"},
-{"id":"new-western-barrel-cactus-001","name":"Western Barrel Cactus","img":"images/items/Western-barrel_cactus-001.png","price":100,"cat":"Furniture"},,
+{"id":"new-western-barrel-cactus-001","name":"Western Barrel Cactus","img":"images/items/Western-barrel_cactus-001.png","price":100,"cat":"Furniture"},
 {"id":"bed-halloween-new","name":"Halloween Pumpkin Bed","img":"images/items/bed-halloween-001.png","price":100,"cat":"Furniture"},
 {"id":"endtable-halloween-new","name":"Halloween End Table","img":"images/items/EndTable-halloween-001.png","price":100,"cat":"Furniture"},
 {"id":"dresser-halloween-new","name":"Halloween Dresser","img":"images/items/dresser-halloween-001.png","price":100,"cat":"Furniture"},
