@@ -1,4 +1,4 @@
-const stems={astro:"star",cycl:"circle",hydro:"water",mania:"insanity",photo:"light",phys:"body","ann/enn":"year",lum:"light",multi:"many","scrib/script":"write"};
+const stems={spect:"see",tempo:"time","syn/sym":"together",agr:"field",de:"away",fort:"strong",heli:"sun",lect:"gather",loc:"place",mod:"change"};
 const catalog=[
 {id:"bed-white",name:"Basic White Bed",img:"images/items/Bed-basic-white-001.png",price:75,cat:"Furniture"},
 {id:"bed-angel-cream",name:"Angel Cream Bed",img:"images/items/Bed-angel-cream-001.png",price:100,cat:"Furniture"},
