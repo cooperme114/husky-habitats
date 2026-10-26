@@ -822,10 +822,23 @@ const catalog=[
 {"id":"pet-halloween-boo-new","name":"Boo the Ghost","img":"images/items/pet-halloween-boo-001.png","price":150,"cat":"Pets"},
 {"id":"rug-halloween-new","name":"Halloween Pumpkin Rug","img":"images/items/rug-halloween-001.png","price":100,"cat":"Decor"},
 {"id":"lamp-halloween-new","name":"Halloween Spooky Floor Lamp","img":"images/items/lamp-halloween-001.png","price":100,"cat":"Furniture"},
-{"id":"vanity-halloween-new","name":"Halloween Vanity","img":"images/items/vanity-halloween-001.png","price":100,"cat":"Furniture"}
+{"id":"vanity-halloween-new","name":"Halloween Vanity","img":"images/items/vanity-halloween-001.png","price":100,"cat":"Furniture"},
+{"id":"bed-mass-effect","name":"Mass Effect Bed","img":"images/items/bed-mass-effect-001.png","price":100,"cat":"Furniture"},
+{"id":"bookcase-mass-effect","name":"Mass Effect Bookcase","img":"images/items/bookcase-mass-effect-001.png","price":100,"cat":"Furniture"},
+{"id":"chair-mass-effect","name":"Mass Effect Command Chair","img":"images/items/chair-mass-effect-001.png","price":100,"cat":"Furniture","turnable":true},
+{"id":"couch-mass-effect","name":"Mass Effect Couch","img":"images/items/couch-mass-effect-001.png","price":100,"cat":"Furniture"},
+{"id":"painting-mass-effect","name":"Mass Effect Galaxy Painting","img":"images/items/decor-painting-mass-effect-001.png","price":100,"cat":"Decor"},
+{"id":"desk-mass-effect","name":"Mass Effect Workstation","img":"images/items/desk-mass-effect-001.png","price":100,"cat":"Furniture"},
+{"id":"dresser-mass-effect","name":"Mass Effect Dresser","img":"images/items/dresser-mass-effect-001.png","price":100,"cat":"Furniture"},
+{"id":"endtable-mass-effect","name":"Mass Effect End Table","img":"images/items/EndTable-mass-effect-001.png","price":100,"cat":"Furniture"},
+{"id":"lamp-mass-effect","name":"Mass Effect Floor Lamp","img":"images/items/lamp-mass-effect-001.png","price":100,"cat":"Furniture"},
+{"id":"pet-mass-effect-space-hamster","name":"Mass Effect Space Hamster","img":"images/items/pet-mass-effect-space-hamster-001.png","price":150,"cat":"Pets"},
+{"id":"rug-mass-effect","name":"Mass Effect N7 Rug","img":"images/items/rug-mass-effect-001.png","price":100,"cat":"Decor"},
+{"id":"table-mass-effect","name":"Mass Effect Holographic Table","img":"images/items/table-mass-effect.png","price":100,"cat":"Furniture"}
 ];
 
 const collections=[
+{"name":"Mass Effect Collection","emoji":"🚀","items":["bed-mass-effect","bookcase-mass-effect","chair-mass-effect","couch-mass-effect","painting-mass-effect","desk-mass-effect","dresser-mass-effect","endtable-mass-effect","lamp-mass-effect","pet-mass-effect-space-hamster","rug-mass-effect","table-mass-effect"]},
  {
   "name": "Basic Collection",
   "emoji": "🛋️",
